@@ -1,23 +1,25 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
+import DependencyHelper
 
 let project = Project(
-    name: "Sharing_iOS",
-    organizationName: sharingDSMOrganizationName,
+    name: "Sharing-iOS",
+    organizationName: SharingOrganizationName,
     targets: [
         Target(
-            name: "Sharing_iOS",
+            name: "Sharing-iOS",
             platform: .iOS,
             product: .app,
-            bundleId: "com.DSM",
+            bundleId: "\(SharingOrganizationName).iOS",
             deploymentTarget: .iOS(
-                   targetVersion: "15.0",
-                   devices: .iphone
-               ),
-            infoPlist: .file(path: Path("SupportingFiles/Info.plist")),
+                targetVersion: "16.0",
+                devices: [.iphone, .ipad]
+            ),
+            infoPlist: .file(path: "SuportingFile/Info.plist"),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
             dependencies: [
+                .Feature.exFeature
             ]
         )
     ]
