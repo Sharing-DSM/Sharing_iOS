@@ -3,11 +3,10 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "ExFeature",
-    resources: ["Resources/**"],
+    name: "Core",
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
-        .Core.core
+        .Module.thiredPartyLib
     ]
 )

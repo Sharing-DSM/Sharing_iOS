@@ -1,5 +1,7 @@
 import UIKit
 import RxFlow
+import Core
+import Flow
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -9,8 +11,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-
-        window?.rootViewController = ExViewController()
+        let tabsFlow = TabsFlow()
+        Flows.use(tabsFlow, when: .created) { [weak self] root in
+            self?.window?.rootViewController = root
+        }
+        coordinater.coordinate(
+            flow: tabsFlow,
+            with: OneStepper(withSingleStep: SharingStep.exRequired),
+            allowStepWhenDismissed: false
+        )
         window?.makeKeyAndVisible()
     }
 

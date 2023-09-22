@@ -6,6 +6,7 @@ let workspace = Workspace(
         "Application",
         "Modules/**",
         "Features/**",
+        "Flow",
         "Core"
     ]
 )

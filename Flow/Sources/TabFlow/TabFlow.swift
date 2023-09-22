@@ -1,15 +1,22 @@
 import UIKit
 import RxFlow
+import Core
 import RxCocoa
 
-class TabsFlow: Flow {
-    var root: RxFlow.Presentable {
+public class TabsFlow: Flow {
+    public init() {}
+
+    public var root: RxFlow.Presentable {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = UINavigationController()
+    private lazy var rootPresentable =  {
+        let tabBarController = UITabBarController()
+        tabBarController.tabBar.backgroundColor = .white
+        return tabBarController
+    }()
 
-    func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
+    public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
         switch step {
         case .exRequired:
@@ -28,7 +35,7 @@ class TabsFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: exFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.exRequired)
+            withNextStepper: OneStepper(withSingleStep: SharingStep.tabsRequired)
         ))
     }
 }

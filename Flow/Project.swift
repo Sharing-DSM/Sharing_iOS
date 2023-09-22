@@ -3,10 +3,10 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "SharingFlow",
+    name: "Flow",
     platform: .iOS,
-    product: .staticLibrary,
+    product: .staticFramework,
     dependencies: [
-        .Module.thiredPartyLib
+        .Feature.exFeature
     ]
 )
