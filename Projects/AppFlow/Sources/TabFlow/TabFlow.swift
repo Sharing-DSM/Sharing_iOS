@@ -19,7 +19,7 @@ public class TabsFlow: Flow {
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
         switch step {
-        case .exRequired:
+        case .tabsRequired:
             return navigateToTabsView()
         default:
             return .none
@@ -35,7 +35,7 @@ public class TabsFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: exFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.tabsRequired)
+            withNextStepper: OneStepper(withSingleStep: SharingStep.exRequired)
         ))
     }
 }

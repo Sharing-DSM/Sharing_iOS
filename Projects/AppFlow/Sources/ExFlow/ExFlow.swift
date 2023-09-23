@@ -1,5 +1,5 @@
 import UIKit
-import ExFeature
+import Presentation
 import RxFlow
 import Core
 import RxCocoa
@@ -16,7 +16,7 @@ class ExFlow: Flow {
     func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
         switch step {
-        case .tabsRequired:
+        case .exRequired:
             return navigateToExView()
         default:
             return .none
