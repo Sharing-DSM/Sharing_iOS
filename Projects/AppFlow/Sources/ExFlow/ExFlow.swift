@@ -24,7 +24,6 @@ class ExFlow: Flow {
     }
 
     private func navigateToExView() -> FlowContributors {
-        print("dsfaafasdf")
         let exViewController = ExViewController()
         rootPresentable.pushViewController(exViewController, animated: false)
         return .none

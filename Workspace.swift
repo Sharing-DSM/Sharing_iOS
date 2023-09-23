@@ -4,9 +4,7 @@ let workspace = Workspace(
     name: "Sharing-iOS",
     projects: [
         "Application",
-        "Modules/**",
-        "Features/**",
-        "Flow",
-        "Core"
+        "Projects/**",
+        "Modules/**"
     ]
 )

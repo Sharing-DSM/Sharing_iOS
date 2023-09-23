@@ -3,11 +3,11 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "ExFeature",
+    name: "SharingKit",
     resources: ["Resources/**"],
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
-        .Core.core
+        .Project.core
     ]
 )

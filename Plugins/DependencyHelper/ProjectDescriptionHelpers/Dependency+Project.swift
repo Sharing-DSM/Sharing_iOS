@@ -2,45 +2,28 @@ import ProjectDescription
 
 public extension TargetDependency {
     struct Module {}
-    struct Feature {}
-    struct Core {}
-    struct Flow {}
+    struct Project {}
 }
 
-public extension TargetDependency.Flow {
-    static let flow = TargetDependency.project(
-        target: "Flow",
-        path: .relativeToRoot("Flow")
-    )
-
-    static func flow(name: String) -> TargetDependency {
+public extension TargetDependency.Project {
+    static let appFlow = project(name: "AppFlow")
+    static let core = project(name: "Core")
+    static let presentation = project(name: "Presentation")
+    static let data = project(name: "Data")
+    static let domain = project(name: "Domain")
+    
+    static func project(name: String) -> TargetDependency {
         return .project(
             target: name,
-            path: .relativeToRoot("Flow/\(name)")
-        )
-    }
-}
-
-public extension TargetDependency.Core {
-    static let core = TargetDependency.project(
-        target: "Core",
-        path: .relativeToRoot("Core")
-    )
-}
-
-public extension TargetDependency.Feature {
-    static let exFeature = feature(name: "ExFeature")
-
-    static func feature(name: String) -> TargetDependency {
-        return .project(
-            target: name,
-            path: .relativeToRoot("Features/\(name)")
+            path: .relativeToRoot("Projects/\(name)")
         )
     }
 }
 
 public extension TargetDependency.Module {
-    static let thiredPartyLib = module(name: "ThiredPartyLib")
+    static let thirdPartyLib = module(name: "ThirdPartyLib")
+    static let network = module(name: "Network")
+    static let sharingKit = module(name: "SharingKit")
 
     static func module(name: String) -> TargetDependency {
         return .project(

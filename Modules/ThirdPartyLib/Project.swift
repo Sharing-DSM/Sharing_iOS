@@ -3,7 +3,7 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "ThiredPartyLib",
+    name: "ThirdPartyLib",
     platform: .iOS,
     product: .framework,
     dependencies: [

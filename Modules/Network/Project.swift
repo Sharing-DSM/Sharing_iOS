@@ -3,10 +3,10 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "Core",
+    name: "Network",
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
-        .Module.thiredPartyLib
+        .Project.core
     ]
 )
