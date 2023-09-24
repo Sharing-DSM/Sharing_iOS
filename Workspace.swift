@@ -1,10 +1,10 @@
 import ProjectDescription
 
 let workspace = Workspace(
-    name: "Sharing_Workspace",
+    name: "Sharing-iOS",
     projects: [
-        "Application"
-    ],
-    fileHeaderTemplate: nil,
-    additionalFiles: []
+        "Application",
+        "Projects/**",
+        "Modules/**"
+    ]
 )

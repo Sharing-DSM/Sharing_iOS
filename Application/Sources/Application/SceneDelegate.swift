@@ -1,15 +1,24 @@
 import UIKit
+import AppFlow
+import RxFlow
+import Core
+import Flow
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    let coordinater = FlowCoordinator()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = MainViewController()
-        window?.makeKeyAndVisible()
+        let window = UIWindow(windowScene: windowScene)
+        let appFlow = AppFlow(window: window)
+        coordinater.coordinate(
+            flow: appFlow,
+            with: AppStepper(),
+            allowStepWhenDismissed: false
+        )
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {  }

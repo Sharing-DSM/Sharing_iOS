@@ -1,6 +1,6 @@
 import ProjectDescription
 
-let depencies = Dependencies(
+let dependencies = Dependencies.init(
     swiftPackageManager: SwiftPackageManagerDependencies([
         // Moya
         .remote(

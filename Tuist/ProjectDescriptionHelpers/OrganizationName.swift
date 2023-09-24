@@ -1,3 +1,3 @@
 import Foundation
 
-public let sharingDSMOrganizationName: String = "com.sharing"
+public let SharingOrganizationName = "com.Sharing"
