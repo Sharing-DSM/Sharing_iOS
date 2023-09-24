@@ -3,10 +3,10 @@ import RxFlow
 import Core
 import RxCocoa
 
-public class TabsFlow: Flow {
+class TabsFlow: Flow {
     public init() {}
 
-    public var root: RxFlow.Presentable {
+    var root: Presentable {
         return rootPresentable
     }
 
@@ -16,7 +16,7 @@ public class TabsFlow: Flow {
         return tabBarController
     }()
 
-    public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
+    func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
         switch step {
         case .tabsRequired:

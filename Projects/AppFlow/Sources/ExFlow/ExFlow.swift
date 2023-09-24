@@ -7,7 +7,7 @@ import RxCocoa
 class ExFlow: Flow {
     public init() {}
 
-    var root: RxFlow.Presentable {
+    var root: Presentable {
         return rootPresentable
     }
 
