@@ -19,7 +19,7 @@ public class AppFlow: Flow {
         case .tabsRequired:
             return presentTabsView()
         case .onBoardingRequired:
-            return presentTabsView()
+            return presentOnBoardingView()
         default:
             return .none
         }

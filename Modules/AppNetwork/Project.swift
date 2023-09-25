@@ -3,7 +3,7 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "Network",
+    name: "AppNetwork",
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
