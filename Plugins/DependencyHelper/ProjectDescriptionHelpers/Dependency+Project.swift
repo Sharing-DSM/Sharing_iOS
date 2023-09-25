@@ -22,7 +22,7 @@ public extension TargetDependency.Project {
 
 public extension TargetDependency.Module {
     static let thirdPartyLib = module(name: "ThirdPartyLib")
-    static let network = module(name: "Network")
+    static let appNetwork = module(name: "AppNetwork")
     static let sharingKit = module(name: "SharingKit")
 
     static func module(name: String) -> TargetDependency {

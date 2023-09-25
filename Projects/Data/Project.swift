@@ -8,6 +8,6 @@ let project = Project.makeModule(
     product: .staticFramework,
     dependencies: [
         .Project.domain,
-        .Module.network
+        .Module.appNetwork
     ]
 )
