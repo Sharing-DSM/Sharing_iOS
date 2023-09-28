@@ -5,4 +5,6 @@ public enum SharingStep: Step {
     case onBoardingRequired
 
     case exRequired
+
+    case loginRequired
 }
