@@ -7,4 +7,5 @@ public enum SharingStep: Step {
     case exRequired
 
     case loginRequired
+    case signupRequired
 }
