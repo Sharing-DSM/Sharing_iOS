@@ -17,7 +17,7 @@ public class LoginViewController: UIViewController {
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
         $0.textColor = .main
     }
-    private let loginTextField = SharingTextField().then {
+    private let idTextField = SharingTextField().then {
         $0.placeholder = "아이디"
     }
     private let passwordTextField = SharingTextField().then {
@@ -54,7 +54,7 @@ extension LoginViewController {
     private func addView() {
         [
             loginLabel,
-            loginTextField,
+            idTextField,
             passwordTextField,
             signupButton,
             loginButton
@@ -67,14 +67,14 @@ extension LoginViewController {
             $0.leading.equalToSuperview().inset(35)
             $0.height.equalTo(30)
         }
-        loginTextField.snp.makeConstraints {
+        idTextField.snp.makeConstraints {
             $0.top.equalTo(loginLabel.snp.bottom).offset(15)
             $0.leading.trailing.equalToSuperview().inset(35)
             $0.height.equalTo(50)
         }
         passwordTextField.snp.makeConstraints {
-            $0.top.equalTo(loginTextField.snp.bottom).offset(15)
-            $0.leading.trailing.equalTo(loginTextField)
+            $0.top.equalTo(idTextField.snp.bottom).offset(15)
+            $0.leading.trailing.equalTo(idTextField)
             $0.height.equalTo(50)
         }
         signupButton.snp.makeConstraints {
@@ -84,7 +84,7 @@ extension LoginViewController {
         }
         loginButton.snp.makeConstraints {
             $0.top.equalTo(signupButton.snp.bottom).offset(15)
-            $0.leading.trailing.equalTo(loginTextField)
+            $0.leading.trailing.equalTo(idTextField)
             $0.height.equalTo(40)
         }
     }
