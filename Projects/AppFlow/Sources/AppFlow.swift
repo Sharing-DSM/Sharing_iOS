@@ -18,8 +18,8 @@ public class AppFlow: Flow {
         switch step {
         case .tabsRequired:
             return presentTabsView()
-        case .onBoardingRequired:
-            return presentOnBoardingView()
+        case .loginRequired:
+            return presentLoginView()
         default:
             return .none
         }
@@ -37,7 +37,14 @@ public class AppFlow: Flow {
     }
 
     // TODO: 온보딩 뷰 연결
-    private func presentOnBoardingView() -> FlowContributors {
-        return .none
+    private func presentLoginView() -> FlowContributors {
+        let loginFlow = LoginFlow()
+        Flows.use(loginFlow, when: .created) { [weak self] root in
+            self?.window.rootViewController = root
+        }
+        return .one(flowContributor: .contribute(
+            withNextPresentable: loginFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.loginRequired)
+        ))
     }
 }
