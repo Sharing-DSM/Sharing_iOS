@@ -3,18 +3,11 @@ import SnapKit
 import Then
 import SharingKit
 
-public class SignupViewController: UIViewController {
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        addView()
-        setLayout()
-    }
+public class SignupViewController: BaseVC<SignupViewModel> {
 
     private let signupLabel = UILabel().then {
         $0.text = "회원가입"
-        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.font = .headerH1SemiBold
         $0.textColor = .main
     }
     private let idTextField = SharingTextField().then {
@@ -29,14 +22,11 @@ public class SignupViewController: UIViewController {
     private let ageTextField = SharingTextField().then {
         $0.placeholder = "나이"
     }
-    private let signupButton = FillButton().then {
+    private let signupButton = FillButton(type: .system).then {
         $0.setTitle("회원가입", for: .normal)
     }
-}
 
-extension SignupViewController {
-
-    private func addView() {
+    public override func addView() {
         [
             signupLabel,
             idTextField,
@@ -47,7 +37,7 @@ extension SignupViewController {
         ].forEach { view.addSubview($0) }
     }
 
-    private func setLayout() {
+    public override func setLayout() {
         signupLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(230)
             $0.leading.equalToSuperview().inset(35)
