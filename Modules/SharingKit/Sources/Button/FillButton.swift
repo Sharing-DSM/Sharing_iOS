@@ -4,7 +4,7 @@ import UIKit
 open class FillButton: UIButton {
 
     override init(frame: CGRect) {
-         super.init(frame: frame)
+        super.init(frame: frame)
         setUpButton()
      }
      
@@ -18,7 +18,7 @@ extension FillButton {
     private func setUpButton() {
         self.backgroundColor = .main
         self.setTitleColor(.white, for: .normal)
-        self.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        self.titleLabel?.font = .bodyB2Medium
         self.layer.cornerRadius = 10
     }
 }

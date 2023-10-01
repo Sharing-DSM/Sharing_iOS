@@ -16,18 +16,19 @@ class TabsFlow: Flow {
         return tabBarController
     }()
 
+    // TODO: 텝바 로직 만들기
     func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
         switch step {
         case .tabsRequired:
-            return navigateToTabsView()
+            return .none
         default:
             return .none
         }
     }
 
     private func navigateToTabsView() -> FlowContributors {
-        let exFlow = ExFlow()
+        let exFlow = SignupFlow()
         Flows.use(exFlow, when: .created) { [weak self] root in
             let tabbarItem = UITabBarItem(title: "예시", image: UIImage(systemName: "heart"), selectedImage: nil)
             root.tabBarItem = tabbarItem
@@ -35,7 +36,7 @@ class TabsFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: exFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.exRequired)
+            withNextStepper: OneStepper(withSingleStep: SharingStep.signupRequired)
         ))
     }
 }

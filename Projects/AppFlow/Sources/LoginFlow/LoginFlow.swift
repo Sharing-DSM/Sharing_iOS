@@ -23,7 +23,7 @@ class LoginFlow: Flow {
     }
 
     private func navigateToLoginView() -> FlowContributors {
-        let loginViewController = LoginViewController()
+        let loginViewController = LoginViewController(viewModel: LoginViewModel())
         rootPresentable.pushViewController(loginViewController, animated: false)
         return .none
     }

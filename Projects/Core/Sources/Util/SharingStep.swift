@@ -1,11 +1,14 @@
 import RxFlow
 
 public enum SharingStep: Step {
-    case tabsRequired
+
+    // dummy
     case onBoardingRequired
 
-    case exRequired
-
+    // Auth
     case loginRequired
     case signupRequired
+
+    //tabs
+    case tabsRequired
 }

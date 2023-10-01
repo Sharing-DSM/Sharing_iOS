@@ -23,7 +23,7 @@ class SignupFlow: Flow {
     }
 
     private func navigateToSignupView() -> FlowContributors {
-        let signupViewController = SignupViewController()
+        let signupViewController = SignupViewController(viewModel: SignupViewModel())
         rootPresentable.pushViewController(signupViewController, animated: false)
         return .none
     }

@@ -36,7 +36,7 @@ extension SharingTextField {
         guard let string = self.placeholder else {
             return
         }
-        attributedPlaceholder = NSAttributedString(string: string, attributes: [.foregroundColor: color])
+        attributedPlaceholder = NSAttributedString(string: string, attributes: [.foregroundColor: color, .font: UIFont.bodyB2Medium])
     }
 
     private func changeBorderColor() {

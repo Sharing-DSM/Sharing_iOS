@@ -1,20 +1,13 @@
 import UIKit
 import SnapKit
 import Then
+import RxCocoa
 import SharingKit
 
-public class LoginViewController: UIViewController {
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        addView()
-        setLayout()
-    }
-    
+public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable {
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
-        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.font = .headerH1SemiBold
         $0.textColor = .main
     }
     private let idTextField = SharingTextField().then {
@@ -28,7 +21,7 @@ public class LoginViewController: UIViewController {
             string: "회원이 아니신가요? ",
             attributes: [
                 .foregroundColor: UIColor.black900!,
-                .font:  UIFont.systemFont(ofSize: 14, weight: .medium)
+                .font: UIFont.bodyB2Medium
             ]
         )
 
@@ -37,7 +30,7 @@ public class LoginViewController: UIViewController {
                 string: "회원가입",
                 attributes: [
                     .foregroundColor: UIColor.main!,
-                    .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                    .font: UIFont.bodyB2Bold,
                     .underlineStyle : NSUnderlineStyle.single.rawValue
                 ]
             )
@@ -47,11 +40,13 @@ public class LoginViewController: UIViewController {
     private let loginButton = FillButton(type: .system).then {
         $0.setTitle("로그인", for: .normal)
     }
-}
 
-extension LoginViewController {
-    
-    private func addView() {
+    public lazy var input: LoginViewModel.Input = LoginViewModel.Input(
+        signupButtonSignal: signupButton.rx.tap.asObservable()
+    )
+    public lazy var output: LoginViewModel.Output = viewModel.transform(input: input)
+
+    public override func addView() {
         [
             loginLabel,
             idTextField,
@@ -60,8 +55,8 @@ extension LoginViewController {
             loginButton
         ].forEach { view.addSubview($0) }
     }
-    
-    private func setLayout() {
+
+    public override func setLayout() {
         loginLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(263)
             $0.leading.equalToSuperview().inset(35)
