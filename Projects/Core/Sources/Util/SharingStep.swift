@@ -11,4 +11,8 @@ public enum SharingStep: Step {
 
     //tabs
     case tabsRequired
+
+    //Alert
+    case alertRequired(title: String, content: String)
+    case errorAlertRequired(content: String)
 }
