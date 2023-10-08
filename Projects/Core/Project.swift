@@ -7,6 +7,7 @@ let project = Project.makeModule(
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
-        .Module.thirdPartyLib
+        .Module.thirdPartyLib,
+        .Module.appLogger
     ]
 )
