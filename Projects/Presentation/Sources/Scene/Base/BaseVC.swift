@@ -23,6 +23,9 @@ public class BaseVC<ViewModel: ViewModelType>:
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        let backButton = UIBarButtonItem(image: PresentationAsset.backButton.image)
+        backButton.tintColor = .black500
+        navigationItem.backBarButtonItem = backButton
         bind()
     }
 
