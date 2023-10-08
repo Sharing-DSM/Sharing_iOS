@@ -36,14 +36,13 @@ public class AppFlow: Flow {
         ))
     }
 
-    // TODO: 온보딩 뷰 연결
     private func presentLoginView() -> FlowContributors {
-        let loginFlow = LoginFlow()
-        Flows.use(loginFlow, when: .created) { [weak self] root in
+        let authFlow = AuthFlow()
+        Flows.use(authFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
         return .one(flowContributor: .contribute(
-            withNextPresentable: loginFlow,
+            withNextPresentable: authFlow,
             withNextStepper: OneStepper(withSingleStep: SharingStep.loginRequired)
         ))
     }

@@ -24,6 +24,7 @@ public extension TargetDependency.Module {
     static let thirdPartyLib = module(name: "ThirdPartyLib")
     static let appNetwork = module(name: "AppNetwork")
     static let sharingKit = module(name: "SharingKit")
+    static let appLogger = module(name: "AppLogger")
 
     static func module(name: String) -> TargetDependency {
         return .project(

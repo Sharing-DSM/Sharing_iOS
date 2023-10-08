@@ -1,8 +1,10 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
 import RxCocoa
 import SharingKit
+import Core
 
 public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable {
     private let loginLabel = UILabel().then {
@@ -16,7 +18,7 @@ public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable
     private let passwordTextField = SharingTextField().then {
         $0.placeholder = "비밀번호"
     }
-    private let signupButton = UIButton().then {
+    private let signupButton = UIButton(type: .system).then {
         let buttonText = NSMutableAttributedString(
             string: "회원이 아니신가요? ",
             attributes: [
@@ -42,9 +44,22 @@ public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable
     }
 
     public lazy var input: LoginViewModel.Input = LoginViewModel.Input(
-        signupButtonSignal: signupButton.rx.tap.asObservable()
+        signupButtonSignal: signupButton.rx.tap.asObservable(),
+        loginButtonSignal: loginButton.rx.tap.asObservable(),
+        idText: idTextField.rx.text.orEmpty.asObservable(),
+        passwordText: passwordTextField.rx.text.orEmpty.asObservable()
     )
     public lazy var output: LoginViewModel.Output = viewModel.transform(input: input)
+
+    public override func bind() {
+        output.idErrorDescription.asObservable()
+            .bind(to: self.idTextField.errorMessage)
+            .disposed(by: disposeBag)
+
+        output.passwordError.asObservable()
+            .bind(to: self.passwordTextField.errorMessage)
+            .disposed(by: disposeBag)
+    }
 
     public override func addView() {
         [

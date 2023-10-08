@@ -3,7 +3,7 @@ import SnapKit
 import Then
 import SharingKit
 
-public class SignupViewController: BaseVC<SignupViewModel> {
+public class SignupViewController: BaseVC<SignupViewModel>, ViewModelTransformable {
 
     private let signupLabel = UILabel().then {
         $0.text = "회원가입"
@@ -24,6 +24,33 @@ public class SignupViewController: BaseVC<SignupViewModel> {
     }
     private let signupButton = FillButton(type: .system).then {
         $0.setTitle("회원가입", for: .normal)
+    }
+
+    public lazy var input = SignupViewModel.Input(
+        idText: idTextField.rx.text.orEmpty.asObservable(),
+        passwordText: passwordTextField.rx.text.orEmpty.asObservable(),
+        nameText: nameTextField.rx.text.orEmpty.asObservable(),
+        ageText: ageTextField.rx.text.orEmpty.asObservable(),
+        signupButtonSignal: signupButton.rx.tap.asObservable()
+    )
+    public lazy var output = viewModel.transform(input: input)
+
+    public override func bind() {
+        output.idErrorDescription.asObservable()
+            .bind(to: idTextField.errorMessage)
+            .disposed(by: disposeBag)
+        
+        output.passwordErrorDescription.asObservable()
+            .bind(to: passwordTextField.errorMessage)
+            .disposed(by: disposeBag)
+        
+        output.nameErrorDescription.asObservable()
+            .bind(to: nameTextField.errorMessage)
+            .disposed(by: disposeBag)
+        
+        output.ageErrorDescription.asObservable()
+            .bind(to: ageTextField.errorMessage)
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {

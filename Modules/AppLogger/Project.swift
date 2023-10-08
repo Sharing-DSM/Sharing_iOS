@@ -3,11 +3,10 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project.makeModule(
-    name: "Core",
+    name: "AppLogger",
     platform: .iOS,
     product: .staticFramework,
     dependencies: [
-        .Module.thirdPartyLib,
-        .Module.appLogger
+        .Module.thirdPartyLib
     ]
 )

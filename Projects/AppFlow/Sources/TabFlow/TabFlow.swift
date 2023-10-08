@@ -2,6 +2,7 @@ import UIKit
 import RxFlow
 import Core
 import RxCocoa
+import Presentation
 
 class TabsFlow: Flow {
     public init() {}
@@ -10,7 +11,9 @@ class TabsFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable =  {
+    private lazy var rootPresentable = UINavigationController(rootViewController: tabBarViewController)
+
+    private let tabBarViewController = {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.backgroundColor = .white
         return tabBarController
@@ -21,23 +24,25 @@ class TabsFlow: Flow {
         guard let step = step as? SharingStep else { return .none }
         switch step {
         case .tabsRequired:
-            return .none
+            return navigateToTabsView()
         default:
             return .none
         }
     }
 
     private func navigateToTabsView() -> FlowContributors {
-        let exFlow = SignupFlow()
-        Flows.use(exFlow, when: .created) { [weak self] root in
-            let tabbarItem = UITabBarItem(title: "예시", image: UIImage(systemName: "heart"), selectedImage: nil)
-            root.tabBarItem = tabbarItem
-            self?.rootPresentable.setViewControllers([root], animated: false)
-        }
-        return .one(flowContributor: .contribute(
-            withNextPresentable: exFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.signupRequired)
-        ))
+
+        let homeView = HomeViewController()
+        let mapView = MapViewController()
+        let profileView = ProfileViewController()
+        let chatView = ChatViewController()
+
+        mapView.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), selectedImage: nil)
+        homeView.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "heart"), selectedImage: nil)
+        chatView.tabBarItem = UITabBarItem(title: "채팅", image: UIImage(systemName: "message"), selectedImage: nil)
+        profileView.tabBarItem = UITabBarItem(title: "MY", image: UIImage(systemName: "book"), selectedImage: nil)
+        tabBarViewController.setViewControllers([mapView, homeView, chatView, profileView], animated: false)
+
+        return .none
     }
 }
-
