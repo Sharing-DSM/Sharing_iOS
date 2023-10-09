@@ -56,7 +56,7 @@ public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable
             .bind(to: self.idTextField.errorMessage)
             .disposed(by: disposeBag)
 
-        output.passwordError.asObservable()
+        output.passwordErrorDescription.asObservable()
             .bind(to: self.passwordTextField.errorMessage)
             .disposed(by: disposeBag)
     }

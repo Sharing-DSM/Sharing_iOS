@@ -42,11 +42,7 @@ public class SignupViewModel: ViewModelType, Stepper {
         input.signupButtonSignal.asObservable()
             .withLatestFrom(info)
             .filter { id, password, name, age in
-                self.idErrorDescription.accept(id.isEmpty ? "아이디를 입력해주세요" : nil)
-                self.passwordErrorDescription.accept(password.isEmpty ? "비밀번호를 입력해주세요" : nil)
-                self.nameErrorDescription.accept(name.isEmpty ? "이름을 입력해주세요" : nil)
-                self.ageErrorDescription.accept(age.isEmpty ? "나이를 입력해주세요" : nil)
-                return !id.isEmpty && !password.isEmpty && !name.isEmpty && !age.isEmpty
+                self.checkSignupData(id, password, name, age)
             }
             .flatMap { id, password, name, age in
                 self.signupUseCase.execute(accountID: id, password: password, name: name, age: Int(age) ?? 0)
@@ -62,5 +58,33 @@ public class SignupViewModel: ViewModelType, Stepper {
             nameErrorDescription: nameErrorDescription.asSignal(),
             ageErrorDescription: ageErrorDescription.asSignal()
         )
+    }
+}
+
+extension SignupViewModel {
+    private func checkSignupData(
+        _ id: String,
+        _ password: String,
+        _ name: String,
+        _ age: String
+    ) -> Bool {
+        if id.isEmpty { idErrorDescription.accept("아이디를 입력해주세요") }
+        else if !id.isCorrectID() { idErrorDescription.accept("올바르지 않은 형식의 아이디 입니다.") }
+        else { idErrorDescription.accept(nil) }
+
+        if password.isEmpty { passwordErrorDescription.accept("비밀번호를 입력해주세요") }
+        else if !password.isCorrectPassword() { passwordErrorDescription.accept("올바르지 않은 형식의 비밀번호 입니다.") }
+        else { passwordErrorDescription.accept(nil) }
+
+        if name.isEmpty { nameErrorDescription.accept("이름을 입력해주세요") }
+        else if !name.isCorrectName() { nameErrorDescription.accept("올바르지 않은 형식의 이름 입니다.") }
+        else { nameErrorDescription.accept(nil) }
+
+        if age.isEmpty { ageErrorDescription.accept("나이를 입력해주세요") }
+        else if !age.isCorrectAge() { ageErrorDescription.accept("올바르지 않은 형식의 나이 입니다.") }
+        else { ageErrorDescription.accept(nil) }
+
+        return !id.isEmpty && !password.isEmpty && !name.isEmpty && !age.isEmpty &&
+        id.isCorrectID() && password.isCorrectPassword() && name.isCorrectName() && age.isCorrectAge()
     }
 }

@@ -24,11 +24,11 @@ public class LoginViewModel: ViewModelType, Stepper {
     }
 
     public struct Output {
-        let passwordError: Signal<String?>
+        let passwordErrorDescription: Signal<String?>
         let idErrorDescription: Signal<String?>
     }
 
-    private let passwordError = PublishRelay<String?>()
+    private let passwordErrorDescription = PublishRelay<String?>()
     private let idErrorDescription = PublishRelay<String?>()
 
     public func transform(input: Input) -> Output {
@@ -36,11 +36,7 @@ public class LoginViewModel: ViewModelType, Stepper {
 
         input.loginButtonSignal
             .withLatestFrom(info)
-            .filter {
-                self.idErrorDescription.accept($0.0.isEmpty ? "아이디를 입력해주세요" : nil)
-                self.passwordError.accept($0.1.isEmpty ? "비밀번호를 입력해주세요" : nil)
-                return !$0.0.isEmpty && !$0.1.isEmpty
-            }
+            .filter { self.checkLoginData($0.0, $0.1) }
             .flatMap { id, password in
                 self.loginUseCase.execute(accountID: id, password: password)
                     .andThen(Single.just(SharingStep.tabsRequired))
@@ -55,8 +51,22 @@ public class LoginViewModel: ViewModelType, Stepper {
             .disposed(by: disposeBag)
 
         return Output(
-            passwordError: passwordError.asSignal(),
+            passwordErrorDescription: passwordErrorDescription.asSignal(),
             idErrorDescription: idErrorDescription.asSignal()
         )
+    }
+}
+
+extension LoginViewModel {
+    private func checkLoginData(_ id: String, _ password: String) -> Bool {
+        if id.isEmpty { idErrorDescription.accept("아이디를 입력해주세요") }
+        else if !id.isCorrectID() { idErrorDescription.accept("올바르지 않은 형식의 아이디 입니다.") }
+        else { idErrorDescription.accept(nil) }
+
+        if password.isEmpty { passwordErrorDescription.accept("비밀번호를 입력해주세요") }
+        else if !password.isCorrectPassword() { passwordErrorDescription.accept("올바르지 않은 형식의 비밀번호 입니다.") }
+        else {passwordErrorDescription.accept(nil)}
+
+        return !id.isEmpty && !password.isEmpty && id.isCorrectID() && password.isCorrectPassword()
     }
 }
