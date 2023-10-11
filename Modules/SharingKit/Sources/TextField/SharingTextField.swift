@@ -9,9 +9,9 @@ open class SharingTextField: UITextField {
     /// nil을 accept하면 오류가 꺼지고 String을 accept하면 오류가 켜집니다
     public var errorMessage = PublishRelay<String?>()
 
-    public var isTextButtonHide: Bool = true {
+    public var isSecurity: Bool = false {
         didSet {
-            textHideButton.isHidden = isTextButtonHide
+            textHideButton.isHidden = !isSecurity
         }
     }
 
