@@ -5,7 +5,7 @@ let dependencies = Dependencies.init(
         // Moya
         .remote(
             url: "https://github.com/Moya/Moya.git",
-            requirement: .upToNextMajor(from: "15.0.0")
+            requirement: .upToNextMajor(from: "15.0.3")
         ),
         // RxSwift
         .remote(url: "https://github.com/ReactiveX/RxSwift",
@@ -39,6 +39,11 @@ let dependencies = Dependencies.init(
         .remote(
             url: "https://github.com/socketio/socket.io-client-swift.git",
             requirement: .upToNextMajor(from: "16.0.1")
+        ),
+        // FloatingPanel
+        .remote(
+            url: "https://github.com/scenee/FloatingPanel.git",
+            requirement: .upToNextMajor(from: "2.8.0")
         )
     ]),
     platforms: [.iOS]
