@@ -15,4 +15,5 @@ public extension TargetDependency.SPM {
     static let RxFlow = TargetDependency.external(name: "RxFlow")
     static let Kingfisher = TargetDependency.external(name: "Kingfisher")
     static let SocketIO = TargetDependency.external(name: "SocketIO")
+    static let FloatingPanel = TargetDependency.external(name: "FloatingPanel")
 }
