@@ -42,7 +42,7 @@ open class SharingTextField: UITextField {
         self.layer.borderWidth = 1
         self.layer.cornerRadius = 10
         self.layer.borderColor = UIColor.black400?.cgColor
-        self.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        self.font = .bodyB2Medium
         self.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         self.leftViewMode = .always
         self.textColor = .black800
