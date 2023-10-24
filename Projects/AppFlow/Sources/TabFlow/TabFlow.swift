@@ -19,6 +19,8 @@ class TabsFlow: Flow {
         return tabBarController
     }()
 
+    private let container = StepperDI.shared
+
     // TODO: 텝바 로직 만들기
     func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? SharingStep else { return .none }
@@ -31,9 +33,12 @@ class TabsFlow: Flow {
     }
 
     private func navigateToTabsView() -> FlowContributors {
+        let mapViewModel = container.mapViewModel
+        
+        let mapPostView = MapPostViewController(viewModel: mapViewModel) // MapViewModel inject
+        let mapView = MapViewController(viewModel: mapViewModel, mapPostVC: mapPostView) // MapViewModel inject
 
         let homeView = HomeViewController()
-        let mapView = MapViewController()
         let profileView = ProfileViewController()
         let chatView = ChatViewController()
 
