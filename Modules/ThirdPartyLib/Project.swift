@@ -16,6 +16,7 @@ let project = Project.makeModule(
         .SPM.RxSwift,
         .SPM.SnapKit,
         .SPM.SocketIO,
-        .SPM.Then
+        .SPM.Then,
+        .SPM.FloatingPanel
     ]
 )
