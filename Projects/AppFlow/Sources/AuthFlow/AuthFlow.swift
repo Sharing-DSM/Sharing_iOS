@@ -27,8 +27,8 @@ class AuthFlow: Flow {
             return navigateToTabs()
         case .errorAlertRequired(let content):
             return presentErrorAlert(content)
-        case .alertRequired(let title, let content):
-            return presentDefaltAlert(title, content)
+        case .succeedSignupRequired:
+            return presentSucceedSignup()
         default:
             return .none
         }
@@ -69,10 +69,14 @@ class AuthFlow: Flow {
         return .none
     }
 
-    private func presentDefaltAlert(_ title: String, _ content: String) -> FlowContributors {
-        let errorAlert = AlertViewController(title: title, content: content)
-        errorAlert.modalPresentationStyle = .overFullScreen
-        rootPresentable.present(errorAlert, animated: false)
+    private func presentSucceedSignup() -> FlowContributors {
+        let alert = AlertViewController(
+            title: "회원가입 성공",
+            content: "같은 아이디와 비밀번호로 로그인을 시도해주세요."
+        )
+        alert.modalPresentationStyle = .overFullScreen
+        rootPresentable.present(alert, animated: false)
+        rootPresentable.popViewController(animated: true)
         return .none
     }
 }
