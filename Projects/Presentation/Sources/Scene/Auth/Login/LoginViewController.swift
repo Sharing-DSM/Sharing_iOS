@@ -18,6 +18,7 @@ public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable
     }
     private let passwordTextField = SharingTextField().then {
         $0.placeholder = "비밀번호"
+        $0.isSecurity = true
     }
     private let signupButton = UIButton(type: .system).then {
         let buttonText = NSMutableAttributedString(
