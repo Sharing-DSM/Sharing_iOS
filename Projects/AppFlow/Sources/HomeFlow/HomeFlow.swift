@@ -38,7 +38,7 @@ class HomeFlow: Flow{
     }
 
     private func navigateToPostDetailScreen() -> FlowContributors {
-        let detailViewController = DetailViewController()
+        let detailViewController = PostDetailViewController()
         self.rootViewController.pushViewController(detailViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: detailViewController,
@@ -46,7 +46,7 @@ class HomeFlow: Flow{
         )
     }
     private func navigateToPostWriteScreen() -> FlowContributors {
-        let writeViewController = WriteViewController()
+        let writeViewController = PostWriteViewController()
         self.rootViewController.pushViewController(writeViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: writeViewController,

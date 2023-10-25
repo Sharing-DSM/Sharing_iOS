@@ -4,7 +4,7 @@ import Then
 import SharingKit
 import RxFlow
 
-public class WriteViewController: UIViewController {
+public class PostWriteViewController: UIViewController {
     public override func viewDidLoad() {
         view.backgroundColor = .white
         addView()
@@ -29,12 +29,12 @@ public class WriteViewController: UIViewController {
     private let titleTextField = SharingTextField().then {
         $0.placeholder = "20자까지 입력해주세요."
     }
-    private let aderessLabel = UILabel().then {
+    private let addressLabel = UILabel().then {
         $0.text = "활동 주소"
         $0.textColor = .black900
         $0.font = .bodyB2Medium
     }
-    private let aderessSearchButton = UIButton(type: .system).then {
+    private let addressSearchButton = UIButton(type: .system).then {
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 10
         $0.setTitle("주소 검색하기", for: .normal)
@@ -90,8 +90,8 @@ public class WriteViewController: UIViewController {
             headerLabel,
             titleLabel,
             titleTextField,
-            aderessLabel,
-            aderessSearchButton,
+            addressLabel,
+            addressSearchButton,
             recruitmentLabel,
             recruitmentTextField,
             tagSettingLabel,
@@ -119,18 +119,18 @@ public class WriteViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(50)
         }
-        aderessLabel.snp.makeConstraints {
+        addressLabel.snp.makeConstraints {
             $0.top.equalTo(titleTextField.snp.bottom).offset(15)
             $0.leading.equalTo(headerLabel.snp.leading)
             $0.height.equalTo(20)
         }
-        aderessSearchButton.snp.makeConstraints {
-            $0.top.equalTo(aderessLabel.snp.bottom)
+        addressSearchButton.snp.makeConstraints {
+            $0.top.equalTo(addressLabel.snp.bottom)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(40)
         }
         recruitmentLabel.snp.makeConstraints {
-            $0.top.equalTo(aderessSearchButton.snp.bottom).offset(15)
+            $0.top.equalTo(addressSearchButton.snp.bottom).offset(15)
             $0.leading.equalTo(headerLabel.snp.leading)
             $0.height.equalTo(20)
         }

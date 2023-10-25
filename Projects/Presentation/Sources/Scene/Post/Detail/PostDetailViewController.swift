@@ -3,7 +3,7 @@ import SnapKit
 import Then
 import SharingKit
 
-public class DetailViewController: UIViewController {
+public class PostDetailViewController: UIViewController {
 
     public override func viewDidLoad() {
         view.backgroundColor = .white
@@ -26,7 +26,7 @@ public class DetailViewController: UIViewController {
         $0.text = "어르신 휠체어 이동 도움 및 보조 활동"
         $0.font = .bodyB2SemiBold
     }
-    private let adderessLabel = UILabel().then {
+    private let addressLabel = UILabel().then {
         $0.text = "유성구 전민동"
         $0.font = .bodyB3Medium
         $0.textColor = .black800
@@ -36,7 +36,7 @@ public class DetailViewController: UIViewController {
         $0.font = .bodyB2Medium
         $0.textColor = .black900
     }
-    private let detailAdderessLabel = UILabel().then {
+    private let detailAddressLabel = UILabel().then {
         $0.text = "상세 주소 : 대덕소프트웨어마이스터고등학교"
         $0.font = .bodyB2Medium
         $0.textColor = .black900
@@ -76,9 +76,9 @@ public class DetailViewController: UIViewController {
         [
             locationImageView,
             titleLabel,
-            adderessLabel,
+            addressLabel,
             targetLabel,
-            detailAdderessLabel,
+            detailAddressLabel,
             recruitmentLabel,
             detailsLabel
         ].forEach { backgroundView.addSubview($0) }
@@ -103,7 +103,7 @@ public class DetailViewController: UIViewController {
             $0.leading.equalTo(locationImageView.snp.trailing).offset(10)
             $0.height.equalTo(20)
         }
-        adderessLabel.snp.makeConstraints {
+        addressLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom)
             $0.leading.equalTo(titleLabel.snp.leading)
             $0.height.equalTo(18)
@@ -113,13 +113,13 @@ public class DetailViewController: UIViewController {
             $0.trailing.leading.equalToSuperview().inset(21)
             $0.height.equalTo(20)
         }
-        detailAdderessLabel.snp.makeConstraints {
+        detailAddressLabel.snp.makeConstraints {
             $0.top.equalTo(targetLabel.snp.bottom)
             $0.trailing.leading.equalToSuperview().inset(21)
             $0.height.equalTo(20)
         }
         recruitmentLabel.snp.makeConstraints {
-            $0.top.equalTo(detailAdderessLabel.snp.bottom)
+            $0.top.equalTo(detailAddressLabel.snp.bottom)
             $0.trailing.leading.equalToSuperview().inset(21)
             $0.height.equalTo(20)
         }
