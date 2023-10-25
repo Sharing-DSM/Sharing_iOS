@@ -12,7 +12,15 @@ public enum SharingStep: Step {
     //tabs
     case tabsRequired
 
+    //home
+    case homeRequired
+    case postDetailsRequired
+    case postWriteRequired
+
     //Alert
     case alertRequired(title: String, content: String)
     case errorAlertRequired(content: String)
+
+    //Test
+    case testRequired
 }
