@@ -38,9 +38,9 @@ class TabsFlow: Flow {
         let chatView = ChatViewController()
 
         mapView.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), selectedImage: nil)
-        homeView.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "heart"), selectedImage: nil)
+        homeView.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house"), selectedImage: nil)
         chatView.tabBarItem = UITabBarItem(title: "채팅", image: UIImage(systemName: "message"), selectedImage: nil)
-        profileView.tabBarItem = UITabBarItem(title: "MY", image: UIImage(systemName: "book"), selectedImage: nil)
+        profileView.tabBarItem = UITabBarItem(title: "MY", image: UIImage(systemName: "person.crop.circle"), selectedImage: nil)
         tabBarViewController.setViewControllers([mapView, homeView, chatView, profileView], animated: false)
 
         return .none

@@ -52,15 +52,16 @@ open class SharingTextField: UITextField {
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(30)
         }
+        setPlaceholderTextColor(color: .black500 ?? .blue)
     }
     
     private func setUpTextField() {
+        self.placeholder = placeholder
         self.layer.borderWidth = 1
         self.layer.cornerRadius = 10
         self.layer.borderColor = UIColor.black400?.cgColor
         self.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        self.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
-        self.leftViewMode = .always
+        self.addLeftAndRightView()
         self.textColor = .black800
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
@@ -74,7 +75,10 @@ extension SharingTextField {
         guard let string = self.placeholder else {
             return
         }
-        attributedPlaceholder = NSAttributedString(string: string, attributes: [.foregroundColor: color, .font: UIFont.bodyB2Medium])
+        attributedPlaceholder = NSAttributedString(
+            string: string,
+            attributes: [.foregroundColor: color, .font: UIFont.bodyB2Medium]
+        )
     }
     
     private func bind() {
