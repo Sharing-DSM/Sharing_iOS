@@ -20,6 +20,8 @@ public class AppFlow: Flow {
             return presentTabsView()
         case .loginRequired:
             return presentLoginView()
+        case .testRequired:
+            return testPresent()
         default:
             return .none
         }
@@ -44,6 +46,17 @@ public class AppFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: authFlow,
             withNextStepper: OneStepper(withSingleStep: SharingStep.loginRequired)
+        ))
+    }
+
+    private func testPresent() -> FlowContributors {
+        let testFlow = TestFlow()
+        Flows.use(testFlow, when: .created) { [weak self] root in
+            self?.window.rootViewController = root
+        }
+        return .one(flowContributor: .contribute(
+            withNextPresentable: testFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired)
         ))
     }
 }

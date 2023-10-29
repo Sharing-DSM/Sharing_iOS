@@ -20,5 +20,6 @@ extension FillButton {
         self.setTitleColor(.white, for: .normal)
         self.titleLabel?.font = .bodyB2Medium
         self.layer.cornerRadius = 10
+        self.setShadow()
     }
 }

@@ -3,7 +3,9 @@ import SharingKit
 import SnapKit
 import Then
 
-class MapPostTableViewCell: UITableViewCell {
+class PostTableViewCell: UITableViewCell {
+
+    static let id: String = "mapPostTableViewCell.id"
 
     private let postTitleLable = UILabel().then {
         $0.textColor = .black900
@@ -20,6 +22,7 @@ class MapPostTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = 10
         $0.layer.shadowColor = UIColor.black.withAlphaComponent(0.25).cgColor
         $0.layer.shadowRadius = 4
+        $0.setShadow()
     }
 
     private let tagsView = TagScrollView()
@@ -27,11 +30,13 @@ class MapPostTableViewCell: UITableViewCell {
     public func settingCell(
         title: String?,
         address: String?,
-        tags: [String]? = nil
+        tags: [String]? = nil,
+        backgroundColor: UIColor? = .white
     ) {
         self.postTitleLable.text = title
         self.addressLable.text = address
         self.tagsView.tags = tags
+        self.cellBackgroundView.backgroundColor = backgroundColor
     }
 
     override func layoutSubviews() {

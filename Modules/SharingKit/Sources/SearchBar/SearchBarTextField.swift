@@ -18,6 +18,7 @@ public class SearchBarTextField: UITextField {
         self.layer.cornerRadius = 25
         self.font = .bodyB2Medium
         self.textColor = .black900
+        self.setShadow()
         setPlaceholderTextColor(color: .black50 ?? .black)
     }
 

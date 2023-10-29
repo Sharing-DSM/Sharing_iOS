@@ -10,7 +10,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = .black50
         $0.separatorStyle = .none
-        $0.register(MapPostTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(MapPostTableViewCell.self))
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
     }
 
     override public func viewDidLoad() {
@@ -39,7 +39,7 @@ extension MapPostViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(MapPostTableViewCell.self), for: indexPath) as? MapPostTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
         
         cell.settingCell(
             title: "어르신 휠체어 이동 도움 및 보조 활동",
@@ -52,5 +52,13 @@ extension MapPostViewController: UITableViewDelegate, UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    }
+
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
     }
 }

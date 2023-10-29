@@ -64,7 +64,7 @@ public class MapViewController: BaseVC<MapViewModel> {
         }
         searchBar.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(25)
-            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
         mapView.snp.makeConstraints {
             $0.top.equalToSuperview()
