@@ -27,6 +27,7 @@ public class BaseVC<ViewModel: ViewModelType>:
         backButton.tintColor = .black500
         navigationItem.backBarButtonItem = backButton
         bind()
+        attribute()
     }
 
     public override func viewDidLayoutSubviews() {
@@ -35,6 +36,7 @@ public class BaseVC<ViewModel: ViewModelType>:
         setLayout()
     }
 
+    public func attribute() {}
     public func bind() {}
     public func addView() {}
     public func setLayout() {}

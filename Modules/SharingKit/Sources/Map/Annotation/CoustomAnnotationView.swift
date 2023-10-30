@@ -4,7 +4,7 @@ import SnapKit
 import Then
 
 public class CoustomAnnotationView: MKAnnotationView {
-    private let annotationImageView = UIImageView(image: SharingKitAsset.Image.annotation.image)
+    private let annotationImageView = UIImageView(image: .annotation)
 
     override public init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)

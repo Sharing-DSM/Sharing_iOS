@@ -5,7 +5,7 @@ import Then
 public class SearchBarTextField: UITextField {
 
     public let searchButton = UIButton(type: .system).then {
-        $0.setImage(SharingKitAsset.Image.search.image, for: .normal)
+        $0.setImage(.search, for: .normal)
     }
 
     public init() {

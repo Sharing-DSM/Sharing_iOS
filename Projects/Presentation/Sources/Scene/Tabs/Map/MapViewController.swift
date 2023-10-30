@@ -16,6 +16,12 @@ public class MapViewController: BaseVC<MapViewModel> {
         $0.placeholder = "게시글 검색"
     }
 
+    private let writePostButton = UIButton(type: .system).then {
+        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+        $0.setBackgroundImage(.writeBackground, for: .normal)
+        $0.layer.cornerRadius = 35
+    }
+
     public init(viewModel: MapViewModel, mapPostVC: MapPostViewController) {
         self.mapPostVC = mapPostVC
         super.init(viewModel: viewModel)
@@ -47,7 +53,8 @@ public class MapViewController: BaseVC<MapViewModel> {
         [
             mapView,
             searchBar,
-            postSheetController.view
+            postSheetController.view,
+            writePostButton
         ].forEach {
             view.addSubview($0)
         }
@@ -68,6 +75,11 @@ public class MapViewController: BaseVC<MapViewModel> {
         }
         mapView.snp.makeConstraints {
             $0.top.equalToSuperview()
+        }
+        writePostButton.snp.makeConstraints {
+            $0.width.height.equalTo(70)
+            $0.right.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
     }
 
