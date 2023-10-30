@@ -24,7 +24,7 @@ class TestFlow: Flow {
     }
 
     private func navigateToHomeScreen() -> FlowContributors {
-        let homeViewController = HomeViewController()
+        let homeViewController = PostWriteViewController()
         self.rootViewController.pushViewController(homeViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: homeViewController,

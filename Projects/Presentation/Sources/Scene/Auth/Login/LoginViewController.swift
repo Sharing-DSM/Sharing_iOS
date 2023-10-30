@@ -7,6 +7,7 @@ import SharingKit
 import Core
 
 public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable {
+
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
         $0.font = .headerH1SemiBold

@@ -26,6 +26,7 @@ class BannerView: UIView {
         addView()
         setLayout()
     }
+
     func addView() {
         [
             titleLabel,
@@ -33,6 +34,7 @@ class BannerView: UIView {
             aderessLabel
         ].forEach { self.addSubview($0)}
     }
+
     func setLayout() {
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(14)

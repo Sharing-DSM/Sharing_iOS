@@ -12,7 +12,14 @@ open class SharingTextField: UITextField {
     public var isSecurity: Bool = false {
         didSet {
             textHideButton.isHidden = !isSecurity
+            self.isSecureTextEntry = true
+            self.addLeftAndRightView()
         }
+    }
+
+    private let titleLabel = UILabel().then {
+        $0.textColor = .black900
+        $0.font = .bodyB2Medium
     }
 
     private let errorLabel = UILabel().then {
@@ -28,21 +35,26 @@ open class SharingTextField: UITextField {
     }
 
     private let disposeBag =  DisposeBag()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    public init(title: String? = nil) {
+        super.init(frame: .zero)
+        self.titleLabel.text = title
         setUpTextField()
         bind()
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override open func layoutSubviews() {
         super.layoutSubviews()
-        addSubview(errorLabel)
-        addSubview(textHideButton)
+        [
+            errorLabel,
+            textHideButton,
+            titleLabel
+        ].forEach { addSubview($0) }
+
         errorLabel.snp.makeConstraints {
             $0.left.equalToSuperview().inset(10)
             $0.top.equalTo(self.snp.bottom).offset(1)
@@ -52,20 +64,24 @@ open class SharingTextField: UITextField {
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(30)
         }
-        setPlaceholderTextColor(color: .black500 ?? .blue)
+        titleLabel.snp.makeConstraints {
+            $0.bottom.equalTo(self.snp.top)
+            $0.left.equalToSuperview()
+            $0.height.equalTo(20)
+        }
+        self.setPlaceholderTextColor(color: .black500 ?? .blue)
     }
     
     private func setUpTextField() {
-        self.placeholder = placeholder
         self.layer.borderWidth = 1
         self.layer.cornerRadius = 10
         self.layer.borderColor = UIColor.black400?.cgColor
-        self.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        self.addLeftAndRightView()
+        self.font = .bodyB2Medium
+        self.addLeftView()
+        self.addRightView()
         self.textColor = .black800
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
-        self.setPlaceholderTextColor(color: .black500 ?? .blue)
     }
 }
 
@@ -75,10 +91,7 @@ extension SharingTextField {
         guard let string = self.placeholder else {
             return
         }
-        attributedPlaceholder = NSAttributedString(
-            string: string,
-            attributes: [.foregroundColor: color, .font: UIFont.bodyB2Medium]
-        )
+        attributedPlaceholder = NSAttributedString(string: string, attributes: [.foregroundColor: color, .font: UIFont.bodyB2Medium])
     }
     
     private func bind() {

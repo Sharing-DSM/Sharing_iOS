@@ -11,17 +11,20 @@ class AuthRepositoryImpl: AuthRepository {
     private var disposeBag = DisposeBag()
 
     func login(accountID: String, password: String) -> Completable {
+
         return Completable.create { [weak self] completable in
             guard let self = self else { return Disposables.create {} }
+
             self.authDataSource.login(accountID: accountID, password: password)
                 .subscribe(onSuccess: { tokenData in
                     TokenStorage.shared.accessToken = tokenData.accessToken
                     TokenStorage.shared.refreshToken = tokenData.refreshToken
                     completable(.completed)
                 }, onFailure: {
-                    completable(.error(self.errorLocalized($0)))
+                    completable(.error($0))
                 })
                 .disposed(by: self.disposeBag)
+
             return Disposables.create {}
         }
     }

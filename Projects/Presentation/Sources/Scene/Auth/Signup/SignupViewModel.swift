@@ -46,7 +46,7 @@ public class SignupViewModel: ViewModelType, Stepper {
             }
             .flatMap { id, password, name, age in
                 self.signupUseCase.execute(accountID: id, password: password, name: name, age: Int(age) ?? 0)
-                    .andThen(Single.just(SharingStep.alertRequired(title: "회원가입 성공", content: "같은 아이디와 비밀번호로 로그인을 시도해주세요.")))
+                    .andThen(Single.just(SharingStep.succeedSignupRequired))
                     .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
             }
             .bind(to: steps)

@@ -8,6 +8,7 @@ public enum SharingStep: Step {
     // Auth
     case loginRequired
     case signupRequired
+    case succeedSignupRequired
 
     //tabs
     case tabsRequired

@@ -37,6 +37,7 @@ public class AppFlow: Flow {
             withNextStepper: OneStepper(withSingleStep: SharingStep.tabsRequired)
         ))
     }
+
     private func presentLoginView() -> FlowContributors {
         let authFlow = AuthFlow()
         Flows.use(authFlow, when: .created) { [weak self] root in
@@ -47,13 +48,15 @@ public class AppFlow: Flow {
             withNextStepper: OneStepper(withSingleStep: SharingStep.loginRequired)
         ))
     }
+
     private func testPresent() -> FlowContributors {
-        let homeFlow = TestFlow()
-        Flows.use(homeFlow, when: .created) { [weak self] root in
+        let testFlow = TestFlow()
+        Flows.use(testFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
         return .one(flowContributor: .contribute(
-            withNextPresentable: homeFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired)))
+            withNextPresentable: testFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired)
+        ))
     }
 }

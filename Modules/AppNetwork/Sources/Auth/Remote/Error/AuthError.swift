@@ -1,14 +1,19 @@
 import Foundation
+import Core
 
-public enum AuthError: Int, Error {
+public enum AuthError: Int, BaseError {
     case NOTFOUND = 404
     case WRONGPASSWORD = 400
     case CONFLICT = 409
     case BADSERVER = 500
     case UNOWNDEERROR = 0
+
+    public static func mappingError(rawValue: Int) -> AuthError {
+        return AuthError(rawValue: rawValue) ?? .UNOWNDEERROR
+    }
 }
 
-extension AuthError: LocalizedError {
+extension AuthError {
     public var errorDescription: String? {
         switch self {
         case .NOTFOUND:

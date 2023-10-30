@@ -18,16 +18,18 @@ public class HomeViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        popularCollectionView.dataSource = self
-        popularCollectionView.delegate = self
-        areaOfInterstCollectionView.dataSource = self
-        areaOfInterstCollectionView.delegate = self
+        popularTableView.delegate = self
+        popularTableView.dataSource = self
+        areaOfInterstTableView.delegate = self
+        areaOfInterstTableView.dataSource = self
+    }
+    // TODO: 나중에 baseview 넣기
+    public override func viewWillLayoutSubviews() {
         addView()
         setLayout()
     }
     private let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.bounces = false
         $0.contentInsetAdjustmentBehavior = .never
         $0.showsVerticalScrollIndicator = false
     }
@@ -39,43 +41,33 @@ public class HomeViewController: UIViewController {
         $0.backgroundColor = .black50
         $0.setShadow()
     }
-    private let searchTextField = UITextField().then {
-        $0.layer.cornerRadius = 25
-        $0.backgroundColor = .black50
-        $0.addLeftAndRightView()
-        $0.setShadow()
-    }
-    private let searchButton = UIButton(type: .system).then {
-        $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        $0.tintColor = .main
-    }
+    private let searchBarTextField = SearchBarTextField()
     private let popularHeaderLabel = UILabel().then {
         $0.text = "인기 자원봉사"
         $0.font = .headerH3SemiBold
         $0.textColor = .black900
     }
-    private let flowLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .vertical
-        $0.minimumLineSpacing = 10
-        $0.minimumInteritemSpacing = 0
-    }
-    private lazy var popularCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout).then {
-        $0.register(PopularCollectionViewCell.self, forCellWithReuseIdentifier: "PopularCollectionViewCell")
+    private let popularTableView = UITableView().then {
+        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
         $0.showsVerticalScrollIndicator = false
         $0.isScrollEnabled = false
-        $0.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+        $0.separatorStyle = .none
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
     }
+    private let areaOfInterstTableView = UITableView().then {
+        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
+        $0.showsVerticalScrollIndicator = false
+        $0.isScrollEnabled = false
+        $0.separatorStyle = .none
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+    }
+
     private let areaOfInterestHeaderLabel = UILabel().then {
         $0.text = "관심지역 자원봉사"
         $0.font = .headerH3SemiBold
         $0.textColor = .black900
     }
-    private lazy var areaOfInterstCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout).then {
-        $0.register(AreaOfInterstCollectionViewCell.self, forCellWithReuseIdentifier: "AreaOfInterstCollectionViewCell")
-        $0.showsVerticalScrollIndicator = false
-        $0.isScrollEnabled = false
-        $0.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
-    }
+
     private let writeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "pencil"), for: .normal)
         $0.backgroundColor = .brown
@@ -85,90 +77,79 @@ public class HomeViewController: UIViewController {
         scrollView.addSubview(contentView)
         [
             bannerView,
-            searchTextField,
-            searchButton,
+            searchBarTextField,
             popularHeaderLabel,
-            popularCollectionView,
+            popularTableView,
             areaOfInterestHeaderLabel,
-            areaOfInterstCollectionView
+            areaOfInterstTableView
         ].forEach{ contentView.addSubview($0) }
     }
     func setLayout() {
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.left.right.equalToSuperview()
+            $0.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         contentView.snp.makeConstraints {
-            $0.edges.equalTo(scrollView.contentLayoutGuide)
-            $0.height.equalTo(1035)
-            $0.width.equalToSuperview()
+            $0.top.width.equalToSuperview()
+            $0.bottom.greaterThanOrEqualToSuperview()
+            $0.bottom.equalTo(areaOfInterstTableView.snp.bottom).offset(10)
         }
         bannerView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(75)
-            $0.leading.equalToSuperview().inset(26)
-            $0.trailing.equalToSuperview().inset(24)
+            $0.top.equalToSuperview()
+            $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(103)
         }
-        searchTextField.snp.makeConstraints {
+        searchBarTextField.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(25)
             $0.top.equalTo(bannerView.snp.bottom).offset(15)
-            $0.leading.trailing.equalTo(bannerView)
-            $0.height.equalTo(49)
-        }
-        searchButton.snp.makeConstraints {
-            $0.top.equalTo(searchTextField.snp.top).offset(12)
-            $0.trailing.equalTo(searchTextField.snp.trailing).offset(-20)
-            $0.height.width.equalTo(25)
         }
         popularHeaderLabel.snp.makeConstraints {
-            $0.top.equalTo(searchTextField.snp.bottom).offset(20)
+            $0.top.equalTo(searchBarTextField.snp.bottom).offset(20)
             $0.leading.equalToSuperview().inset(26)
-            $0.height.equalTo(26)
         }
-        popularCollectionView.snp.makeConstraints {
+        popularTableView.snp.makeConstraints {
             $0.top.equalTo(popularHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(329)
+            $0.height.equalTo(self.popularTableView.numberOfRows(inSection: 0) * 100)
         }
         areaOfInterestHeaderLabel.snp.makeConstraints {
-            $0.top.equalTo(popularCollectionView.snp.bottom).offset(20)
+            $0.top.equalTo(popularTableView.snp.bottom).offset(20)
             $0.leading.trailing.equalTo(bannerView)
-            $0.height.equalTo(26)
         }
-        areaOfInterstCollectionView.snp.makeConstraints {
+        areaOfInterstTableView.snp.makeConstraints {
             $0.top.equalTo(areaOfInterestHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(329)
+            $0.height.equalTo(self.areaOfInterstTableView.numberOfRows(inSection: 0) * 100)
         }
     }
 }
 
-extension HomeViewController:  UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch collectionView {
-        case popularCollectionView:
-            return 4
-        case areaOfInterstCollectionView:
-            return 3
-        default:
-            return 4
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == popularTableView {
+            return 2
+        } else if tableView == areaOfInterstTableView {
+            return 5
+        } else {
+            return 0
         }
     }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
+        
+        cell.settingCell(
+            title: "어르신 휠체어 이동 도움 및 보조 활동",
+            address: "유성구 전민동",
+            tags: ["생활편의 지원", "노인 보조"],
+            backgroundColor: .black50
+        )
 
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch collectionView {
-        case popularCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PopularCollectionViewCell", for: indexPath)
-            return cell
-        case areaOfInterstCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AreaOfInterstCollectionViewCell", for: indexPath)
-            return cell
-        default:
-            return UICollectionViewCell()
-        }
+        return cell
     }
-}
 
-extension HomeViewController: UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: collectionView.bounds.width - 50, height: 91 )
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
+
 }

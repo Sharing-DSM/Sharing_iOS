@@ -1,4 +1,5 @@
 import UIKit
+import Then
 import RxFlow
 import Core
 import RxCocoa
@@ -11,13 +12,17 @@ class TabsFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = UINavigationController(rootViewController: tabBarViewController)
+    private lazy var rootPresentable = UINavigationController(rootViewController: tabBarViewController).then {
+        $0.navigationBar.isHidden = true
+    }
 
     private let tabBarViewController = {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.backgroundColor = .white
         return tabBarController
     }()
+
+    private let container = StepperDI.shared
 
     // TODO: 텝바 로직 만들기
     func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -31,9 +36,12 @@ class TabsFlow: Flow {
     }
 
     private func navigateToTabsView() -> FlowContributors {
+        let mapViewModel = container.mapViewModel
+        
+        let mapPostView = MapPostViewController(viewModel: mapViewModel) // MapViewModel inject
+        let mapView = MapViewController(viewModel: mapViewModel, mapPostVC: mapPostView) // MapViewModel inject
 
         let homeView = HomeViewController()
-        let mapView = MapViewController()
         let profileView = ProfileViewController()
         let chatView = ChatViewController()
 

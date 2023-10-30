@@ -10,7 +10,7 @@ public extension String {
     }
 
     func isCorrectName() -> Bool {
-        return (self.range(of: "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{1,20}$", options: .regularExpression) != nil)
+        return (self.range(of: "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{1,5}$", options: .regularExpression) != nil)
     }
 
     func isCorrectAge() -> Bool {

@@ -7,6 +7,7 @@ public struct StepperDI {
 
     public let loginViewModel: LoginViewModel
     public let signupViewModel: SignupViewModel
+    public let mapViewModel: MapViewModel
 }
 
 extension StepperDI {
@@ -20,10 +21,12 @@ extension StepperDI {
         let signupViewModel = SignupViewModel(
             signupUseCase: ServiceDI.signupUseCaseInject
         )
+        let mapViewModel = MapViewModel()
 
         return .init(
             loginViewModel: loginViewModel,
-            signupViewModel: signupViewModel
+            signupViewModel: signupViewModel,
+            mapViewModel: mapViewModel
         )
     }
 }
