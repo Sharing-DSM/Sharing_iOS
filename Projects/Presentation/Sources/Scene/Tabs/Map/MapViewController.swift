@@ -6,49 +6,48 @@ import Then
 import FloatingPanel
 
 public class MapViewController: BaseVC<MapViewModel> {
-
+    
     private let locationManager = CLLocationManager() // 자기 위치 표시
     private let mapView = CoustomMapView()
     private let mapPostVC: MapPostViewController
     private let postSheetController = FloatingPanelController()
-
+    
     private let searchBar = SearchBarTextField().then {
         $0.placeholder = "게시글 검색"
     }
 
-    private let writePostButton = UIButton(type: .system).then {
-        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-        $0.setBackgroundImage(.writeBackground, for: .normal)
+    private let writePostButton = GradationButton(type: .system).then {
         $0.layer.cornerRadius = 35
+        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
     }
-
+    
     public init(viewModel: MapViewModel, mapPostVC: MapPostViewController) {
         self.mapPostVC = mapPostVC
         super.init(viewModel: viewModel)
     }
-
+    
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .blue
         mapView.delegate = self
         locationManager.delegate = self
         postSheetController.delegate = self
-
+        
         locationSetting()
         postBottomSeetSetting()
-
+        
         addAnnotation() // dummy
     }
-
+    
     public override func viewDidAppear(_ animated: Bool) {
         postSheetController.show(animated: true)
         postSheetController.loadViewIfNeeded()
     }
-
+    
     public override func addView() {
         [
             mapView,
