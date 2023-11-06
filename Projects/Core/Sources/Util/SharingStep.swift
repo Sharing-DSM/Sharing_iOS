@@ -18,6 +18,9 @@ public enum SharingStep: Step {
     case postDetailsRequired
     case postWriteRequired
 
+    //profile
+    case profileEditReqired
+
     //Alert
     case alertRequired(title: String, content: String)
     case errorAlertRequired(content: String)
