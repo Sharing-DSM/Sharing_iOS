@@ -2,8 +2,9 @@ import UIKit
 import SnapKit
 import Then
 import SharingKit
+import Core
 
-public class SignupViewController: BaseVC<SignupViewModel>, ViewModelTransformable {
+public class SignupViewController: BaseVC<SignupViewModel> {
 
     private let signupLabel = UILabel().then {
         $0.text = "회원가입"

@@ -22,5 +22,6 @@ class AuthDataSource {
     func signup(accountID: String, password: String, name: String, age: Int) -> Single<Response> {
         return provider.rx.request(.signup(accountID: accountID, password: password, name: name, age: age))
             .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(AuthError.self)) }
     }
 }

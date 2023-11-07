@@ -27,6 +27,7 @@ public class HomeViewController: UIViewController {
         areaOfInterstTableView.delegate = self
         areaOfInterstTableView.dataSource = self
     }
+
     // TODO: 나중에 baseview 넣기
     public override func viewWillLayoutSubviews() {
         addView()
@@ -46,21 +47,27 @@ public class HomeViewController: UIViewController {
         $0.backgroundColor = .black50
         $0.setShadow()
     }
-    private let searchBarTextField = SearchBarTextField()
+    private let searchBarTextField = SearchBarTextField().then {
+        $0.layer.cornerRadius = 25
+    }
     private let popularHeaderLabel = UILabel().then {
         $0.text = "인기 자원봉사"
         $0.font = .headerH3SemiBold
         $0.textColor = .black900
     }
     private let popularTableView = UITableView().then {
-        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
+        $0.rowHeight = UITableView.automaticDimension
+        $0.estimatedRowHeight = 105
+        $0.contentInset = .init(top: 5, left: 0, bottom: 10, right: 0)
         $0.showsVerticalScrollIndicator = false
         $0.isScrollEnabled = false
         $0.separatorStyle = .none
         $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
     }
     private let areaOfInterstTableView = UITableView().then {
-        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
+        $0.rowHeight = UITableView.automaticDimension
+        $0.estimatedRowHeight = 105
+        $0.contentInset = .init(top: 5, left: 0, bottom: 10, right: 0)
         $0.showsVerticalScrollIndicator = false
         $0.isScrollEnabled = false
         $0.separatorStyle = .none
@@ -97,7 +104,7 @@ public class HomeViewController: UIViewController {
         contentView.snp.makeConstraints {
             $0.top.width.equalToSuperview()
             $0.bottom.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(areaOfInterstTableView.snp.bottom).offset(10)
+            $0.bottom.equalTo(areaOfInterstTableView.snp.bottom).offset(30)
         }
         bannerView.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -115,7 +122,7 @@ public class HomeViewController: UIViewController {
         popularTableView.snp.makeConstraints {
             $0.top.equalTo(popularHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(self.popularTableView.numberOfRows(inSection: 0) * 100)
+            $0.height.equalTo(popularTableView.contentSize.height + 5)
         }
         areaOfInterestHeaderLabel.snp.makeConstraints {
             $0.top.equalTo(popularTableView.snp.bottom).offset(20)
@@ -124,12 +131,12 @@ public class HomeViewController: UIViewController {
         areaOfInterstTableView.snp.makeConstraints {
             $0.top.equalTo(areaOfInterestHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(self.areaOfInterstTableView.numberOfRows(inSection: 0) * 100)
+            $0.height.equalTo(areaOfInterstTableView.contentSize.height + 5)
         }
         writePostButton.snp.makeConstraints {
             $0.width.height.equalTo(70)
-            $0.right.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
     }
 }
@@ -147,19 +154,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
-        
+
         cell.settingCell(
             title: "어르신 휠체어 이동 도움 및 보조 활동",
             address: "유성구 전민동",
             tags: ["생활편의 지원", "노인 보조"],
+            cellId: "asfd",
             backgroundColor: .black50
         )
 
         return cell
     }
-
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-
 }

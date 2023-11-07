@@ -5,9 +5,9 @@ import RxCocoa
 import Presentation
 import Core
 
-class HomeFlow: Flow{
+class HomeFlow: Flow {
 
-    private let rootViewController = UINavigationController()
+    private let rootViewController = BaseNavigationController()
 
     var root: RxFlow.Presentable {
         return rootViewController
@@ -20,11 +20,10 @@ class HomeFlow: Flow{
             return navigateToHomeScreen()
         case .postDetailsRequired:
             return navigateToPostDetailScreen()
-        case .postWriteRequired:
-            return navigateToPostWriteScreen()
+//        case .postWriteRequired:
+//            return navigateToPostWriteScreen()
         default:
             return .none
-            
         }
     }
 
@@ -45,12 +44,15 @@ class HomeFlow: Flow{
             withNextStepper: OneStepper(withSingleStep: SharingStep.postDetailsRequired))
         )
     }
-    private func navigateToPostWriteScreen() -> FlowContributors {
-        let writeViewController = PostWriteViewController()
-        self.rootViewController.pushViewController(writeViewController, animated: false)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: writeViewController,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired))
-        )
-    }
+//    private func navigateToPostWriteScreen() -> FlowContributors {
+//        let writeViewController = PostWriteViewController(
+//            viewModel: PostWriteViewModel(),
+//            addressHelper:
+//        )
+//        self.rootViewController.pushViewController(writeViewController, animated: false)
+//        return .one(flowContributor: .contribute(
+//            withNextPresentable: writeViewController,
+//            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired))
+//        )
+//    }
 }

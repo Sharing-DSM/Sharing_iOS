@@ -4,10 +4,13 @@ import RxSwift
 import RxCocoa
 import Presentation
 import Core
+import Data
 
 class TestFlow: Flow {
 
-    private let rootViewController = UINavigationController()
+    private let rootViewController = BaseNavigationController()
+
+    private let container = StepperDI.shared
 
     var root: RxFlow.Presentable {
         return rootViewController
@@ -24,11 +27,11 @@ class TestFlow: Flow {
     }
 
     private func navigateToHomeScreen() -> FlowContributors {
-        let homeViewController = PostWriteViewController()
-        self.rootViewController.pushViewController(homeViewController, animated: false)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: homeViewController,
-            withNextStepper:  OneStepper(withSingleStep: SharingStep.homeRequired)
-        ))
+        let viewModel = container.addressViewModel
+        let testVC = AddressHelperViewController(
+            viewModel: viewModel
+        )
+        self.rootViewController.pushViewController(testVC, animated: false)
+        return .none
     }
 }

@@ -3,8 +3,9 @@ import UIKit
 public class GradationButton: UIButton {
 
     public override func layoutSubviews() {
-         super.layoutSubviews()
-         gradientLayer.frame = bounds
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+        setShadow()
      }
 
     lazy var gradientLayer: CAGradientLayer = {

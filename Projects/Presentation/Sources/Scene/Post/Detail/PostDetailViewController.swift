@@ -5,6 +5,8 @@ import SharingKit
 
 public class PostDetailViewController: UIViewController {
 
+    public var id: String = ""
+
     public override func viewDidLoad() {
         view.backgroundColor = .white
         addView()
@@ -89,7 +91,7 @@ public class PostDetailViewController: UIViewController {
     }
     private func setLayout() {
         backgroundView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(75)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.bottom.equalToSuperview().inset(207)
         }

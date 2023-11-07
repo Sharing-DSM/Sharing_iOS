@@ -7,6 +7,8 @@ class PostTableViewCell: UITableViewCell {
 
     static let id: String = "mapPostTableViewCell.id"
 
+    public var cellId: String? = nil
+
     private let postTitleLable = UILabel().then {
         $0.textColor = .black900
         $0.font = .bodyB2SemiBold
@@ -31,15 +33,17 @@ class PostTableViewCell: UITableViewCell {
         title: String?,
         address: String?,
         tags: [String]? = nil,
+        cellId: String?,
         backgroundColor: UIColor? = .white
     ) {
+        self.backgroundColor = .clear
+        self.selectionStyle = .none
         self.postTitleLable.text = title
         self.addressLable.text = address
         self.tagsView.tags = tags
+        self.cellId = cellId
         self.cellBackgroundView.backgroundColor = backgroundColor
-    }
 
-    override func layoutSubviews() {
         addSubview(cellBackgroundView)
         [
             postTitleLable,
@@ -48,9 +52,10 @@ class PostTableViewCell: UITableViewCell {
         ].forEach { cellBackgroundView.addSubview($0) }
 
         cellBackgroundView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(5)
             $0.left.right.equalToSuperview().inset(26)
-            $0.height.greaterThanOrEqualTo(90)
-            $0.bottom.equalTo(tagsView.snp.bottom).offset(12)
+            $0.bottom.equalToSuperview().offset(-5)
+            $0.bottom.greaterThanOrEqualTo(tagsView.snp.bottom).offset(12)
         }
         postTitleLable.snp.makeConstraints {
             $0.top.equalToSuperview().inset(12)

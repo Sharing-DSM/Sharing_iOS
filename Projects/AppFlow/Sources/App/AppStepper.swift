@@ -11,7 +11,6 @@ public class AppStepper: Stepper {
     /// - 자동 로그인 분기처리 부분임
     /// - 나중에 분기처리 하기
     public func readyToEmitSteps() {
-        steps.accept(SharingStep.loginRequired)
+        steps.accept(SharingStep.tabsRequired)
     }
-}
-
+} 
