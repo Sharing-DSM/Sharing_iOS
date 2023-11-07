@@ -31,4 +31,8 @@ extension UIColor {
     public static let check = UIColor(named: "Check")
     public static let error = UIColor(named: "Error")
     public static let focus = UIColor(named: "Focus")
+
+    //MARK: Gradation
+    public static let blue1 = UIColor(named: "Blue1")
+    public static let blue2 = UIColor(named: "Blue2")
 }

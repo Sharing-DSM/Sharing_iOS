@@ -19,7 +19,7 @@ public class MapViewModel: ViewModelType, Stepper {
     let totalPostData = PublishRelay<TotalPostEntity>()
 
     public struct Input {
-        let viewDidLoad: Observable<Void>
+        let viewDidLoad: Observable<Void>?
         let writePostButtonDidClick: Observable<Void>?
         let selectItem: Signal<String>?
     }
@@ -30,7 +30,7 @@ public class MapViewModel: ViewModelType, Stepper {
 
     public func transform(input: Input) -> Output {
 
-        input.viewDidLoad.asObservable()
+        input.viewDidLoad?.asObservable()
             .flatMap {
                 self.fetchTotalPostUseCase.excute()
                     .catch {

@@ -16,23 +16,22 @@ public class MapViewController: BaseVC<MapViewModel> {
     private let mapView = CoustomMapView()
     private let mapPostVC: MapPostViewController
     private let postSheetController = FloatingPanelController()
-
+    
     private let searchBar = SearchBarTextField().then {
         $0.placeholder = "게시글 검색"
         $0.layer.cornerRadius = 25
     }
 
-    private let writePostButton = UIButton(type: .system).then {
-        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-        $0.setBackgroundImage(.writeBackground, for: .normal)
+    private let writePostButton = GradationButton(type: .system).then {
         $0.layer.cornerRadius = 35
+        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
     }
-
+    
     public init(viewModel: MapViewModel, mapPostVC: MapPostViewController) {
         self.mapPostVC = mapPostVC
         super.init(viewModel: viewModel)
     }
-
+    
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -41,14 +40,14 @@ public class MapViewController: BaseVC<MapViewModel> {
         tabBarController?.tabBar.isHidden = false
     }
 
-    public override func attribute() {
+    public override func attribute() { 
         mapView.delegate = self
         locationManager.delegate = self
         postSheetController.delegate = self
-
+        
         locationSetting()
         postBottomSeetSetting()
-
+        
         addAnnotation() // dummy
         postSheetController.show(animated: true)
         viewDidLoadRelay.accept(())
@@ -61,7 +60,7 @@ public class MapViewController: BaseVC<MapViewModel> {
             selectItem: nil
         )
         let output = viewModel.transform(input: input)
-
+        
         searchBar.searchButton.rx.tap
             .bind(onNext: { [weak self] in
                 self?.postSheetController.move(to: .half, animated: true)
@@ -98,8 +97,8 @@ public class MapViewController: BaseVC<MapViewModel> {
         }
         writePostButton.snp.makeConstraints {
             $0.width.height.equalTo(70)
-            $0.right.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
     }
 }

@@ -4,6 +4,10 @@ import Then
 import SharingKit
 import RxFlow
 import RxSwift
+import RxCocoa
+import Core
+import Domain
+
 
 public class HomeViewController: UIViewController {
 
@@ -23,11 +27,13 @@ public class HomeViewController: UIViewController {
         areaOfInterstTableView.delegate = self
         areaOfInterstTableView.dataSource = self
     }
+
     // TODO: 나중에 baseview 넣기
     public override func viewWillLayoutSubviews() {
         addView()
         setLayout()
     }
+
     private let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentInsetAdjustmentBehavior = .never
@@ -67,16 +73,15 @@ public class HomeViewController: UIViewController {
         $0.separatorStyle = .none
         $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
     }
-
+    
     private let areaOfInterestHeaderLabel = UILabel().then {
         $0.text = "관심지역 자원봉사"
         $0.font = .headerH3SemiBold
         $0.textColor = .black900
     }
 
-    private let writeButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "pencil"), for: .normal)
-        $0.backgroundColor = .brown
+    private let writePostButton = GradationButton(type: .system).then {
+        $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
     }
     func addView() {
         view.addSubview(scrollView)
@@ -87,7 +92,8 @@ public class HomeViewController: UIViewController {
             popularHeaderLabel,
             popularTableView,
             areaOfInterestHeaderLabel,
-            areaOfInterstTableView
+            areaOfInterstTableView,
+            writePostButton
         ].forEach{ contentView.addSubview($0) }
     }
     func setLayout() {
@@ -126,6 +132,11 @@ public class HomeViewController: UIViewController {
             $0.top.equalTo(areaOfInterestHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(areaOfInterstTableView.contentSize.height + 5)
+        }
+        writePostButton.snp.makeConstraints {
+            $0.width.height.equalTo(70)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
     }
 }

@@ -41,7 +41,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
 
     public override func bind() {
         let input = MapViewModel.Input(
-            viewDidLoad: viewDidLoadSignal.asObservable(),
+            viewDidLoad: nil,
             writePostButtonDidClick: nil,
             selectItem: selectItemWithID.asSignal()
         )
