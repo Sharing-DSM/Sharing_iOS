@@ -13,10 +13,19 @@ public enum SharingStep: Step {
     //tabs
     case tabsRequired
 
+    // map
+    case mapRequired
+
     //home
     case homeRequired
     case postDetailsRequired
     case postWriteRequired
+
+    // chat
+    case chatRequired
+
+    // profile
+    case profileRequired
 
     //Alert
     case alertRequired(title: String, content: String)
@@ -24,4 +33,8 @@ public enum SharingStep: Step {
 
     //Test
     case testRequired
+
+    // Post
+    case postDetailRequired(id: String)
+    case succeedCreatePostRequired
 }

@@ -3,9 +3,14 @@ import SharingKit
 import MapKit
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 import FloatingPanel
+import Core
 
 public class MapViewController: BaseVC<MapViewModel> {
+
+    private let viewDidLoadRelay = PublishRelay<Void>()
 
     private let locationManager = CLLocationManager() // 자기 위치 표시
     private let mapView = CoustomMapView()
@@ -14,6 +19,7 @@ public class MapViewController: BaseVC<MapViewModel> {
 
     private let searchBar = SearchBarTextField().then {
         $0.placeholder = "게시글 검색"
+        $0.layer.cornerRadius = 25
     }
 
     private let writePostButton = UIButton(type: .system).then {
@@ -31,9 +37,11 @@ public class MapViewController: BaseVC<MapViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
+    public override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
+
+    public override func attribute() {
         mapView.delegate = self
         locationManager.delegate = self
         postSheetController.delegate = self
@@ -42,11 +50,23 @@ public class MapViewController: BaseVC<MapViewModel> {
         postBottomSeetSetting()
 
         addAnnotation() // dummy
+        postSheetController.show(animated: true)
+        viewDidLoadRelay.accept(())
     }
 
-    public override func viewDidAppear(_ animated: Bool) {
-        postSheetController.show(animated: true)
-        postSheetController.loadViewIfNeeded()
+    public override func bind() {
+        let input = MapViewModel.Input(
+            viewDidLoad: viewDidLoadRelay.asObservable(),
+            writePostButtonDidClick: writePostButton.rx.tap.asObservable(),
+            selectItem: nil
+        )
+        let output = viewModel.transform(input: input)
+
+        searchBar.searchButton.rx.tap
+            .bind(onNext: { [weak self] in
+                self?.postSheetController.move(to: .half, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -81,14 +101,6 @@ public class MapViewController: BaseVC<MapViewModel> {
             $0.right.equalToSuperview().inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
-    }
-
-    public override func bind() {
-        searchBar.searchButton.rx.tap
-            .bind(onNext: { [weak self] in
-                self?.postSheetController.move(to: .half, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 }
 

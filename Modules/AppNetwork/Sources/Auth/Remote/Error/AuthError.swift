@@ -8,8 +8,8 @@ public enum AuthError: Int, BaseError {
     case BADSERVER = 500
     case UNOWNDEERROR = 0
 
-    public static func mappingError(rawValue: Int) -> AuthError {
-        return AuthError(rawValue: rawValue) ?? .UNOWNDEERROR
+    public static func mappingError(rawValue: Int) -> Self {
+        return Self(rawValue: rawValue) ?? .UNOWNDEERROR
     }
 }
 

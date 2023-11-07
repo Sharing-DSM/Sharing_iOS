@@ -29,15 +29,8 @@ class AuthRepositoryImpl: AuthRepository {
         }
     }
 
-    // TODO: 회원가입 기능 구현
     func signup(accountID: String, password: String, name: String, age: Int) -> Completable {
         return authDataSource.signup(accountID: accountID, password: password, name: name, age: age)
-            .catch { .error(self.errorLocalized($0)) }
             .asCompletable()
-    }
-
-    private func errorLocalized(_ error: Error) -> AuthError {
-        guard let error = (error as? MoyaError)?.response?.statusCode else { return .UNOWNDEERROR }
-        return AuthError(rawValue: error) ?? .UNOWNDEERROR
     }
 }
