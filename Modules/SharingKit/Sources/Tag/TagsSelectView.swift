@@ -9,7 +9,7 @@ public class TagsSelectView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    public var selectTagType = BehaviorRelay<TagTypeEnum>(value: .NONE)
+    public var selectTagType = BehaviorRelay<TagTypeEnum>(value: .none)
     
     private let naturalTagButton = UIButton(type: .system).then {
         $0.setTitle("#환경(자연)", for: .normal)
@@ -66,7 +66,7 @@ public class TagsSelectView: UIView {
             .subscribe(
                 with: self,
                 onNext: { owner, _ in
-                    owner.selectButton(button: owner.naturalTagButton, type: .NATURAL)
+                    owner.selectButton(button: owner.naturalTagButton, type: .natural)
                 }
             )
             .disposed(by: disposeBag)
@@ -74,7 +74,7 @@ public class TagsSelectView: UIView {
             .subscribe(
                 with: self,
                 onNext: { owner, _ in
-                    owner.selectButton(button: owner.educationTagButton, type: .EDUCATION)
+                    owner.selectButton(button: owner.educationTagButton, type: .education)
                 }
             )
             .disposed(by: disposeBag)
@@ -82,7 +82,7 @@ public class TagsSelectView: UIView {
             .subscribe(
                 with: self,
                 onNext: { owner, _ in
-                    owner.selectButton(button: owner.societyTagButton, type: .SOCIAL)
+                    owner.selectButton(button: owner.societyTagButton, type: .social)
                 }
             )
             .disposed(by: disposeBag)
@@ -90,7 +90,7 @@ public class TagsSelectView: UIView {
             .subscribe(
                 with: self,
                 onNext: { owner, _ in
-                    owner.selectButton(button: owner.cultureTagButton, type: .CULTURE)
+                    owner.selectButton(button: owner.cultureTagButton, type: .culture)
                 }
             )
             .disposed(by: disposeBag)
@@ -98,7 +98,7 @@ public class TagsSelectView: UIView {
             .subscribe(
                 with: self,
                 onNext: { owner, _ in
-                    owner.selectButton(button: owner.ectTagButton, type: .ETC)
+                    owner.selectButton(button: owner.ectTagButton, type: .ect)
                 }
             )
             .disposed(by: disposeBag)
