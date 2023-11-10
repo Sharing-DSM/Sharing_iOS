@@ -1,21 +1,23 @@
 import Foundation
 import Moya
 import Core
-import Domain
 
 public enum PostAPI {
-    case fetchTotalPost
+    case fetchPopularityPost
     case fetchPostDetail(id: String)
     case createPost(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
         isEmergency: Bool
     )
-//    case deletePost(id: String)
+    case deletePost(id: String)
 //    case editPost(id: String)
 }
 
@@ -26,9 +28,9 @@ extension PostAPI: TargetType {
     
     public var path: String {
         switch self {
-        case .fetchTotalPost, .createPost:
+        case .fetchPopularityPost, .createPost:
             return "/feeds/"
-        case .fetchPostDetail(let id):
+        case .fetchPostDetail(let id), .deletePost(let id):
             return "/feeds/\(id)"
 //        case .createPost:
 //            return "/feeds/"
@@ -41,10 +43,12 @@ extension PostAPI: TargetType {
     
     public var method: Moya.Method {
         switch self {
-        case .fetchTotalPost, .fetchPostDetail:
+        case .fetchPopularityPost, .fetchPostDetail:
             return .get
         case .createPost:
             return .post
+        case .deletePost:
+            return .delete
 //        case .createPost:
 //            return .post
 //        case .editPost:
@@ -56,24 +60,28 @@ extension PostAPI: TargetType {
     
     public var task: Moya.Task {
         switch self {
-        case .fetchTotalPost, .fetchPostDetail:
+        case .fetchPopularityPost, .fetchPostDetail, .deletePost:
             return .requestPlain
         case .createPost(
             let title,
             let content,
-            let addressData,
+            let addressName,
+            let roadAddressName,
+            let xCos,
+            let yCos,
             let recruitment,
             let type,
             let volunteerTime,
-            let isEmergency):
+            let isEmergency
+        ):
             return .requestParameters(
                 parameters: [
                     "title" : title,
                     "content" : content,
-                    "address_name": addressData.addressName,
-                    "road_address_name": addressData.roadAddressName,
-                    "x": addressData.x,
-                    "y": addressData.y,
+                    "address_name": addressName,
+                    "road_address_name": roadAddressName,
+                    "x": xCos,
+                    "y": yCos,
                     "recruitment" : recruitment,
                     "type" : type,
                     "volunteer_time" : volunteerTime,
