@@ -41,7 +41,7 @@ public class PostWriteViewModel: ViewModelType, Stepper {
             input.isEmergency
         )
         let isCompleteButtonEnable = info.map { title, address, recruitment, tag, volunteerTime, detailContent, _ -> Bool in
-            address != nil && tag != .NONE && !title.isEmpty && !recruitment.isEmpty && !volunteerTime.isEmpty && !detailContent.isEmpty
+            address != nil && tag != .none && !title.isEmpty && !recruitment.isEmpty && !volunteerTime.isEmpty && !detailContent.isEmpty
         }
 
         input.completeButtonDidClick.withLatestFrom(info)
@@ -53,9 +53,12 @@ public class PostWriteViewModel: ViewModelType, Stepper {
                 return self.createPostUseCase.execute(
                     title: title,
                     content: detailContent,
-                    addressData: address,
+                    addressName: address.addressName,
+                    roadAddressName: address.roadAddressName,
+                    xCos: address.x,
+                    yCos: address.y,
                     recruitment: recruitment,
-                    type: tag.toString,
+                    type: tag.rawValue,
                     volunteerTime: volunteerTime,
                     isEmergency: isEmergency
                 )
