@@ -12,7 +12,10 @@ public class CreatePostUseCase {
     public func execute(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
@@ -21,7 +24,10 @@ public class CreatePostUseCase {
         return repository.createPost(
             title: title,
             content: content,
-            addressData: addressData,
+            addressName: addressName,
+            roadAddressName: roadAddressName,
+            xCos: xCos,
+            yCos: yCos,
             recruitment: recruitment,
             type: type,
             volunteerTime: volunteerTime,
