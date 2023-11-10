@@ -18,4 +18,6 @@ public extension UIImage {
 
     static let toggleActivate = SharingKitAsset.Image.toggleActivate.image
     static let toggleDisabled = SharingKitAsset.Image.toggleDisabled.image
+
+    static let interactionDot = SharingKitAsset.Image.interactionDot.image
 }
