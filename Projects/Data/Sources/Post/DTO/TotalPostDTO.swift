@@ -1,7 +1,8 @@
 import Foundation
 import Domain
+import Core
 
-struct TotalPostDTOElement: Decodable {
+struct PopularityPostDTOElement: Decodable {
     let id, title, addressName, type: String
 
     enum CodingKeys: String, CodingKey {
@@ -11,21 +12,21 @@ struct TotalPostDTOElement: Decodable {
     }
 }
 
-typealias TotalPostDTO = [TotalPostDTOElement]
+typealias PopularityPostDTO = [PopularityPostDTOElement]
 
-extension TotalPostDTO {
-    func toDomain() -> TotalPostEntity {
+extension PopularityPostDTO {
+    func toDomain() -> PopularityPostEntity {
         return self.map { $0.toDomain() }
     }
 }
 
-extension TotalPostDTOElement {
-    func toDomain() -> TotalPostEntityElement {
+extension PopularityPostDTOElement {
+    func toDomain() -> PopularityPostEntityElement {
         return .init(
             id: id,
             title: title,
             addressName: addressName,
-            type: type
+            type: TagTypeEnum(rawValue: type) ?? .none
         )
     }
 }

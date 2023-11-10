@@ -12,8 +12,8 @@ class PostDataSource {
     static let shared = PostDataSource()
     private init() {}
 
-    func fetchTotalPost() -> Single<Response> {
-        return provider.rx.request(.fetchTotalPost)
+    func fetchPopularityPost() -> Single<Response> {
+        return provider.rx.request(.fetchPopularityPost)
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
@@ -27,7 +27,10 @@ class PostDataSource {
     func createPost(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
@@ -36,7 +39,10 @@ class PostDataSource {
         return provider.rx.request(.createPost(
             title: title,
             content: content,
-            addressData: addressData,
+            addressName: addressName,
+            roadAddressName: roadAddressName,
+            xCos: xCos,
+            yCos: yCos,
             recruitment: recruitment,
             type: type,
             volunteerTime: volunteerTime,
@@ -46,12 +52,11 @@ class PostDataSource {
         .catch { .error($0.toError(PostError.self)) }
     }
 
-//    // TODO: 명세보고 request 구조체 만들어서 요청하기
-//    func deletePost() -> Completable {
-//        return provider.rx.request(.deletePost(id: ""))
-//            .asCompletable()
-//            .catch { .error($0.toError(PostError.self)) }
-//    }
+    func deletePost(id: String) -> Completable {
+        return provider.rx.request(.deletePost(id: id))
+            .asCompletable()
+            .catch { .error($0.toError(PostError.self)) }
+    }
 //
 //    func editPost() -> Completable {
 //        return provider.rx.request(.editPost(id: ""))

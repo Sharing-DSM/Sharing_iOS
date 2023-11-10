@@ -9,9 +9,9 @@ class PostRepositoryImpl: PostRepository {
 
     let remoteDataSource = PostDataSource.shared
 
-    func fetchTotalPost() -> Single<TotalPostEntity> {
-       return remoteDataSource.fetchTotalPost()
-            .map(TotalPostDTO.self)
+    func fetchPopularityPost() -> Single<PopularityPostEntity> {
+       return remoteDataSource.fetchPopularityPost()
+            .map(PopularityPostDTO.self)
             .map { $0.toDomain() }
     }
 
@@ -24,7 +24,10 @@ class PostRepositoryImpl: PostRepository {
     func createPost(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
@@ -33,7 +36,10 @@ class PostRepositoryImpl: PostRepository {
         return remoteDataSource.createPost(
             title: title,
             content: content,
-            addressData: addressData,
+            addressName: addressName,
+            roadAddressName: roadAddressName,
+            xCos: xCos,
+            yCos: yCos,
             recruitment: recruitment,
             type: type,
             volunteerTime: volunteerTime,
@@ -41,13 +47,9 @@ class PostRepositoryImpl: PostRepository {
         )
     }
 
-//    func registerPost() -> Completable {
-//        return remoteDataSource.registerPost()
-//    }
-//    
-//    func deletePost(id: String) -> Completable {
-//        return remoteDataSource.deletePost()
-//    }
+    func deletePost(id: String) -> Completable {
+        return remoteDataSource.deletePost(id: id)
+    }
 //    
 //    func editPost(id: String) -> Completable {
 //        return remoteDataSource.editPost()
