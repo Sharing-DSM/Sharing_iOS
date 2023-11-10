@@ -9,8 +9,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
 
     private let contentView = UIView()
     private let scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.bounces = false
+        $0.showsVerticalScrollIndicator = false
         $0.contentInsetAdjustmentBehavior = .never
     }
     private let headerLabel = UILabel().then {
@@ -109,6 +108,10 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         tabBarController?.tabBar.isHidden = true
     }
 
+    public override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
+
     public override func bind() {
         let input = PostWriteViewModel.Input(
             titleText: titleTextField.rx.text.orEmpty.asObservable(),
@@ -141,7 +144,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             )
             .disposed(by: disposeBag)
 
-        addressHelper.selectAddress.asObservable()
+        addressHelper.selectAddress
             .compactMap { $0 }
             .subscribe(
                 with: self,
