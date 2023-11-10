@@ -5,11 +5,14 @@ import Presentation
 public struct StepperDI {
     public static let shared = resolve()
 
+    public let homeViewModel: HomeViewModel
+
     public let loginViewModel: LoginViewModel
     public let signupViewModel: SignupViewModel
     public let mapViewModel: MapViewModel
 
     public let postWriteViewModel: PostWriteViewModel
+    public let postDetailViewModel: PostDetailViewModel
 
     public let addressViewModel: AddressViewModel
 }
@@ -17,6 +20,11 @@ public struct StepperDI {
 extension StepperDI {
     private static func resolve() -> StepperDI {
         let serviceDI = ServiceDI.shared
+
+        // MARK: Home관련 UseCase
+        let homeViewModel = HomeViewModel(
+            fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase
+        )
 
         // MARK: Auth관련 UseCase
         let loginViewModel = LoginViewModel(
@@ -26,12 +34,16 @@ extension StepperDI {
             signupUseCase: serviceDI.signupUseCaseInject
         )
         let mapViewModel = MapViewModel(
-            fetchTotalPostUseCase: serviceDI.fetchTotalPostUseCase
+            fetchTotalPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
 
         // MARK: Post관련 UseCase
         let postWriteViewModel = PostWriteViewModel(
             createPostUseCase: serviceDI.createPostUseCase
+        )
+        let postDetailViewModel = PostDetailViewModel(
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            deletePostUseCase: serviceDI.deletePostUseCase
         )
 
         // MARK: Address관련 UseCase
@@ -40,10 +52,12 @@ extension StepperDI {
         )
 
         return .init(
+            homeViewModel: homeViewModel,
             loginViewModel: loginViewModel,
             signupViewModel: signupViewModel,
             mapViewModel: mapViewModel,
             postWriteViewModel: postWriteViewModel,
+            postDetailViewModel: postDetailViewModel,
             addressViewModel: addressViewModel
         )
     }
