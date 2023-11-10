@@ -47,12 +47,12 @@ class MapFlow: Flow {
     }
 
     private func navigateToPostDetailScreen() -> FlowContributors {
-        let detailViewController = PostDetailViewController()
+        let detailViewController = PostDetailViewController(viewModel: container.postDetailViewModel)
         self.rootViewController.pushViewController(detailViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: detailViewController,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.postDetailsRequired))
-        )
+            withNextStepper: detailViewController.viewModel
+        ))
     }
 
     private func navigateToPostWriteScreen() -> FlowContributors {

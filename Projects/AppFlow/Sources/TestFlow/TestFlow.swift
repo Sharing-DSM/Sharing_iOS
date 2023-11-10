@@ -27,10 +27,8 @@ class TestFlow: Flow {
     }
 
     private func navigateToHomeScreen() -> FlowContributors {
-        let viewModel = container.addressViewModel
-        let testVC = AddressHelperViewController(
-            viewModel: viewModel
-        )
+//        let viewModel = container.addressViewModel
+        let testVC = PostDetailViewController(viewModel: container.postDetailViewModel)
         self.rootViewController.pushViewController(testVC, animated: false)
         return .none
     }
