@@ -2,17 +2,20 @@ import Foundation
 import RxSwift
 
 public protocol PostRepository {
-    func fetchTotalPost() -> Single<TotalPostEntity>
+    func fetchPopularityPost() -> Single<PopularityPostEntity>
     func fetchDetailPost(id: String) -> Single<PostDetailEntity>
     func createPost(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
         isEmergency: Bool
     ) -> Completable
-//    func deletePost(id: String) -> Completable
+    func deletePost(id: String) -> Completable
 //    func editPost(id: String) -> Completable
 }
