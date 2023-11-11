@@ -107,11 +107,14 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
         interactionButton.menu = postDatailMenu
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        fetchDetailRelay.accept(id)
+    }
+
     public override func attribute() {
         view.backgroundColor = .white
         settingAlert()
         settingMenu()
-        fetchDetailRelay.accept(id)
     }
 
     public override func bind() {

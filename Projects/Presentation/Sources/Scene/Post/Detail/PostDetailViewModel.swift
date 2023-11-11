@@ -45,12 +45,18 @@ public class PostDetailViewModel: ViewModelType, Stepper {
             }
             .bind(to: detailData)
             .disposed(by: disposeBag)
+
         input.deletePost
             .flatMap { id in
                 self.deletePostUseCase.excute(id: id)
-                    .andThen(Single.just(SharingStep.succeedDeletePostRequired))
+                    .andThen(Single.just(SharingStep.popRequired))
                     .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
             }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+
+        input.editPost
+            .map { SharingStep.postEditRequired(id: $0) }
             .bind(to: steps)
             .disposed(by: disposeBag)
         
