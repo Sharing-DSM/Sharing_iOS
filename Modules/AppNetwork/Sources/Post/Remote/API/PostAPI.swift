@@ -5,6 +5,7 @@ import Core
 public enum PostAPI {
     case fetchPopularityPost
     case fetchPostDetail(id: String)
+    case deletePost(id: String)
     case createPost(
         title: String,
         content: String,
@@ -17,8 +18,19 @@ public enum PostAPI {
         volunteerTime: Int,
         isEmergency: Bool
     )
-    case deletePost(id: String)
-//    case editPost(id: String)
+    case editPost(
+        id: String,
+        title: String,
+        content: String,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
+        recruitment: Int,
+        type: String,
+        volunteerTime: Int,
+        isEmergency: Bool
+    )
 }
 
 extension PostAPI: TargetType {
@@ -30,14 +42,8 @@ extension PostAPI: TargetType {
         switch self {
         case .fetchPopularityPost, .createPost:
             return "/feeds/"
-        case .fetchPostDetail(let id), .deletePost(let id):
+        case .fetchPostDetail(let id), .deletePost(let id), .editPost(let id, _, _, _, _, _, _, _, _, _, _):
             return "/feeds/\(id)"
-//        case .createPost:
-//            return "/feeds/"
-//        case .deletePost(let id):
-//            return "/feeds/\(id)"
-//        case .editPost(let id):
-//            return "/feeds/\(id)"
         }
     }
     
@@ -49,19 +55,13 @@ extension PostAPI: TargetType {
             return .post
         case .deletePost:
             return .delete
-//        case .createPost:
-//            return .post
-//        case .editPost:
-//            return .patch
-//        case .deletePost:
-//            return .delete
+        case .editPost:
+            return .patch
         }
     }
     
     public var task: Moya.Task {
         switch self {
-        case .fetchPopularityPost, .fetchPostDetail, .deletePost:
-            return .requestPlain
         case .createPost(
             let title,
             let content,
@@ -89,6 +89,36 @@ extension PostAPI: TargetType {
                 ],
                 encoding: JSONEncoding.default
             )
+        case .editPost(
+            _,
+            let title,
+            let content,
+            let addressName,
+            let roadAddressName,
+            let xCos,
+            let yCos,
+            let recruitment,
+            let type,
+            let volunteerTime,
+            let isEmergency
+        ):
+            return .requestParameters(
+                parameters: [
+                    "title" : title,
+                    "content" : content,
+                    "address_name": addressName,
+                    "road_address_name": roadAddressName,
+                    "x": xCos,
+                    "y": yCos,
+                    "recruitment" : recruitment,
+                    "type" : type,
+                    "volunteer_time" : volunteerTime,
+                    "is_emergency": isEmergency
+                ],
+                encoding: JSONEncoding.default
+            )
+        default:
+            return .requestPlain
         }
     }
 
