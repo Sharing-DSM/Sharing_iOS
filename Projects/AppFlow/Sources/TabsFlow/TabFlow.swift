@@ -25,7 +25,7 @@ class TabsFlow: Flow {
         }
         $0.tabBar.addSubview(tabbarView)
         tabbarView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(-17)
+            $0.top.equalToSuperview().offset(-10)
             $0.bottom.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
         }

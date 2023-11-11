@@ -24,7 +24,9 @@ class HomeFlow: Flow {
             return navigateToPostDetailScreen(id: id)
         case .postWriteRequired:
             return navigateToPostWriteScreen()
-        case .succeedDeletePostRequired, .succeedCreatePostRequired:
+        case .postEditRequired(let id):
+            return navigateToPostEditScreen(id: id)
+        case .popRequired:
             return popRequired()
         default:
             return .none
@@ -62,6 +64,22 @@ class HomeFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: writeViewController,
             withNextStepper: writeViewController.viewModel
+        ))
+    }
+
+    private func navigateToPostEditScreen(id: String) -> FlowContributors {
+        let addressVC = AddressHelperViewController(viewModel: container.addressViewModel)
+
+        let editViewController = PostEditViewController(
+            viewModel: container.postEditViewModel,
+            addressHelper: addressVC
+        )
+        editViewController.postId = id
+        self.rootViewController.pushViewController(editViewController, animated: true)
+
+        return .one(flowContributor: .contribute(
+            withNextPresentable: editViewController,
+            withNextStepper: editViewController.viewModel
         ))
     }
 
