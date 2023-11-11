@@ -25,7 +25,7 @@ class MapFlow: Flow {
             return presentMapView()
         case .postWriteRequired:
             return navigateToPostWriteScreen()
-        case .succeedCreatePostRequired:
+        case .popRequired:
             return popWhenSucceedCreatePost()
         case .errorAlertRequired(let content):
             return presentErrorAlert(content)
@@ -47,12 +47,12 @@ class MapFlow: Flow {
     }
 
     private func navigateToPostDetailScreen() -> FlowContributors {
-        let detailViewController = PostDetailViewController()
+        let detailViewController = PostDetailViewController(viewModel: container.postDetailViewModel)
         self.rootViewController.pushViewController(detailViewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: detailViewController,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.postDetailsRequired))
-        )
+            withNextStepper: detailViewController.viewModel
+        ))
     }
 
     private func navigateToPostWriteScreen() -> FlowContributors {

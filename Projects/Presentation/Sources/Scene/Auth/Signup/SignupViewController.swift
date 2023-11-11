@@ -15,6 +15,7 @@ public class SignupViewController: BaseVC<SignupViewModel> {
         $0.placeholder = "아이디"
     }
     private let passwordTextField = SharingTextField().then {
+        $0.isSecurity = true
         $0.placeholder = "비밀번호"
     }
     private let nameTextField = SharingTextField().then {

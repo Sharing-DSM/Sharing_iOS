@@ -18,7 +18,6 @@ public enum SharingStep: Step {
 
     //home
     case homeRequired
-    case postDetailsRequired
     case postWriteRequired
 
     // chat
@@ -36,5 +35,6 @@ public enum SharingStep: Step {
 
     // Post
     case postDetailRequired(id: String)
-    case succeedCreatePostRequired
+    case postEditRequired(id: String)
+    case popRequired
 }

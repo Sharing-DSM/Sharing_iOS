@@ -3,9 +3,16 @@ import SnapKit
 import Then
 import SharingKit
 import RxFlow
+import RxSwift
+import RxCocoa
 import Core
 
-public class PostWriteViewController: BaseVC<PostWriteViewModel> {
+public class PostEditViewController: BaseVC<PostEditViewModel> {
+
+    public var postId: String = ""
+
+    private let fetchPostDetailRelay = PublishRelay<String>()
+    private let patchPostRelay = BehaviorRelay<String>(value: "")
 
     private let contentView = UIView()
     private let scrollView = UIScrollView().then {
@@ -13,7 +20,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         $0.contentInsetAdjustmentBehavior = .never
     }
     private let headerLabel = UILabel().then {
-        $0.text = "게시글 작성"
+        $0.text = "게시글 수정"
         $0.textColor = .main
         $0.font = .headerH1SemiBold
     }
@@ -40,12 +47,11 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.black800?.cgColor
         $0.layer.cornerRadius = 10
-        $0.isHidden = true
     }
     private let addressSearchButton = UIButton(type: .system).then {
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 10
-        $0.setTitle("주소 검색하기", for: .normal)
+        $0.setTitle("주소 수정하기", for: .normal)
         $0.setTitleColor(UIColor.black800, for: .normal)
         $0.titleLabel?.font = .bodyB2Medium
     }
@@ -82,12 +88,12 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         $0.layer.borderColor = UIColor.black400?.cgColor
         $0.textContainerInset = .init(top: 15, left: 15, bottom: 15, right: 15)
     }
-    private let completeButton = FillButton(type: .system).then {
-        $0.setTitle("작성 완료", for: .normal)
+    private let completeEditButton = FillButton(type: .system).then {
+        $0.setTitle("수정하기", for: .normal)
     }
     private let addressHelper: AddressHelperViewController
 
-    public init(viewModel: PostWriteViewModel, addressHelper: AddressHelperViewController) {
+    public init(viewModel: PostEditViewModel, addressHelper: AddressHelperViewController) {
         self.addressHelper = addressHelper
         self.addressHelper.modalPresentationStyle = .overFullScreen
         self.addressHelper.modalTransitionStyle = .crossDissolve
@@ -100,6 +106,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
 
     public override func attribute() {
         view.backgroundColor = .white
+        fetchPostDetailRelay.accept(postId)
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -111,7 +118,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
     }
 
     public override func bind() {
-        let input = PostWriteViewModel.Input(
+        let input = PostEditViewModel.Input(
             titleText: titleTextField.rx.text.orEmpty.asObservable(),
             addressData: addressHelper.selectAddress.asObservable(),
             recruitmentText: recruitmentTextField.rx.text.orEmpty.asObservable(),
@@ -119,7 +126,8 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             volunteerTimeText: volunteerTimeTextField.rx.text.orEmpty.asObservable(),
             detailContentText: detailsTextView.rx.text.orEmpty.asObservable(),
             isEmergency: emergencyToggleButton.isActivate.asObservable(),
-            completeButtonDidClick: completeButton.rx.tap.asObservable()
+            fetchPostDetail: fetchPostDetailRelay.asObservable(),
+            patchPost: patchPostRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
 
@@ -127,8 +135,40 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             .subscribe(
                 with: self,
                 onNext: { owner, status in
-                    owner.completeButton.isEnabled = status
-                    owner.completeButton.backgroundColor = status ? .main : .black400
+                    owner.completeEditButton.isEnabled = status
+                    owner.completeEditButton.backgroundColor = status ? .main : .black400
+                }
+            )
+            .disposed(by: disposeBag)
+
+        output.detailData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.titleTextField.text = data.title
+                    owner.addressHelper.selectAddress.accept(
+                        .init(
+                            x: data.x,
+                            y: data.y,
+                            addressName: data.addressName,
+                            roadAddressName: data.roadAddressName,
+                            buildingName: ""
+                        )
+                    )
+                    owner.recruitmentTextField.text = "\(data.recruitment)"
+                    owner.tagSelectView.selectTagType.accept(data.type)
+                    owner.volunteerTimeTextField.text = "\(data.volunteerTime)"
+                    owner.detailsTextView.text = data.content
+                    owner.emergencyToggleButton.isActivate.accept(data.isEmergency)
+                }
+            )
+            .disposed(by: disposeBag)
+
+        completeEditButton.rx.tap
+            .subscribe(
+                with: self,
+                onNext: { owner, _ in
+                    owner.patchPostRelay.accept(owner.postId)
                 }
             )
             .disposed(by: disposeBag)
@@ -147,8 +187,6 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             .subscribe(
                 with: self,
                 onNext: { owner, data in
-                    owner.selectAddressBackground.isHidden = false
-                    owner.addressSearchButton.setTitle("주소 수정하기", for: .normal)
                     owner.selectAddressLabel.text = data.buildingName.isEmpty ?
                     data.roadAddressName : "\(data.roadAddressName)(\(data.buildingName))"
                 }
@@ -177,7 +215,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             tagSelectView,
             emergencyMarkLabel,
             emergencyToggleButton,
-            completeButton
+            completeEditButton
         ].forEach { contentView.addSubview($0) }
     }
     public override func setLayout() {
@@ -190,7 +228,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             $0.top.equalToSuperview()
             $0.width.equalToSuperview()
             $0.bottom.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(completeButton.snp.bottom).offset(64)
+            $0.bottom.equalTo(completeEditButton.snp.bottom).offset(64)
         }
         headerLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -280,7 +318,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         }
 
         // 완료 버튼
-        completeButton.snp.makeConstraints {
+        completeEditButton.snp.makeConstraints {
             $0.top.equalTo(emergencyMarkLabel.snp.bottom).offset(26)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(40)

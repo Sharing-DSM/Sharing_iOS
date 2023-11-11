@@ -1,27 +1,27 @@
 import Foundation
 
-public enum TagTypeEnum {
-    case NATURAL
-    case SOCIAL
-    case EDUCATION
-    case CULTURE
-    case ETC
-    case NONE
+public enum TagTypeEnum: String {
+    case natural = "NATURAL"
+    case social = "SOCIAL"
+    case education = "EDUCATION"
+    case culture = "CULTURE"
+    case ect = "ETC"
+    case none = "NONE"
 
-    public var toString: String {
+    public var toTagName: String {
         switch self {
-        case .NATURAL:
-            return "NATURAL"
-        case .SOCIAL:
-            return "SOCIAL"
-        case .EDUCATION:
-            return "EDUCATION"
-        case .CULTURE:
-            return "CULTURE"
-        case .ETC:
-            return "ETC"
-        case .NONE:
-            return "NONE"
+        case .natural:
+            return "환경(자연)"
+        case .social:
+            return "사회"
+        case .education:
+            return "교육"
+        case .culture:
+            return "문화"
+        case .ect:
+            return "기타"
+        case .none:
+            return "없음"
         }
     }
 }

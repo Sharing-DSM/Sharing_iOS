@@ -6,12 +6,11 @@ public struct ServiceDI {
     public let loginUseCaseInject: LoginUseCase
     public let signupUseCaseInject: SignupUseCase
 
-    public let fetchTotalPostUseCase: FetchTotalPostUseCase
+    public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
     public let createPostUseCase: CreatePostUseCase
-
-//    public let postDeleteUseCase: PostDeleteUseCase
-//    public let postEditUseCase: PostEditUseCase
+    public let deletePostUseCase: DeletePostUseCase
+    public let patchPostUseCase: PatchPostUseCase
 
     public let fetchAddressUseCase : FetchAddressUseCase
 }
@@ -27,9 +26,11 @@ extension ServiceDI {
         let signupUseCaseInject = SignupUseCase(repository: authRepo)
 
         // MARK: Post관련 UseCase
-        let fetchTotalPostUseCaseInject = FetchTotalPostUseCase(repository: postRepo)
+        let fetchTotalPostUseCaseInject = FetchPopularityPostUseCase(repository: postRepo)
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
         let createPostUseCaseInject = CreatePostUseCase(repository: postRepo)
+        let deletePostUseCase = DeletePostUseCase(repository: postRepo)
+        let patchPostUseCase = PatchPostUseCase(repository: postRepo)
 
         // MARK: Address관련 UseCase
         let fetchAddressUseCaseInject = FetchAddressUseCase(repository: addressRepo)
@@ -37,9 +38,11 @@ extension ServiceDI {
         return .init(
             loginUseCaseInject: loginUseCaseInject,
             signupUseCaseInject: signupUseCaseInject,
-            fetchTotalPostUseCase: fetchTotalPostUseCaseInject,
+            fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
             fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
             createPostUseCase: createPostUseCaseInject,
+            deletePostUseCase: deletePostUseCase,
+            patchPostUseCase: patchPostUseCase,
             fetchAddressUseCase: fetchAddressUseCaseInject
 //            postRegisterUseCase: postRegisterUseCaseInject,
 //            postDeleteUseCase: postDeleteUseCaseInject,

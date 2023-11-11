@@ -1,22 +1,36 @@
 import Foundation
 import Moya
 import Core
-import Domain
 
 public enum PostAPI {
-    case fetchTotalPost
+    case fetchPopularityPost
     case fetchPostDetail(id: String)
+    case deletePost(id: String)
     case createPost(
         title: String,
         content: String,
-        addressData: AddressEntityElement,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
         recruitment: Int,
         type: String,
         volunteerTime: Int,
         isEmergency: Bool
     )
-//    case deletePost(id: String)
-//    case editPost(id: String)
+    case editPost(
+        id: String,
+        title: String,
+        content: String,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
+        recruitment: Int,
+        type: String,
+        volunteerTime: Int,
+        isEmergency: Bool
+    )
 }
 
 extension PostAPI: TargetType {
@@ -26,54 +40,48 @@ extension PostAPI: TargetType {
     
     public var path: String {
         switch self {
-        case .fetchTotalPost, .createPost:
+        case .fetchPopularityPost, .createPost:
             return "/feeds/"
-        case .fetchPostDetail(let id):
+        case .fetchPostDetail(let id), .deletePost(let id), .editPost(let id, _, _, _, _, _, _, _, _, _, _):
             return "/feeds/\(id)"
-//        case .createPost:
-//            return "/feeds/"
-//        case .deletePost(let id):
-//            return "/feeds/\(id)"
-//        case .editPost(let id):
-//            return "/feeds/\(id)"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .fetchTotalPost, .fetchPostDetail:
+        case .fetchPopularityPost, .fetchPostDetail:
             return .get
         case .createPost:
             return .post
-//        case .createPost:
-//            return .post
-//        case .editPost:
-//            return .patch
-//        case .deletePost:
-//            return .delete
+        case .deletePost:
+            return .delete
+        case .editPost:
+            return .patch
         }
     }
     
     public var task: Moya.Task {
         switch self {
-        case .fetchTotalPost, .fetchPostDetail:
-            return .requestPlain
         case .createPost(
             let title,
             let content,
-            let addressData,
+            let addressName,
+            let roadAddressName,
+            let xCos,
+            let yCos,
             let recruitment,
             let type,
             let volunteerTime,
-            let isEmergency):
+            let isEmergency
+        ):
             return .requestParameters(
                 parameters: [
                     "title" : title,
                     "content" : content,
-                    "address_name": addressData.addressName,
-                    "road_address_name": addressData.roadAddressName,
-                    "x": addressData.x,
-                    "y": addressData.y,
+                    "address_name": addressName,
+                    "road_address_name": roadAddressName,
+                    "x": xCos,
+                    "y": yCos,
                     "recruitment" : recruitment,
                     "type" : type,
                     "volunteer_time" : volunteerTime,
@@ -81,6 +89,36 @@ extension PostAPI: TargetType {
                 ],
                 encoding: JSONEncoding.default
             )
+        case .editPost(
+            _,
+            let title,
+            let content,
+            let addressName,
+            let roadAddressName,
+            let xCos,
+            let yCos,
+            let recruitment,
+            let type,
+            let volunteerTime,
+            let isEmergency
+        ):
+            return .requestParameters(
+                parameters: [
+                    "title" : title,
+                    "content" : content,
+                    "address_name": addressName,
+                    "road_address_name": roadAddressName,
+                    "x": xCos,
+                    "y": yCos,
+                    "recruitment" : recruitment,
+                    "type" : type,
+                    "volunteer_time" : volunteerTime,
+                    "is_emergency": isEmergency
+                ],
+                encoding: JSONEncoding.default
+            )
+        default:
+            return .requestPlain
         }
     }
 

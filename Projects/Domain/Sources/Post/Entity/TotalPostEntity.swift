@@ -1,9 +1,11 @@
 import Foundation
+import Core
 
-public struct TotalPostEntityElement {
-    public let id, title, addressName, type: String
+public struct PopularityPostEntityElement {
+    public let id, title, addressName: String
+    public let type: TagTypeEnum
 
-    public init(id: String, title: String, addressName: String, type: String) {
+    public init(id: String, title: String, addressName: String, type: TagTypeEnum) {
         self.id = id
         self.title = title
         self.addressName = addressName
@@ -11,4 +13,4 @@ public struct TotalPostEntityElement {
     }
 }
 
-public typealias TotalPostEntity = [TotalPostEntityElement]
+public typealias PopularityPostEntity = [PopularityPostEntityElement]

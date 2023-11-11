@@ -10,13 +10,13 @@ public class MapViewModel: ViewModelType, Stepper {
     
     public var disposeBag = DisposeBag()
 
-    private let fetchTotalPostUseCase: FetchTotalPostUseCase
+    private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
 
-    public init(fetchTotalPostUseCase: FetchTotalPostUseCase) {
-        self.fetchTotalPostUseCase = fetchTotalPostUseCase
+    public init(fetchTotalPostUseCase: FetchPopularityPostUseCase) {
+        self.fetchPopularityPostUseCase = fetchTotalPostUseCase
     }
 
-    let totalPostData = PublishRelay<TotalPostEntity>()
+    let totalPostData = PublishRelay<PopularityPostEntity>()
 
     public struct Input {
         let viewDidLoad: Observable<Void>?
@@ -25,14 +25,14 @@ public class MapViewModel: ViewModelType, Stepper {
     }
     
     public struct Output {
-        let totalPostData: Signal<TotalPostEntity>
+        let totalPostData: Signal<PopularityPostEntity>
     }
 
     public func transform(input: Input) -> Output {
 
         input.viewDidLoad?.asObservable()
             .flatMap {
-                self.fetchTotalPostUseCase.excute()
+                self.fetchPopularityPostUseCase.excute()
                     .catch {
                         print($0.localizedDescription)
                         return .just([])

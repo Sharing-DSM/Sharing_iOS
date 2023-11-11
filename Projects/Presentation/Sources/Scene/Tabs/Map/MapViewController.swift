@@ -36,10 +36,6 @@ public class MapViewController: BaseVC<MapViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
-    }
-
     public override func attribute() { 
         mapView.delegate = self
         locationManager.delegate = self

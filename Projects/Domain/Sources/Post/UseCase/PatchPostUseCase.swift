@@ -1,7 +1,7 @@
 import Foundation
 import RxSwift
 
-public class CreatePostUseCase {
+public class PatchPostUseCase {
 
     let repository: PostRepository
 
@@ -10,6 +10,7 @@ public class CreatePostUseCase {
     }
 
     public func execute(
+        id: String,
         title: String,
         content: String,
         addressName: String,
@@ -21,7 +22,8 @@ public class CreatePostUseCase {
         volunteerTime: Int,
         isEmergency: Bool
     ) -> Completable {
-        return repository.createPost(
+        return repository.editPost(
+            id: id,
             title: title,
             content: content,
             addressName: addressName,

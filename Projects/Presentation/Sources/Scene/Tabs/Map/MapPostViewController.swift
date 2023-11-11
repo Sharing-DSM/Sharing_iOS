@@ -19,7 +19,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = .black50
         $0.separatorStyle = .none
-        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
     }
 
     public override func attribute() {
@@ -58,13 +58,14 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             .disposed(by: disposeBag)
 
         output.totalPostData.asObservable()
-            .bind(to: postTableView.rx.items(cellIdentifier: PostTableViewCell.id, cellType: PostTableViewCell.self)) { (index, element, cell) in
-                cell.settingCell(
-                    title: element.title,
-                    address: element.addressName,
-                    tags: [element.type],
-                    cellId: element.id
-                )
+            .bind(to: postTableView.rx.items(cellIdentifier: PostTableViewCell.identifier, cellType: PostTableViewCell.self)) { (index, element, cell) in
+//                cell.settingCell(
+//                    title: element.title,
+//                    address: element.addressName,
+//                    tags: [element.type],
+//                    cellId: element.id
+//                )
+                cell.backgroundColor = .clear
             }
             .disposed(by: disposeBag)
     }
