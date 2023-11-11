@@ -36,9 +36,13 @@ open class SharingTextField: UITextField {
 
     private let disposeBag =  DisposeBag()
     
-    public init(title: String? = nil) {
+    public init(
+        title: String? = nil,
+        keyboardType: UIKeyboardType = .default
+    ) {
         super.init(frame: .zero)
         self.titleLabel.text = title
+        self.keyboardType = keyboardType
         setUpTextField()
         bind()
     }
