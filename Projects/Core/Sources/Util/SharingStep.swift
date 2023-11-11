@@ -35,6 +35,6 @@ public enum SharingStep: Step {
 
     // Post
     case postDetailRequired(id: String)
-    case succeedCreatePostRequired
-    case succeedDeletePostRequired
+    case postEditRequired(id: String)
+    case popRequired
 }
