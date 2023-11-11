@@ -13,6 +13,7 @@ public struct StepperDI {
 
     public let postWriteViewModel: PostWriteViewModel
     public let postDetailViewModel: PostDetailViewModel
+    public let postEditViewModel: PostEditViewModel
 
     public let addressViewModel: AddressViewModel
 }
@@ -45,6 +46,10 @@ extension StepperDI {
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             deletePostUseCase: serviceDI.deletePostUseCase
         )
+        let postEditViewModel = PostEditViewModel(
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            patchPostUseCase: serviceDI.patchPostUseCase
+        )
 
         // MARK: Address관련 UseCase
         let addressViewModel = AddressViewModel(
@@ -58,6 +63,7 @@ extension StepperDI {
             mapViewModel: mapViewModel,
             postWriteViewModel: postWriteViewModel,
             postDetailViewModel: postDetailViewModel,
+            postEditViewModel: postEditViewModel,
             addressViewModel: addressViewModel
         )
     }

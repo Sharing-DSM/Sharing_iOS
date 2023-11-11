@@ -10,7 +10,7 @@ public struct ServiceDI {
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
     public let createPostUseCase: CreatePostUseCase
     public let deletePostUseCase: DeletePostUseCase
-//    public let postEditUseCase: PostEditUseCase
+    public let patchPostUseCase: PatchPostUseCase
 
     public let fetchAddressUseCase : FetchAddressUseCase
 }
@@ -30,6 +30,7 @@ extension ServiceDI {
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
         let createPostUseCaseInject = CreatePostUseCase(repository: postRepo)
         let deletePostUseCase = DeletePostUseCase(repository: postRepo)
+        let patchPostUseCase = PatchPostUseCase(repository: postRepo)
 
         // MARK: Address관련 UseCase
         let fetchAddressUseCaseInject = FetchAddressUseCase(repository: addressRepo)
@@ -41,6 +42,7 @@ extension ServiceDI {
             fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
             createPostUseCase: createPostUseCaseInject,
             deletePostUseCase: deletePostUseCase,
+            patchPostUseCase: patchPostUseCase,
             fetchAddressUseCase: fetchAddressUseCaseInject
 //            postRegisterUseCase: postRegisterUseCaseInject,
 //            postDeleteUseCase: postDeleteUseCaseInject,
