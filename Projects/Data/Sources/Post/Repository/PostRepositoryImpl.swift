@@ -50,8 +50,32 @@ class PostRepositoryImpl: PostRepository {
     func deletePost(id: String) -> Completable {
         return remoteDataSource.deletePost(id: id)
     }
-//    
-//    func editPost(id: String) -> Completable {
-//        return remoteDataSource.editPost()
-//    }
+
+    func editPost(
+        id: String,
+        title: String,
+        content: String,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
+        recruitment: Int,
+        type: String,
+        volunteerTime: Int,
+        isEmergency: Bool
+    ) -> Completable {
+        return remoteDataSource.editPost(
+            id: id,
+            title: title,
+            content: content,
+            addressName: addressName,
+            roadAddressName: roadAddressName,
+            xCos: xCos,
+            yCos: yCos,
+            recruitment: recruitment,
+            type: type,
+            volunteerTime: volunteerTime,
+            isEmergency: isEmergency
+        )
+    }
 }

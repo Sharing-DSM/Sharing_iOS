@@ -57,10 +57,34 @@ class PostDataSource {
             .asCompletable()
             .catch { .error($0.toError(PostError.self)) }
     }
-//
-//    func editPost() -> Completable {
-//        return provider.rx.request(.editPost(id: ""))
-//            .asCompletable()
-//            .catch { .error($0.toError(PostError.self)) }
-//    }
+
+    func editPost(
+        id: String,
+        title: String,
+        content: String,
+        addressName: String,
+        roadAddressName: String,
+        xCos: Double,
+        yCos: Double,
+        recruitment: Int,
+        type: String,
+        volunteerTime: Int,
+        isEmergency: Bool
+    ) -> Completable {
+        return provider.rx.request(.editPost(
+            id: id,
+            title: title,
+            content: content,
+            addressName: addressName,
+            roadAddressName: roadAddressName,
+            xCos: xCos,
+            yCos: yCos,
+            recruitment: recruitment,
+            type: type,
+            volunteerTime: volunteerTime,
+            isEmergency: isEmergency
+        ))
+        .asCompletable()
+        .catch { .error($0.toError(PostError.self)) }
+    }
 }
