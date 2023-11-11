@@ -62,7 +62,7 @@ public class PostWriteViewModel: ViewModelType, Stepper {
                     volunteerTime: volunteerTime,
                     isEmergency: isEmergency
                 )
-                .andThen(.just(SharingStep.succeedCreatePostRequired))
+                .andThen(.just(SharingStep.popRequired))
                 .catch {
                     print($0.localizedDescription)
                     return .just(SharingStep.errorAlertRequired(content: $0.localizedDescription))

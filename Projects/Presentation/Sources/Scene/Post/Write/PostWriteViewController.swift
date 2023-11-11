@@ -50,7 +50,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
         $0.titleLabel?.font = .bodyB2Medium
     }
 
-    private let recruitmentTextField = SharingTextField(title: "모집 인원").then {
+    private let recruitmentTextField = SharingTextField(title: "모집 인원", keyboardType: .asciiCapableNumberPad).then {
         $0.placeholder = "ex) 특정 지역, 연령대 등"
     }
 
@@ -68,7 +68,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
     }
     private let emergencyToggleButton = ToggleButton(type: .system)
 
-    private let volunteerTimeTextField = SharingTextField(title: "봉사 시간").then {
+    private let volunteerTimeTextField = SharingTextField(title: "봉사 시간", keyboardType: .asciiCapableNumberPad).then {
         $0.placeholder = "최대 100자리까지 숫자만 입력해주세요."
     }
     private let detailsLabel = UILabel().then {
@@ -78,9 +78,9 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
     }
     private let detailsTextView = UITextView().then {
         $0.layer.borderWidth = 1
-        $0.layer
-            .cornerRadius = 10
+        $0.layer.cornerRadius = 10
         $0.layer.borderColor = UIColor.black400?.cgColor
+        $0.textContainerInset = .init(top: 15, left: 15, bottom: 15, right: 15)
     }
     private let completeButton = FillButton(type: .system).then {
         $0.setTitle("작성 완료", for: .normal)
@@ -100,8 +100,6 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
 
     public override func attribute() {
         view.backgroundColor = .white
-        addView()
-        setLayout()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
