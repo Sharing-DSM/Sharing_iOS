@@ -22,8 +22,15 @@ open class BaseVC<ViewModel: ViewModelType>:
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
         bind()
         attribute()
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     public override func viewDidLayoutSubviews() {
