@@ -10,6 +10,14 @@ public class TagsSelectView: UIView {
     private let disposeBag = DisposeBag()
     
     public var selectTagType = BehaviorRelay<TagTypeEnum>(value: .none)
+
+    private lazy var buttonTypeMapper: [TagTypeEnum: UIButton] = [
+        .natural: naturalTagButton,
+        .education: educationTagButton,
+        .social: societyTagButton,
+        .culture: cultureTagButton,
+        .ect: ectTagButton
+    ]
     
     private let naturalTagButton = UIButton(type: .system).then {
         $0.setTitle("#환경(자연)", for: .normal)
@@ -62,60 +70,44 @@ public class TagsSelectView: UIView {
     }
     
     private func bind() {
-        naturalTagButton.rx.tap
+        [
+            naturalTagButton,
+            educationTagButton,
+            societyTagButton,
+            societyTagButton,
+            cultureTagButton,
+            ectTagButton
+        ].forEach { button in
+            button.rx.tap
+                .subscribe(
+                    with: self,
+                    onNext: { owner, _ in
+                        let tag = owner.buttonTypeMapper.filter({ $0.value == button })[0].key
+                        owner.selectTagType.accept(tag)
+                    }
+                )
+                .disposed(by: disposeBag)
+        }
+
+        selectTagType
+            .filter { $0 != .none }
             .subscribe(
                 with: self,
-                onNext: { owner, _ in
-                    owner.selectButton(button: owner.naturalTagButton, type: .natural)
-                }
-            )
-            .disposed(by: disposeBag)
-        educationTagButton.rx.tap
-            .subscribe(
-                with: self,
-                onNext: { owner, _ in
-                    owner.selectButton(button: owner.educationTagButton, type: .education)
-                }
-            )
-            .disposed(by: disposeBag)
-        societyTagButton.rx.tap
-            .subscribe(
-                with: self,
-                onNext: { owner, _ in
-                    owner.selectButton(button: owner.societyTagButton, type: .social)
-                }
-            )
-            .disposed(by: disposeBag)
-        cultureTagButton.rx.tap
-            .subscribe(
-                with: self,
-                onNext: { owner, _ in
-                    owner.selectButton(button: owner.cultureTagButton, type: .culture)
-                }
-            )
-            .disposed(by: disposeBag)
-        ectTagButton.rx.tap
-            .subscribe(
-                with: self,
-                onNext: { owner, _ in
-                    owner.selectButton(button: owner.ectTagButton, type: .ect)
+                onNext: { owner, data in
+                    owner.selectButton(type: data)
                 }
             )
             .disposed(by: disposeBag)
     }
 
-    private func selectButton(button: UIButton, type: TagTypeEnum) {
-        selectTagType.accept(type)
+    private func selectButton(type: TagTypeEnum) {
         [
             naturalTagButton,
             educationTagButton,
             societyTagButton,
             cultureTagButton,
             ectTagButton
-        ].forEach {
-            if button == $0 { $0.backgroundColor = .main }
-            else { $0.backgroundColor = .black400 }
-        }
+        ].forEach { $0.backgroundColor = buttonTypeMapper[type] == $0 ? .main : .black400 }
     }
 
     public override func layoutSubviews() {
