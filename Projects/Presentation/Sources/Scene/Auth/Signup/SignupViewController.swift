@@ -21,7 +21,7 @@ public class SignupViewController: BaseVC<SignupViewModel> {
     private let nameTextField = SharingTextField().then {
         $0.placeholder = "이름"
     }
-    private let ageTextField = SharingTextField().then {
+    private let ageTextField = SharingTextField(keyboardType: .asciiCapableNumberPad).then {
         $0.placeholder = "나이"
     }
     private let signupButton = FillButton(type: .system).then {

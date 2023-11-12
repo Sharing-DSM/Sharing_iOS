@@ -120,7 +120,10 @@ public class HomeViewController: BaseVC<HomeViewModel> {
     }
 
     public override func addView() {
-        view.addSubview(scrollView)
+        [
+            scrollView,
+            writePostButton
+        ].forEach( { view.addSubview($0) })
         scrollView.addSubview(contentView)
         [
             bannerView,
@@ -128,8 +131,7 @@ public class HomeViewController: BaseVC<HomeViewModel> {
             popularHeaderLabel,
             popularTableView,
             areaOfInterestHeaderLabel,
-            areaOfInterstTableView,
-            writePostButton
+            areaOfInterstTableView
         ].forEach{ contentView.addSubview($0) }
     }
 
