@@ -4,7 +4,7 @@ import Presentation
 
 public struct StepperDI {
     public static let shared = resolve()
-    
+
     public let homeViewModel: HomeViewModel
     
     public let loginViewModel: LoginViewModel
@@ -24,23 +24,25 @@ public struct StepperDI {
 
 extension StepperDI {
     private static func resolve() -> StepperDI {
-        let ServiceDI = ServiceDI.shared
-        
+
+        let serviceDI = ServiceDI.shared
+
         // MARK: Home관련 UseCase
         let homeViewModel = HomeViewModel(
             fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
-        
+
         // MARK: Auth관련 UseCase
         let loginViewModel = LoginViewModel(
-            loginUseCase: ServiceDI.loginUseCaseInject
+            loginUseCase: serviceDI.loginUseCaseInject
         )
         let signupViewModel = SignupViewModel(
-            signupUseCase: ServiceDI.signupUseCaseInject
+            signupUseCase: serviceDI.signupUseCaseInject
         )
         let mapViewModel = MapViewModel(
             fetchTotalPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
+
         // MARK: Post관련 UseCase
         let postWriteViewModel = PostWriteViewModel(
             createPostUseCase: serviceDI.createPostUseCase
@@ -53,23 +55,24 @@ extension StepperDI {
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             patchPostUseCase: serviceDI.patchPostUseCase
         )
-        
+
         // MARK: Address관련 UseCase
         let addressViewModel = AddressViewModel(
             fetchAddressUseCase: serviceDI.fetchAddressUseCase
         )
-        
+
         let profileViewModel = ProfileViewModel(
-            fetchUserprofileUseCase: ServiceDI.fetchUserProfileUseCaseInject
+            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCaseInject
         )
         let profileEditViewModel = ProfileEditViewModel(
-            patchUserprofileUseCase: ServiceDI.patchUserProfileUseCaseInject
+            patchUserprofileUseCase: serviceDI.patchUserProfileUseCaseInject
         )
         
         let creatScheduleViewModel = CreateSheduleViewModel(
-            postScheduleUseCase: ServiceDI.postSchedulesUseCaseInject
+            postScheduleUseCase: serviceDI.postSchedulesUseCaseInject
         )
         
+
         return .init(
             homeViewModel: homeViewModel,
             loginViewModel: loginViewModel,
@@ -78,7 +81,7 @@ extension StepperDI {
             postWriteViewModel: postWriteViewModel,
             postDetailViewModel: postDetailViewModel,
             postEditViewModel: postEditViewModel,
-            addressViewModel: addressViewModel
+            addressViewModel: addressViewModel,
             profileViewModel: profileViewModel,
             profileEditViewModel: profileEditViewModel,
             createScheduleViewModel: creatScheduleViewModel

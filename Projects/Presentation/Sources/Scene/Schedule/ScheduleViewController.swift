@@ -21,7 +21,7 @@ public class ScheduleViewController:  UIViewController {
         addView()
         setLayout()
         postWriteButton.rx.tap
-            .map{SharingStep.postDetailsRequired}
+            .map{SharingStep.postWriteRequired}
             .bind(to: steps)
             .disposed(by: disposeBag)
     }

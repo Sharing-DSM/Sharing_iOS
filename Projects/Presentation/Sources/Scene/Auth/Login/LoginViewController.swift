@@ -6,7 +6,7 @@ import RxCocoa
 import SharingKit
 import Core
 
-public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable {
+public class LoginViewController: BaseVC<LoginViewModel> {
 
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
@@ -45,15 +45,15 @@ public class LoginViewController: BaseVC<LoginViewModel>, ViewModelTransformable
         $0.setTitle("로그인", for: .normal)
     }
 
-    public lazy var input: LoginViewModel.Input = LoginViewModel.Input(
-        signupButtonSignal: signupButton.rx.tap.asObservable(),
-        loginButtonSignal: loginButton.rx.tap.asObservable(),
-        idText: idTextField.rx.text.orEmpty.asObservable(),
-        passwordText: passwordTextField.rx.text.orEmpty.asObservable()
-    )
-    public lazy var output: LoginViewModel.Output = viewModel.transform(input: input)
-
     public override func bind() {
+        let input = LoginViewModel.Input(
+            signupButtonSignal: signupButton.rx.tap.asObservable(),
+            loginButtonSignal: loginButton.rx.tap.asObservable(),
+            idText: idTextField.rx.text.orEmpty.asObservable(),
+            passwordText: passwordTextField.rx.text.orEmpty.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+
         output.idErrorDescription.asObservable()
             .bind(to: self.idTextField.errorMessage)
             .disposed(by: disposeBag)

@@ -2,6 +2,7 @@ import UIKit
 import SharingKit
 import Then
 import SnapKit
+import Core
 
 public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
     private let headerLabel = UILabel().then {

@@ -2,8 +2,9 @@ import UIKit
 import SnapKit
 import Then
 import SharingKit
+import Core
 
-public class SignupViewController: BaseVC<SignupViewModel>, ViewModelTransformable {
+public class SignupViewController: BaseVC<SignupViewModel> {
 
     private let signupLabel = UILabel().then {
         $0.text = "회원가입"
@@ -14,12 +15,13 @@ public class SignupViewController: BaseVC<SignupViewModel>, ViewModelTransformab
         $0.placeholder = "아이디"
     }
     private let passwordTextField = SharingTextField().then {
+        $0.isSecurity = true
         $0.placeholder = "비밀번호"
     }
     private let nameTextField = SharingTextField().then {
         $0.placeholder = "이름"
     }
-    private let ageTextField = SharingTextField().then {
+    private let ageTextField = SharingTextField(keyboardType: .asciiCapableNumberPad).then {
         $0.placeholder = "나이"
     }
     private let signupButton = FillButton(type: .system).then {

@@ -1,4 +1,5 @@
 import Foundation
+import Core
 import RxSwift
 
 public class EditScheduleViewModel: ViewModelType {

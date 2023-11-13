@@ -13,5 +13,4 @@ public class AppStepper: Stepper {
     public func readyToEmitSteps() {
         steps.accept(SharingStep.loginRequired)
     }
-}
-
+} 

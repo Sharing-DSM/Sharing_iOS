@@ -10,10 +10,7 @@ class AuthFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = UINavigationController().then {
-        $0.navigationBar.backIndicatorImage = UIImage()
-        $0.navigationBar.backIndicatorTransitionMaskImage = UIImage()
-    }
+    private lazy var rootPresentable = BaseNavigationController()
     private let container = StepperDI.shared
 
     func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {

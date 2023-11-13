@@ -15,7 +15,6 @@ public class SearchBarTextField: UITextField {
         self.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         self.leftViewMode = .always
         self.rightViewMode = .always
-        self.layer.cornerRadius = 25
         self.font = .bodyB2Medium
         self.textColor = .black900
         self.setShadow()

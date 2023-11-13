@@ -4,6 +4,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import Core
 
 public class AlertViewController: UIViewController, HasDisposeBag {
 
@@ -100,7 +101,6 @@ public class AlertViewController: UIViewController, HasDisposeBag {
 
 extension AlertViewController {
     private func showAlertWithAnimation() {
-//        alertBackGroundView.frame = CGRect(origin: CGPoint(x: view.frame.width / 2, y: (view.frame.height / 2) - 200), size: CGSize())
         UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) { [weak self] in
             self?.alertBackGroundView.layer.opacity = 1
             self?.alertBackGroundView.subviews.forEach { $0.layer.opacity = 1 }

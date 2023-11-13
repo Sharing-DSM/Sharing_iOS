@@ -9,29 +9,10 @@ import Core
 import Domain
 
 
-public class HomeViewController: UIViewController {
+public class HomeViewController: BaseVC<HomeViewModel> {
 
-    public init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        popularTableView.delegate = self
-        popularTableView.dataSource = self
-        areaOfInterstTableView.delegate = self
-        areaOfInterstTableView.dataSource = self
-    }
-    // TODO: 나중에 baseview 넣기
-    public override func viewWillLayoutSubviews() {
-        addView()
-        setLayout()
-    }
+    private let viewWillAppearRelay = PublishRelay<Void>()
+    private let showDetailPostRelay = PublishRelay<String>()
 
     private let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -46,25 +27,27 @@ public class HomeViewController: UIViewController {
         $0.backgroundColor = .black50
         $0.setShadow()
     }
-    private let searchBarTextField = SearchBarTextField()
+    private let searchBarTextField = SearchBarTextField().then {
+        $0.layer.cornerRadius = 25
+    }
     private let popularHeaderLabel = UILabel().then {
         $0.text = "인기 자원봉사"
         $0.font = .headerH3SemiBold
         $0.textColor = .black900
     }
     private let popularTableView = UITableView().then {
-        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
-        $0.showsVerticalScrollIndicator = false
+        $0.rowHeight = UITableView.automaticDimension
+        $0.contentInset = .init(top: 5, left: 0, bottom: 10, right: 0)
         $0.isScrollEnabled = false
         $0.separatorStyle = .none
-        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
     }
     private let areaOfInterstTableView = UITableView().then {
-        $0.contentInset = .init(top: 5, left: 0, bottom: 0, right: 0)
-        $0.showsVerticalScrollIndicator = false
+        $0.rowHeight = UITableView.automaticDimension
+        $0.contentInset = .init(top: 5, left: 0, bottom: 10, right: 0)
         $0.isScrollEnabled = false
         $0.separatorStyle = .none
-        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
     }
     
     private let areaOfInterestHeaderLabel = UILabel().then {
@@ -76,8 +59,71 @@ public class HomeViewController: UIViewController {
     private let writePostButton = GradationButton(type: .system).then {
         $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
     }
-    func addView() {
-        view.addSubview(scrollView)
+
+    public override func viewWillAppear(_ animated: Bool) {
+        viewWillAppearRelay.accept(())
+    }
+
+    public override func attribute() {
+        view.backgroundColor = .white
+    }
+
+    public override func bind() {
+        let input = HomeViewModel.Input(
+            viewWillApper: viewWillAppearRelay.asObservable(),
+            showDetailPost: showDetailPostRelay.asObservable(),
+            writePostButtonDidClick: writePostButton.rx.tap.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+
+        output.popularityPostData.asObservable()
+            .bind(to: popularTableView.rx.items(
+                cellIdentifier: PostTableViewCell.identifier,
+                cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
+                    guard let self = self else { return }
+                    cell.postTitleLable.text = element.title
+                    cell.addressLable.text = element.addressName
+                    cell.tagView.setTag(element.type.toTagName)
+                    
+                    cell.cellBackgroundView.backgroundColor = .black50
+                    cell.cellId = element.id
+
+                    cell.setup()
+
+                    popularTableView.snp.updateConstraints {
+                        $0.height.greaterThanOrEqualTo(self.popularTableView.contentSize.height + 5)
+                    }
+                }
+                .disposed(by: disposeBag)
+
+        popularTableView.rx.itemSelected
+            .map { index -> String in
+                guard let cell = self.popularTableView.cellForRow(at: index) as? PostTableViewCell else { return "" }
+                return cell.cellId ?? ""
+            }
+            .bind(to: showDetailPostRelay)
+            .disposed(by: disposeBag)
+
+        output.popularityPostData.asObservable()
+            .bind(to: areaOfInterstTableView.rx.items(
+                cellIdentifier: PostTableViewCell.identifier,
+                cellType: PostTableViewCell.self)) { row, element, cell in
+                    cell.postTitleLable.text = element.title
+                    cell.addressLable.text = element.addressName
+                    cell.tagView.setTag(element.type.rawValue)
+                    cell.cellBackgroundView.backgroundColor = .black50
+                    cell.cellId = element.id
+
+                    cell.setup()
+                }
+                .disposed(by: disposeBag)
+    }
+
+    public override func addView() {
+        [
+            scrollView,
+            writePostButton
+        ].forEach( { view.addSubview($0) })
         scrollView.addSubview(contentView)
         [
             bannerView,
@@ -85,11 +131,11 @@ public class HomeViewController: UIViewController {
             popularHeaderLabel,
             popularTableView,
             areaOfInterestHeaderLabel,
-            areaOfInterstTableView,
-            writePostButton
+            areaOfInterstTableView
         ].forEach{ contentView.addSubview($0) }
     }
-    func setLayout() {
+
+    public override func setLayout() {
         scrollView.snp.makeConstraints {
             $0.left.right.equalToSuperview()
             $0.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -97,7 +143,7 @@ public class HomeViewController: UIViewController {
         contentView.snp.makeConstraints {
             $0.top.width.equalToSuperview()
             $0.bottom.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(areaOfInterstTableView.snp.bottom).offset(10)
+            $0.bottom.equalTo(areaOfInterstTableView.snp.bottom).offset(30)
         }
         bannerView.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -115,7 +161,7 @@ public class HomeViewController: UIViewController {
         popularTableView.snp.makeConstraints {
             $0.top.equalTo(popularHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(self.popularTableView.numberOfRows(inSection: 0) * 100)
+            $0.height.greaterThanOrEqualTo(popularTableView.contentSize.height + 5)
         }
         areaOfInterestHeaderLabel.snp.makeConstraints {
             $0.top.equalTo(popularTableView.snp.bottom).offset(20)
@@ -124,42 +170,12 @@ public class HomeViewController: UIViewController {
         areaOfInterstTableView.snp.makeConstraints {
             $0.top.equalTo(areaOfInterestHeaderLabel.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(self.areaOfInterstTableView.numberOfRows(inSection: 0) * 100)
+            $0.height.greaterThanOrEqualTo(areaOfInterstTableView.contentSize.height + 5)
         }
         writePostButton.snp.makeConstraints {
             $0.width.height.equalTo(70)
-            $0.right.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
     }
-}
-
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == popularTableView {
-            return 2
-        } else if tableView == areaOfInterstTableView {
-            return 5
-        } else {
-            return 0
-        }
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
-        
-        cell.settingCell(
-            title: "어르신 휠체어 이동 도움 및 보조 활동",
-            address: "유성구 전민동",
-            tags: ["생활편의 지원", "노인 보조"],
-            backgroundColor: .black50
-        )
-
-        return cell
-    }
-
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-
 }

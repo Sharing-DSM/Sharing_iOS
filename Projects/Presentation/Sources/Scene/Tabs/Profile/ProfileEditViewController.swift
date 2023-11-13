@@ -2,6 +2,7 @@ import UIKit
 import Then
 import SnapKit
 import SharingKit
+import Core
 
 public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
 

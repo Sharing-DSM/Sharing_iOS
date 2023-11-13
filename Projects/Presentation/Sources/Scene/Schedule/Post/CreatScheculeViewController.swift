@@ -2,6 +2,7 @@ import UIKit
 import SnapKit
 import Then
 import SharingKit
+import Core
 
 public class CreatScheculeViewController: BaseVC<CreateSheduleViewModel> {
 
