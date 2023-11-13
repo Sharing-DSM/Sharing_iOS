@@ -37,12 +37,13 @@ class TabsFlow: Flow {
 
     private func navigateToTabsView() -> FlowContributors {
         let mapViewModel = container.mapViewModel
+        let userProfileViewModel = container.profileViewModel
         
         let mapPostView = MapPostViewController(viewModel: mapViewModel) // MapViewModel inject
         let mapView = MapViewController(viewModel: mapViewModel, mapPostVC: mapPostView) // MapViewModel inject
 
         let homeView = HomeViewController()
-        let profileView = ProfileViewController()
+        let profileView = ProfileViewController(viewModel: userProfileViewModel)
         let chatView = ChatViewController()
 
         mapView.tabBarItem = UITabBarItem(title: "지도", image: UIImage(systemName: "map"), selectedImage: nil)
