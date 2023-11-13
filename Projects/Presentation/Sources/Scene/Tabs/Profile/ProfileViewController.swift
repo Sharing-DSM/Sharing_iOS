@@ -3,22 +3,15 @@ import SnapKit
 import SharingKit
 import Then
 
-public class ProfileViewController: UIViewController {
+import RxFlow
+import RxCocoa
+import Core
+import RxSwift
 
-    public init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        addView()
-        setLayout()
-    }
+
+public class ProfileViewController: BaseVC<ProfileViewModel> {
+
+    private let viewDidLoadRelay = PublishRelay<Void>()
 
     private let profileBackgroundView = UIView().then {
         $0.backgroundColor = .black50
@@ -35,11 +28,11 @@ public class ProfileViewController: UIViewController {
         $0.layer.cornerRadius = 10
     }
     private let nameLabel = UILabel().then {
-        $0.text = "김주영"
+        $0.text = ""
         $0.font = .headerH1Bold
     }
     private let idLabel = UILabel().then {
-        $0.text = "@jyk1029"
+        $0.text = ""
         $0.font = .bodyB1Regular
         $0.textColor = .black600
     }
@@ -111,7 +104,27 @@ public class ProfileViewController: UIViewController {
         $0.backgroundColor = .black50
     }
 
-    private func addView() {
+    public override init(viewModel: ProfileViewModel) {
+        super.init(viewModel: viewModel)
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    public override func attribute() {
+        viewDidLoadRelay.accept(())
+    }
+    public override func bind() {
+        let input = ProfileViewModel.Input(
+            viewDidLoad: viewDidLoadRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        output.userProfileData.asObservable().subscribe(onNext: {
+            self.nameLabel.text = $0.name
+            self.idLabel.text = "@\($0.accountId)"
+        }).disposed(by: disposeBag)
+    }
+
+    public override func addView() {
         view.addSubview(profileBackgroundView)
         [
             profileImageView,
@@ -135,7 +148,7 @@ public class ProfileViewController: UIViewController {
             outOfMemberButton
         ].forEach { view.addSubview($0) }
     }
-    private func setLayout() {
+    public override func setLayout() {
         profileBackgroundView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(75)
             $0.leading.trailing.equalToSuperview().inset(25)

@@ -3,13 +3,7 @@ import Then
 import SnapKit
 import SharingKit
 
-public class ProfileEditViewController: UIViewController {
-
-    public override func viewDidLoad() {
-        view.backgroundColor = .systemBackground
-        addView()
-        setLayout()
-    }
+public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
 
     private let headerLabel = UILabel().then {
         $0.text = "프로필 정보 수정"
@@ -40,7 +34,23 @@ public class ProfileEditViewController: UIViewController {
     private let editCompleteButton = FillButton(type: .system).then {
         $0.setTitle("수정 완료", for: .normal)
     }
-    private func addView() {
+
+    public override init(viewModel: ProfileEditViewModel) {
+        super.init(viewModel: viewModel)
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }    
+    public override func bind() {
+        let input = ProfileEditViewModel.Input(
+            editButtonSignal: editCompleteButton.rx.tap.asObservable(),
+            idText: idTextField.rx.text.orEmpty.asObservable(),
+            nameText: nameTextField.rx.text.orEmpty.asObservable(),
+            ageText: ageTextField.rx.text.orEmpty.asObservable().map { Int($0) ?? 0 }
+        )
+        _ = viewModel.transform(input: input)
+    }
+    public override func addView() {
         [
             headerLabel,
             profileImageView,
@@ -52,7 +62,7 @@ public class ProfileEditViewController: UIViewController {
             editCompleteButton
         ].forEach { view.addSubview($0) }
     }
-    private func setLayout() {
+    public override func setLayout() {
         headerLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(75)
             $0.left.equalToSuperview().inset(25)
