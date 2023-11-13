@@ -8,6 +8,9 @@ public struct StepperDI {
     public let loginViewModel: LoginViewModel
     public let signupViewModel: SignupViewModel
     public let mapViewModel: MapViewModel
+    public let profileViewModel: ProfileViewModel
+    public let profileEditViewModel: ProfileEditViewModel
+    public let createScheduleViewModel: CreateSheduleViewModel
 }
 
 extension StepperDI {
@@ -23,10 +26,24 @@ extension StepperDI {
         )
         let mapViewModel = MapViewModel()
 
+        let profileViewModel = ProfileViewModel(
+            fetchUserprofileUseCase: ServiceDI.fetchUserProfileUseCaseInject
+        )
+        let profileEditViewModel = ProfileEditViewModel(
+            patchUserprofileUseCase: ServiceDI.patchUserProfileUseCaseInject
+        )
+
+        let creatScheduleViewModel = CreateSheduleViewModel(
+            postScheduleUseCase: ServiceDI.postSchedulesUseCaseInject
+        )
+
         return .init(
             loginViewModel: loginViewModel,
             signupViewModel: signupViewModel,
-            mapViewModel: mapViewModel
+            mapViewModel: mapViewModel,
+            profileViewModel: profileViewModel,
+            profileEditViewModel: profileEditViewModel,
+            createScheduleViewModel: creatScheduleViewModel
         )
     }
 }
