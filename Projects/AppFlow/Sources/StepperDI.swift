@@ -6,20 +6,25 @@ public struct StepperDI {
     public static let shared = resolve()
 
     public let homeViewModel: HomeViewModel
-
+    
     public let loginViewModel: LoginViewModel
     public let signupViewModel: SignupViewModel
     public let mapViewModel: MapViewModel
-
+    
     public let postWriteViewModel: PostWriteViewModel
     public let postDetailViewModel: PostDetailViewModel
     public let postEditViewModel: PostEditViewModel
-
+    
     public let addressViewModel: AddressViewModel
+    
+    public let profileViewModel: ProfileViewModel
+    public let profileEditViewModel: ProfileEditViewModel
+    public let createScheduleViewModel: CreateSheduleViewModel
 }
 
 extension StepperDI {
     private static func resolve() -> StepperDI {
+
         let serviceDI = ServiceDI.shared
 
         // MARK: Home관련 UseCase
@@ -57,6 +62,18 @@ extension StepperDI {
             fetchAddressUseCase: serviceDI.fetchAddressUseCase
         )
 
+        let profileViewModel = ProfileViewModel(
+            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCaseInject
+        )
+        let profileEditViewModel = ProfileEditViewModel(
+            patchUserprofileUseCase: serviceDI.patchUserProfileUseCaseInject
+        )
+        
+        let creatScheduleViewModel = CreateSheduleViewModel(
+            postScheduleUseCase: serviceDI.postSchedulesUseCaseInject
+        )
+        
+
         return .init(
             homeViewModel: homeViewModel,
             loginViewModel: loginViewModel,
@@ -65,7 +82,10 @@ extension StepperDI {
             postWriteViewModel: postWriteViewModel,
             postDetailViewModel: postDetailViewModel,
             postEditViewModel: postEditViewModel,
-            addressViewModel: addressViewModel
+            addressViewModel: addressViewModel,
+            profileViewModel: profileViewModel,
+            profileEditViewModel: profileEditViewModel,
+            createScheduleViewModel: creatScheduleViewModel
         )
     }
 }

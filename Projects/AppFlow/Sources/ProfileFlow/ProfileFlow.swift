@@ -28,7 +28,7 @@ class ProfileFlow: Flow {
     }
 
     private func presentProfileView() -> FlowContributors {
-        let profileView = ProfileViewController()
+        let profileView = ProfileViewController(viewModel: container.profileViewModel)
 
         self.rootViewController.pushViewController(profileView, animated: false)
         return .none

@@ -21,6 +21,12 @@ class TestFlow: Flow {
         switch step {
         case .homeRequired:
             return navigateToHomeScreen()
+        case .profileEditRequired:
+            return navigateToProfileEditScreen()
+        case .createScheduleRequired:
+            return navigateToCreateScheduleScreen()
+        case .scheduleRequired:
+            return navigateToScheduleScreen()
         default:
             return .none
         }
@@ -31,5 +37,29 @@ class TestFlow: Flow {
         let testVC = PostDetailViewController(viewModel: container.postDetailViewModel)
         self.rootViewController.pushViewController(testVC, animated: false)
         return .none
+    }
+    private func navigateToProfileEditScreen() -> FlowContributors {
+        let homeViewController = ProfileEditViewController(viewModel: container.profileEditViewModel)
+        self.rootViewController.pushViewController(homeViewController, animated: false)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: homeViewController,
+            withNextStepper:  OneStepper(withSingleStep: SharingStep.profileEditRequired)
+        ))
+    }
+    private func navigateToCreateScheduleScreen() -> FlowContributors {
+        let homeViewController = CreatScheculeViewController(viewModel: container.createScheduleViewModel)
+        self.rootViewController.pushViewController(homeViewController, animated: false)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: homeViewController,
+            withNextStepper:  OneStepper(withSingleStep: SharingStep.createScheduleRequired)
+        ))
+    }
+    private func navigateToScheduleScreen() -> FlowContributors {
+        let homeViewController = ScheduleViewController()
+        self.rootViewController.pushViewController(homeViewController, animated: false)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: homeViewController,
+            withNextStepper:  OneStepper(withSingleStep: SharingStep.scheduleRequired)
+        ))
     }
 }

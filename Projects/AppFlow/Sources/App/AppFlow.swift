@@ -56,7 +56,7 @@ public class AppFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: testFlow,
-            withNextStepper: OneStepper(withSingleStep: SharingStep.homeRequired)
+            withNextStepper: OneStepper(withSingleStep: SharingStep.profileEditRequired)
         ))
     }
 }

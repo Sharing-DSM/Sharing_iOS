@@ -20,6 +20,11 @@ public enum SharingStep: Step {
     case homeRequired
     case postWriteRequired
 
+    //profile
+    case profileEditRequired
+    case createScheduleRequired
+    case scheduleRequired
+
     // chat
     case chatRequired
 
