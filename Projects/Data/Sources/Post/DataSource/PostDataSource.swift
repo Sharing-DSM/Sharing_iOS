@@ -87,4 +87,9 @@ class PostDataSource {
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
     }
+
+    func fetchSurroundingPost(x: Double, y: Double) -> Single<Response> {
+        return provider.rx.request(.fetchSurroundingPost(x: x, y: y))
+            .catch { .error($0.toError(PostError.self)) }
+    }
 }
