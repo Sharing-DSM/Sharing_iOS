@@ -28,7 +28,7 @@ class ChatFlow: Flow {
     }
 
     private func presentChatView() -> FlowContributors {
-        let chatView = ChatViewController()
+        let chatView = ChatViewController(viewModel: ChatViewModel())
 
         self.rootViewController.pushViewController(chatView, animated: false)
         return .none

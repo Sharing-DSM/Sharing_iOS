@@ -27,6 +27,7 @@ public enum SharingStep: Step {
 
     // chat
     case chatRequired
+    case chatRoomRequired(roomID: String)
 
     // profile
     case profileRequired
