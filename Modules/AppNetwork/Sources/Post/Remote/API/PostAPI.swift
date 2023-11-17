@@ -31,7 +31,6 @@ public enum PostAPI {
         volunteerTime: Int,
         isEmergency: Bool
     )
-    case fetchSurroundingPost(x: Double, y: Double)
 }
 
 extension PostAPI: TargetType {
@@ -45,8 +44,6 @@ extension PostAPI: TargetType {
             return "/feeds/"
         case .fetchPostDetail(let id), .deletePost(let id), .editPost(let id, _, _, _, _, _, _, _, _, _, _):
             return "/feeds/\(id)"
-        case .fetchSurroundingPost:
-            return "/feeds/map"
         }
     }
     
@@ -54,7 +51,7 @@ extension PostAPI: TargetType {
         switch self {
         case .fetchPopularityPost, .fetchPostDetail:
             return .get
-        case .createPost, .fetchSurroundingPost:
+        case .createPost:
             return .post
         case .deletePost:
             return .delete
@@ -117,14 +114,6 @@ extension PostAPI: TargetType {
                     "type" : type,
                     "volunteer_time" : volunteerTime,
                     "is_emergency": isEmergency
-                ],
-                encoding: JSONEncoding.default
-            )
-        case .fetchSurroundingPost(let x, let y):
-            return .requestParameters(
-                parameters: [
-                    "x": x,
-                    "y": y
                 ],
                 encoding: JSONEncoding.default
             )

@@ -23,13 +23,13 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
         ])
         $0.setAttributedTitle(attributedTitle, for: .normal)
     }
-    private let idTextField = SharingTextField(title: "아이디").then {
+    public var idTextField = SharingTextField(title: "아이디").then {
         $0.placeholder = "아이디"
     }
-    private let nameTextField = SharingTextField(title: "이름").then {
+    public var nameTextField = SharingTextField(title: "이름").then {
         $0.placeholder = "이름"
     }
-    private let ageTextField = SharingTextField(title: "나이").then {
+    public var ageTextField = SharingTextField(title: "나이").then {
         $0.placeholder = "나이"
     }
     private let editCompleteButton = FillButton(type: .system).then {
@@ -42,6 +42,7 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }    
+    
     public override func bind() {
         let input = ProfileEditViewModel.Input(
             editButtonSignal: editCompleteButton.rx.tap.asObservable(),
@@ -49,7 +50,16 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
             nameText: nameTextField.rx.text.orEmpty.asObservable(),
             ageText: ageTextField.rx.text.orEmpty.asObservable().map { Int($0) ?? 0 }
         )
-        _ = viewModel.transform(input: input)
+        let output = viewModel.transform(input: input)
+        output.nameErrorDescription.asObservable()
+            .bind(to: self.nameTextField.errorMessage)
+            .disposed(by: disposeBag)
+        output.idErrorDescription.asObservable()
+            .bind(to: self.idTextField.errorMessage)
+            .disposed(by: disposeBag)
+        output.ageErrorDescription.asObservable()
+            .bind(to: self.ageTextField.errorMessage)
+            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
@@ -65,7 +75,7 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
     }
     public override func setLayout() {
         headerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(75)
+            $0.top.equalToSuperview().inset(90)
             $0.left.equalToSuperview().inset(25)
             $0.height.equalTo(30)
         }
@@ -80,17 +90,17 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
             $0.height.equalTo(18)
         }
         idTextField.snp.makeConstraints {
-            $0.top.equalTo(profileChangeButton.snp.bottom).offset(24)
+            $0.top.equalTo(profileChangeButton.snp.bottom).offset(35)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(50)
         }
         nameTextField.snp.makeConstraints {
-            $0.top.equalTo(idTextField.snp.bottom).offset(24)
+            $0.top.equalTo(idTextField.snp.bottom).offset(35)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(50)
         }
         ageTextField.snp.makeConstraints {
-            $0.top.equalTo(nameTextField.snp.bottom).offset(24)
+            $0.top.equalTo(nameTextField.snp.bottom).offset(35)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(50)
         }

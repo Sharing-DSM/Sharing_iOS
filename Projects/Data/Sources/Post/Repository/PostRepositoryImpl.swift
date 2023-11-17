@@ -78,10 +78,4 @@ class PostRepositoryImpl: PostRepository {
             isEmergency: isEmergency
         )
     }
-
-    func fetchSurroundingPost(x: Double, y: Double) -> Single<SurroundPostEntity> {
-        return remoteDataSource.fetchSurroundingPost(x: x, y: y)
-            .map(SurroundPostDTO.self)
-            .map { $0.toDomain() }
-    }
 }

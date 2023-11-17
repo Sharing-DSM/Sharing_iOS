@@ -10,56 +10,40 @@ public class MapViewModel: ViewModelType, Stepper {
     
     public var disposeBag = DisposeBag()
 
-    private let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
-    private let fetchPostDetailUseCase: FetchPostDetailUseCase
+    private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
 
-    public init(
-        fetchSurroundingPostUseCase: FetchSurroundingPostUseCase,
-        fetchPostDetailUseCase: FetchPostDetailUseCase
-    ) {
-        self.fetchSurroundingPostUseCase = fetchSurroundingPostUseCase
-        self.fetchPostDetailUseCase = fetchPostDetailUseCase
+    public init(fetchTotalPostUseCase: FetchPopularityPostUseCase) {
+        self.fetchPopularityPostUseCase = fetchTotalPostUseCase
     }
 
-    let surroundPostData = PublishRelay<SurroundPostEntity>()
-    let postDetailData = PublishRelay<PostDetailEntity>()
-    let dismissPostDetail = PublishRelay<Void>()
+    let totalPostData = PublishRelay<PopularityPostEntity>()
 
     public struct Input {
+        let viewDidLoad: Observable<Void>?
         let writePostButtonDidClick: Observable<Void>?
         let selectItem: Signal<String>?
-        let fetchSurroundingPost: Observable<(x: Double, y: Double)>?
-        let dismissPostDetail: Observable<Void>?
     }
     
     public struct Output {
-        let surroundPostData: Signal<SurroundPostEntity>
-        let postDetailData: Signal<PostDetailEntity>
-        let dismissPostDetail: Signal<Void>
+        let totalPostData: Signal<PopularityPostEntity>
     }
 
     public func transform(input: Input) -> Output {
 
-        input.fetchSurroundingPost?.asObservable()
+        input.viewDidLoad?.asObservable()
             .flatMap {
-                self.fetchSurroundingPostUseCase.execute(x: $0.x, y: $0.y)
+                self.fetchPopularityPostUseCase.excute()
                     .catch {
                         print($0.localizedDescription)
                         return .just([])
                     }
             }
-            .bind(to: surroundPostData)
+            .bind(to: totalPostData)
             .disposed(by: disposeBag)
 
         input.selectItem?.asObservable()
-            .flatMap {
-                self.fetchPostDetailUseCase.excute(id: $0)
-                    .catch {
-                        print($0.localizedDescription)
-                        return .never()
-                    }
-            }
-            .bind(to: postDetailData)
+            .map { SharingStep.postDetailRequired(id: $0) }
+            .bind(to: steps)
             .disposed(by: disposeBag)
 
         input.writePostButtonDidClick?
@@ -67,14 +51,6 @@ public class MapViewModel: ViewModelType, Stepper {
             .bind(to: steps)
             .disposed(by: disposeBag)
 
-        input.dismissPostDetail?
-            .bind(to: dismissPostDetail)
-            .disposed(by: disposeBag)
-
-        return Output(
-            surroundPostData: surroundPostData.asSignal(),
-            postDetailData: postDetailData.asSignal(),
-            dismissPostDetail: dismissPostDetail.asSignal()
-        )
+        return Output(totalPostData: totalPostData.asSignal())
     }
 }

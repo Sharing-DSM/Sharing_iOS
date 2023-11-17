@@ -5,8 +5,10 @@ import SnapKit
 import Core
 
 public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
+
+    public var cellId: String = ""
     private let headerLabel = UILabel().then {
-        $0.text = "일정 작성"
+        $0.text = "일정 수정"
         $0.textColor = .main
         $0.font = .headerH1SemiBold
     }
@@ -23,7 +25,7 @@ public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko-KR")
     }
-    private let completeButton = FillButton(type: .system).then {
+    private let editButton = FillButton(type: .system).then {
         $0.setTitle("수정 완료", for: .normal)
     }
 
@@ -34,6 +36,13 @@ public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
     public override func bind() {
+        let input = EditScheduleViewModel.Input(
+            cellId: cellId,
+            scheduleEditButtonDidTap: editButton.rx.tap.asObservable(),
+            titleText: titleTextField.rx.text.orEmpty.asObservable(),
+            dateText: datePicker.rx.date.asObservable()
+        )
+        _ = viewModel.transform(input: input)
     }
 
     public override func addView() {
@@ -42,12 +51,12 @@ public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
             titleTextField,
             dateLabel,
             datePicker,
-            completeButton
+            editButton
         ].forEach { view.addSubview($0) }
     }
     public override func setLayout() {
         headerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(75)
+            $0.top.equalToSuperview().inset(90)
             $0.left.equalToSuperview().inset(25)
             $0.height.equalTo(30)
         }
@@ -66,7 +75,7 @@ public class EditScheduleViewController: BaseVC<EditScheduleViewModel> {
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(100)
         }
-        completeButton.snp.makeConstraints {
+        editButton.snp.makeConstraints {
             $0.top.equalTo(datePicker.snp.bottom).offset(24)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(40)

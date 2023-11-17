@@ -21,16 +21,19 @@ public enum SharingStep: Step {
     case postWriteRequired
 
     //profile
+    case profileRequired
     case profileEditRequired
+    case successProfileEdit
     case createScheduleRequired
+    case successCreateSchedule
     case scheduleRequired
+    case scheduleEditRequired(id: String)
+    case myPostRequired
+    case applyHistoryRequired
+    case completeScheduleAlertRequired
 
     // chat
     case chatRequired
-    case chatRoomRequired(roomID: String)
-
-    // profile
-    case profileRequired
 
     //Alert
     case alertRequired(title: String, content: String)
