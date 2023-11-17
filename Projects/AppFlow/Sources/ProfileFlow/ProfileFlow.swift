@@ -26,8 +26,6 @@ class ProfileFlow: Flow {
             return presentProfileEditView()
         case .scheduleRequired:
             return presentScheduleView()
-        case .loginRequired:
-            return presentLoginView()
         case .createScheduleRequired:
             return presentCreateScheduleView()
         case .myPostRequired:
@@ -35,9 +33,9 @@ class ProfileFlow: Flow {
         case .applyHistoryRequired:
             return presentApplyHistroyView()
         case .successProfileEdit:
-            return successProfileEdit()
+            return popViewController()
         case .successCreateSchedule:
-            return successCreateSchedule()
+            return popViewController()
         case .postDetailRequired(let id):
             return navigateToDetail(id: id)
         case .scheduleEditRequired(let id):
@@ -79,16 +77,6 @@ class ProfileFlow: Flow {
             withNextPresentable: createScheduleView,
             withNextStepper: createScheduleView.viewModel))
     }
-    private func presentLoginView() -> FlowContributors{
-        let loginView = LoginViewController(viewModel: container.loginViewModel)
-        //TODO: 로그인 뷰를 루트뷰로 설정
-        loginView.navigationItem.hidesBackButton = true
-        loginView.hidesBottomBarWhenPushed = true
-        self.rootViewController.pushViewController(loginView, animated: true)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: loginView,
-            withNextStepper: loginView.viewModel ))
-    }
     private func presentMyPostView() -> FlowContributors {
         let myPostView = MyPostViewController(viewModel: container.myPostViewModel)
         self.rootViewController.pushViewController(myPostView, animated: true)
@@ -103,11 +91,7 @@ class ProfileFlow: Flow {
             withNextPresentable: applyHistoryVC,
             withNextStepper: applyHistoryVC.viewModel))
     }
-    private func successProfileEdit() -> FlowContributors {
-        self.rootViewController.popViewController(animated: true)
-        return .none
-    }
-    private func successCreateSchedule() -> FlowContributors {
+    private func popViewController() -> FlowContributors {
         self.rootViewController.popViewController(animated: true)
         return .none
     }

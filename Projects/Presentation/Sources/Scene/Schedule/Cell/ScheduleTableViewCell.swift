@@ -69,6 +69,7 @@ public class ScheduleTableViewCell: UITableViewCell {
                 self.delegate?.checkBoxButtonDidTap(
                     cellId: cellId ?? ""
                 )
+                checkBoxButton.backgroundColor = .main
             }.disposed(by: disposeBag)
     }
     func setUpControl()  {

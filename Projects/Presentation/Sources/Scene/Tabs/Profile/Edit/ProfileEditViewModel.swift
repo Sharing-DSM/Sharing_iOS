@@ -45,7 +45,11 @@ public class ProfileEditViewModel: ViewModelType, Stepper {
             }
             .bind(to: steps)
             .disposed(by: disposeBag)
-        return Output(nameErrorDescription: nameErrorDescription.asSignal(), idErrorDescription: idErrorDescription.asSignal(), ageErrorDescription: ageErrorDescription.asSignal())
+        return Output(
+            nameErrorDescription: nameErrorDescription.asSignal(),
+            idErrorDescription: idErrorDescription.asSignal(),
+            ageErrorDescription: ageErrorDescription.asSignal()
+        )
     }
     private func checkData(_ id: String, _ name: String, _ age: Int) -> Bool {
         if id.isEmpty { idErrorDescription.accept("아이디를 입력해주세요") }

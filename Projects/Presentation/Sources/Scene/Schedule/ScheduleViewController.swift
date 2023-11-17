@@ -81,10 +81,6 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
                 cell.cellId = item.id
                 cell.setup()
                 cell.delegate = self
-                cell.checkBoxButton.rx.tap
-                    .bind {
-                        cell.checkBoxButton.backgroundColor = .main
-                    }.disposed(by: cell.disposeBag)
             }.disposed(by: disposeBag)
 
         output.completeScheduleList
@@ -148,7 +144,7 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
     }
 }
 
-extension ScheduleViewController: UITableViewDelegate, ScheduleTableViewCellDelegate {
+extension ScheduleViewController: ScheduleTableViewCellDelegate {
     public func didTapDeleteButton(cellId: String) {
         self.presentedViewController?.dismiss(animated: false)
         let alert = self.deleteAlertController

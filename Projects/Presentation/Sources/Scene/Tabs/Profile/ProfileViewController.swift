@@ -31,7 +31,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.text = ""
         $0.font = .headerH1Bold
     }
-    private lazy var idLabel = UILabel().then {
+    private let idLabel = UILabel().then {
         $0.text = ""
         $0.font = .bodyB1Regular
         $0.textColor = .black600

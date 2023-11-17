@@ -86,9 +86,6 @@ extension ServiceDI {
             completScheduleUseCaseInject: completeScheduleUsecaseInject,
             patchScheduleUseCaseInject: patchScheduleUseCaseInject,
             deleteScheduleUseCaseInject: deleteScheduleUseCaseInject
-//            postRegisterUseCase: postRegisterUseCaseInject,
-//            postDeleteUseCase: postDeleteUseCaseInject,
-//            postEditUseCase: postEditUseCaseInject
         )
     }
 }

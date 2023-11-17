@@ -24,7 +24,6 @@ public class MyPostViewController: BaseVC<MyPostViewModel> {
         viewWillAppear.accept(())
     }
     public override func bind() {
-        myPostTableView.delegate = self
         viewWillAppear.accept(())
         let input = MyPostViewModel.Input(
             viewWillAppear: viewWillAppear.asObservable(),
@@ -68,16 +67,5 @@ public class MyPostViewController: BaseVC<MyPostViewModel> {
             $0.left.right.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-    }
-}
-
-extension MyPostViewController: UITableViewDelegate {
-//    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 8
-//    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as? PostTableViewCell else {return UITableViewCell()}
-        return cell
     }
 }
