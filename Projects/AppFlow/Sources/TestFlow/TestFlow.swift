@@ -27,6 +27,8 @@ class TestFlow: Flow {
             return navigateToCreateScheduleScreen()
         case .scheduleRequired:
             return navigateToScheduleScreen()
+        case .chatRoomRequired:
+            return navigateToChatRoom()
         default:
             return .none
         }
@@ -61,5 +63,10 @@ class TestFlow: Flow {
             withNextPresentable: homeViewController,
             withNextStepper:  OneStepper(withSingleStep: SharingStep.scheduleRequired)
         ))
+    }
+    private func navigateToChatRoom() -> FlowContributors {
+        let chatRoomViewController = ChatRoomViewController(viewModel: ChatViewModel())
+        self.rootViewController.pushViewController(chatRoomViewController, animated: false)
+        return .none
     }
 }
