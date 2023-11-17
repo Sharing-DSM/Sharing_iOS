@@ -1,6 +1,6 @@
 import Foundation
 
-public struct CompleteScheduleEntity {
+public struct UncompleteScheduleEntity {
     public let id: String
     public let title: String
     public let date: String
