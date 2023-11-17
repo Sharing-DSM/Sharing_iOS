@@ -19,7 +19,12 @@ public struct StepperDI {
     
     public let profileViewModel: ProfileViewModel
     public let profileEditViewModel: ProfileEditViewModel
+    public let myPostViewModel: MyPostViewModel
+    public let applyHistoryViewModel: ApplyHistroyViewModel
+
+    public let scheduleViewModel: ScheduleViewModel
     public let createScheduleViewModel: CreateSheduleViewModel
+    public let editScheduleViewModel: EditScheduleViewModel
 }
 
 extension StepperDI {
@@ -61,13 +66,30 @@ extension StepperDI {
             fetchAddressUseCase: serviceDI.fetchAddressUseCase
         )
 
+        //MARK: Profile관련 UseCase
         let profileViewModel = ProfileViewModel(
             fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCaseInject
         )
         let profileEditViewModel = ProfileEditViewModel(
             patchUserprofileUseCase: serviceDI.patchUserProfileUseCaseInject
         )
-        
+        let myPostViewModel = MyPostViewModel(
+            fetchMyPostUseCase: serviceDI.fetchMyPostUseCaseInject
+        )
+        let applyHistoryViewModel = ApplyHistroyViewModel(
+            fetchApplyHistoryUseCase: serviceDI.fetchApplyHistoryUseCaseInject
+        )
+
+        //MARK: Schedule관련 UseCase
+        let scheduleViewModel = ScheduleViewModel(
+            fetchCompleteScheduleUseCase: serviceDI.fetchCompleteScheduleInject,
+            fetchUnCompleteScheduleUseCase: serviceDI.fetchUnCompleteScheduleInject,
+            completeScheduleUseCase: serviceDI.completScheduleUseCaseInject,
+            deleteScheduleUseCase: serviceDI.deleteScheduleUseCaseInject
+        )
+        let editScheduleViewModel = EditScheduleViewModel(
+            editScheduleUseCase: serviceDI.patchScheduleUseCaseInject
+        )
         let creatScheduleViewModel = CreateSheduleViewModel(
             postScheduleUseCase: serviceDI.postSchedulesUseCaseInject
         )
@@ -84,7 +106,11 @@ extension StepperDI {
             addressViewModel: addressViewModel,
             profileViewModel: profileViewModel,
             profileEditViewModel: profileEditViewModel,
-            createScheduleViewModel: creatScheduleViewModel
+            myPostViewModel: myPostViewModel,
+            applyHistoryViewModel: applyHistoryViewModel,
+            scheduleViewModel: scheduleViewModel,
+            createScheduleViewModel: creatScheduleViewModel,
+            editScheduleViewModel: editScheduleViewModel
         )
     }
 }
