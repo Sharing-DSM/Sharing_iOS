@@ -39,14 +39,13 @@ extension StepperDI {
 
         // MARK: Auth관련 UseCase
         let loginViewModel = LoginViewModel(
-            loginUseCase: serviceDI.loginUseCase
+            loginUseCase: serviceDI.loginUseCaseInject
         )
         let signupViewModel = SignupViewModel(
-            signupUseCase: serviceDI.signupUseCase
+            signupUseCase: serviceDI.signupUseCaseInject
         )
         let mapViewModel = MapViewModel(
-            fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCase,
-            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase
+            fetchTotalPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
 
         // MARK: Post관련 UseCase

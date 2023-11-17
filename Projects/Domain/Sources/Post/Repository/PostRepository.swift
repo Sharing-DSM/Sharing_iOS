@@ -30,5 +30,4 @@ public protocol PostRepository {
         volunteerTime: Int,
         isEmergency: Bool
     ) -> Completable
-    func fetchSurroundingPost(x: Double, y: Double) -> Single<SurroundPostEntity>
 }

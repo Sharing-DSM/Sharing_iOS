@@ -3,15 +3,14 @@ import Domain
 public struct ServiceDI {
     public static let shared = resolve()
 
-    public let loginUseCase: LoginUseCase
-    public let signupUseCase: SignupUseCase
+    public let loginUseCaseInject: LoginUseCase
+    public let signupUseCaseInject: SignupUseCase
 
     public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
     public let createPostUseCase: CreatePostUseCase
     public let deletePostUseCase: DeletePostUseCase
     public let patchPostUseCase: PatchPostUseCase
-    public let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
 
     public let fetchAddressUseCase : FetchAddressUseCase
 
@@ -47,9 +46,8 @@ extension ServiceDI {
         let fetchTotalPostUseCaseInject = FetchPopularityPostUseCase(repository: postRepo)
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
         let createPostUseCaseInject = CreatePostUseCase(repository: postRepo)
-        let deletePostUseCaseInject = DeletePostUseCase(repository: postRepo)
-        let patchPostUseCaseInject = PatchPostUseCase(repository: postRepo)
-        let fetchSurroundingPostUseCaseInject = FetchSurroundingPostUseCase(repository: postRepo)
+        let deletePostUseCase = DeletePostUseCase(repository: postRepo)
+        let patchPostUseCase = PatchPostUseCase(repository: postRepo)
 
         // MARK: Address관련 UseCase
         let fetchAddressUseCaseInject = FetchAddressUseCase(repository: addressRepo)
@@ -70,7 +68,6 @@ extension ServiceDI {
         
 
         return .init(
-
             loginUseCaseInject: loginUseCaseInject,
             signupUseCaseInject: signupUseCaseInject,
             fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
@@ -92,20 +89,6 @@ extension ServiceDI {
 //            postRegisterUseCase: postRegisterUseCaseInject,
 //            postDeleteUseCase: postDeleteUseCaseInject,
 //            postEditUseCase: postEditUseCaseInject
-
-            loginUseCase: loginUseCaseInject,
-            signupUseCase: signupUseCaseInject,
-            fetchUserProfileUseCaseInject: fetchUserProfileUseCaseInject,
-            patchUserProfileUseCaseInject: patchUserProfileUseCaseInject,
-            postSchedulesUseCaseInject: postSchedulesUseCaseInject,
-            fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
-            fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
-            createPostUseCase: createPostUseCaseInject,
-            deletePostUseCase: deletePostUseCaseInject,
-            patchPostUseCase: patchPostUseCaseInject,
-            fetchSurroundingPostUseCase: fetchSurroundingPostUseCaseInject,
-            fetchAddressUseCase: fetchAddressUseCaseInject
-
         )
     }
 }

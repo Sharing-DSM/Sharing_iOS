@@ -34,7 +34,6 @@ public enum SharingStep: Step {
 
     // chat
     case chatRequired
-    case chatRoomRequired(roomID: String)
 
     //Alert
     case alertRequired(title: String, content: String)
