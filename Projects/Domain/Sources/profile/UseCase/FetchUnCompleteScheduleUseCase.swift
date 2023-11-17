@@ -1,7 +1,7 @@
 import Foundation
 import RxSwift
 
-public class PostScheduleUseCase {
+public class FetchUnCompleteScheduleUseCase {
 
     let repository: ProfileRepository
 
@@ -9,7 +9,7 @@ public class PostScheduleUseCase {
         self.repository = repository
     }
 
-    public func excute(title: String, date: String) -> Completable {
-        return repository.postSchedules(title: title, date: date)
+    public func excute() -> Single<[UncompleteScheduleEntity]> {
+        return repository.fetchUnCompleteSchedules()
     }
 }
