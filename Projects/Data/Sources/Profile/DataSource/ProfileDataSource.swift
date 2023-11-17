@@ -22,19 +22,36 @@ class ProfileDataSource {
             .catch { .error($0.toError(ProfileError.self))}
     }
 
+    //Single<Response>
+    func fetchMyPost() -> Single<Response> {
+        return provider.rx.request(.fetchMyPost)
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self))}
+    }
+    func fetchApplyHistory() -> Single<Response> {
+        return provider.rx.request(.fetchApplyHistory)
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self))}
+    }
+
     //schedules
-    func postScheduls(title: String, date: Date) -> Completable {
+    func postScheduls(title: String, date: String) -> Completable {
         return provider.rx.request(.postSchedules(title: title, date: date))
             .asCompletable()
             .catch { .error($0.toError(ProfileError.self))}
     }
-    func fetchCompleteSchedules(id: String) -> Single<Response> {
-        return provider.rx.request(.fetchCompleteSchedules(id: id))
+    func fetchCompleteSchedules() -> Single<Response> {
+        return provider.rx.request(.fetchCompleteSchedules)
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(ProfileError.self))}
     }
-    func patchSchedules(id: String) -> Completable {
-        return provider.rx.request(.patchSchedules(id: id))
+    func fetchUnCompleteSchedules() -> Single<Response> {
+        return provider.rx.request(.fetchUnCompleteSchedule)
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(ProfileError.self))}
+    }
+    func patchSchedules(id: String, title: String, date: String) -> Completable {
+        return provider.rx.request(.patchSchedules(id: id, title: title, date: date))
             .asCompletable()
             .catch { .error($0.toError(ProfileError.self))}
     }
