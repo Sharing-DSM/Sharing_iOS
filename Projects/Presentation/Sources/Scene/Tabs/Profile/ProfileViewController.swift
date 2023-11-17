@@ -31,11 +31,12 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.text = ""
         $0.font = .headerH1Bold
     }
-    private let idLabel = UILabel().then {
+    private lazy var idLabel = UILabel().then {
         $0.text = ""
         $0.font = .bodyB1Regular
         $0.textColor = .black600
     }
+    private let ageText: String = ""
     private let editButton = UIButton(type: .system).then {
         $0.setTitle("내 정보 수정하기", for: .normal)
         $0.setTitleColor(.black900, for: .normal)
@@ -61,6 +62,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.text = "신청 내역"
         $0.font = .bodyB1Medium
     }
+    private let applyButton = UIButton(type: .system)
     private let writtenHistoryView = UIButton(type: .system).then {
         $0.backgroundColor = .black50
         $0.layer.cornerRadius = 10
@@ -73,6 +75,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.text = "작성글"
         $0.font = .bodyB1Medium
     }
+    private let myPostButton = UIButton(type: .system)
     private let scheduleView = UIButton(type: .system).then {
         $0.backgroundColor = .black50
         $0.layer.cornerRadius = 10
@@ -85,6 +88,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.text = "일정"
         $0.font = .bodyB1Medium
     }
+    private let scheduleButton = UIButton(type: .system)
     private let logoutButton = UIButton(type: .system).then {
         $0.setTitle("로그아웃", for: .normal)
         $0.setTitleColor(.black900, for: .normal)
@@ -113,9 +117,18 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
     public override func attribute() {
         viewDidLoadRelay.accept(())
     }
+    public override func viewWillAppear(_ animated: Bool) {
+        viewDidLoadRelay.accept(())
+    }
     public override func bind() {
+
         let input = ProfileViewModel.Input(
-            viewDidLoad: viewDidLoadRelay.asObservable()
+            viewWillApear: viewDidLoadRelay.asObservable(),
+            applyButtonDidTap: applyButton.rx.tap.asObservable(),
+            scheduleButtonDidTap: scheduleButton.rx.tap.asObservable(),
+            profileEditButtonDidTap: editButton.rx.tap.asObservable(),
+            myPostButtonDidTap: myPostButton.rx.tap.asObservable(),
+            logoutButtonDidTap: logoutButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)
         output.userProfileData.asObservable().subscribe(onNext: {
@@ -138,12 +151,15 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             applyHistoryView,
             profilIcon,
             applyHistoryLabel,
+            applyButton,
             writtenHistoryView,
             folderIcon,
             writtenHistoryLabel,
+            myPostButton,
             scheduleView,
             scheduleIcon,
             scheduleLabel,
+            scheduleButton,
             logoutButton,
             outOfMemberButton
         ].forEach { view.addSubview($0) }
@@ -198,6 +214,11 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             $0.centerX.equalTo(writtenHistoryView)
             $0.height.equalTo(22)
         }
+        myPostButton.snp.makeConstraints {
+            $0.top.equalTo(profileBackgroundView.snp.bottom).offset(16)
+            $0.centerX.equalToSuperview()
+            $0.width.height.equalTo(99)
+        }
         applyHistoryView.snp.makeConstraints {
             $0.top.equalTo(profileBackgroundView.snp.bottom).offset(16)
             $0.right.equalTo(writtenHistoryView.snp.left).offset(-17)
@@ -213,6 +234,11 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             $0.centerX.equalTo(applyHistoryView)
             $0.height.equalTo(22)
         }
+        applyButton.snp.makeConstraints {
+            $0.top.equalTo(profileBackgroundView.snp.bottom).offset(16)
+            $0.right.equalTo(writtenHistoryView.snp.left).offset(-17)
+            $0.width.height.equalTo(99)
+        }
         scheduleView.snp.makeConstraints {
             $0.top.equalTo(profileBackgroundView.snp.bottom).offset(16)
             $0.left.equalTo(writtenHistoryView.snp.right).offset(16)
@@ -227,6 +253,11 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             $0.top.equalTo(scheduleIcon.snp.bottom).offset(10)
             $0.centerX.equalTo(scheduleView)
             $0.height.equalTo(22)
+        }
+        scheduleButton.snp.makeConstraints {
+            $0.top.equalTo(profileBackgroundView.snp.bottom).offset(16)
+            $0.left.equalTo(writtenHistoryView.snp.right).offset(16)
+            $0.height.width.equalTo(99)
         }
         outOfMemberButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(32)
