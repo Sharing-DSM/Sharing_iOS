@@ -7,6 +7,8 @@ class ChatTableViewCell: UITableViewCell {
 
     static let Identifier = "ChatTableViewCell"
 
+    public var roomID: String = ""
+
     public var isDidNotRead: Bool = false {
         didSet {
             backgroundColor = isDidNotRead ? .black50 : .white
