@@ -1,5 +1,6 @@
 import Foundation
 import Domain
+import Core
 
 struct ChatListDTO: Decodable {
     let myRoomList: [ChatListDTOMyRoomList]
@@ -36,7 +37,7 @@ extension ChatListDTOMyRoomList {
         return .init(
             roomID: roomID,
             lastChat: lastChat,
-            lastSendAt: lastSendAt.toDate().toString(),
+            lastSendAt: lastSendAt.toDate(.fullDateAndTime).toString("a hh:mm"),
             isRead: isRead,
             roomName: roomName
         )

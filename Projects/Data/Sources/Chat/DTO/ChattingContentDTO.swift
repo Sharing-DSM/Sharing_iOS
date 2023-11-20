@@ -20,7 +20,7 @@ extension ChattingContentDTO {
             roomID: roomID,
             isMine: isMine,
             message: message,
-            sendAt: sendAt.toDate().toString()
+            sendAt: sendAt.toDate(.fullDateAndTimeWithMillisecond).toString("a hh:mm")
         )
     }
 }

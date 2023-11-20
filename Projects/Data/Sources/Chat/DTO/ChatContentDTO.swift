@@ -39,7 +39,7 @@ extension ChatContentDTOElement {
             roomID: roomID,
             isMine: isMine,
             message: message,
-            sendAt: sendAt.toDate().toString()
+            sendAt: sendAt.toDate(.fullDateAndTime).toString("a hh:mm")
         )
     }
 }

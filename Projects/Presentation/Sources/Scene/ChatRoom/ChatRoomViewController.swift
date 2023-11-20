@@ -160,7 +160,6 @@ public class ChatRoomViewController: BaseVC<ChatRoomViewModel> {
             .subscribe(
                 with: self,
                 onNext: { owner, data in
-                    print(data.userName)
                     owner.headerLabel.text = data.userName
                     owner.navigationItem.titleView = owner.headerLabel
                     owner.placeHolderLabel.text = "메시지를 보내어\n\(data.userName)님과의 소통을 시작하세요!"
