@@ -9,7 +9,9 @@ import Core
 public class PostDetailViewController: BaseVC<PostDetailViewModel> {
 
     public var id: String = ""
+    public var userID: String = ""
 
+    private let createChatRoom = PublishRelay<String>()
     private let fetchDetailRelay = PublishRelay<String>()
     private let deletePostRelay = PublishRelay<String>()
     private let editPostRelay = PublishRelay<String>()
@@ -51,7 +53,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     }
     private let detailsLabel = UILabel().then {
         $0.numberOfLines = 0
-        $0.textAlignment = .justified
+        $0.textAlignment = .left
         $0.font = .bodyB2Medium
         $0.textColor = .black900
     }
@@ -121,9 +123,15 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
         let input = PostDetailViewModel.Input(
             fetchDetailView: fetchDetailRelay.asObservable(),
             deletePost: deletePostRelay.asObservable(),
-            editPost: editPostRelay.asObservable()
+            editPost: editPostRelay.asObservable(),
+            chatButtonDidClick: createChatRoom.asObservable()
         )
         let output = viewModel.transform(input: input)
+
+        chatButton.rx.tap
+            .map { self.userID }
+            .bind(to: createChatRoom)
+            .disposed(by: disposeBag)
 
         output.detailData.asObservable()
             .subscribe(
@@ -135,6 +143,9 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
                     owner.recruitmentLabel.text = "모집 인원 : \(data.recruitment)명"
                     owner.detailsLabel.text = data.content
                     owner.interactionButton.isHidden = !data.isMine
+                    owner.chatButton.isHidden = data.isMine
+                    owner.applyButton.isHidden = data.isMine
+                    owner.userID = data.userID
                 }
             )
             .disposed(by: disposeBag)
@@ -208,6 +219,5 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
             $0.width.equalTo(92)
             $0.height.equalTo(40)
         }
-
     }
 }

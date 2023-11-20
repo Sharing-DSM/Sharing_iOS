@@ -12,21 +12,26 @@ public class PostDetailViewModel: ViewModelType, Stepper {
 
     private let fetchPostDetailUseCase: FetchPostDetailUseCase
     private let deletePostUseCase: DeletePostUseCase
+    private let createChatRoomUseCase: CreateChatRoomUseCase
 
     public init(
         fetchPostDetailUseCase: FetchPostDetailUseCase,
-        deletePostUseCase: DeletePostUseCase
+        deletePostUseCase: DeletePostUseCase,
+        createChatRoomUseCase: CreateChatRoomUseCase
     ) {
         self.fetchPostDetailUseCase = fetchPostDetailUseCase
         self.deletePostUseCase = deletePostUseCase
+        self.createChatRoomUseCase = createChatRoomUseCase
     }
 
     private let detailData = PublishRelay<PostDetailEntity>()
+    private let didCreateChatRoom = PublishRelay<ChatRoomIDEntity>()
 
     public struct Input {
         let fetchDetailView: Observable<String>
         let deletePost: Observable<String>
         let editPost: Observable<String>
+        let chatButtonDidClick: Observable<String>
     }
 
     public struct Output {
@@ -59,8 +64,27 @@ public class PostDetailViewModel: ViewModelType, Stepper {
             .map { SharingStep.postEditRequired(id: $0) }
             .bind(to: steps)
             .disposed(by: disposeBag)
-        
-        
-        return Output(detailData: detailData.asSignal())
+
+        input.chatButtonDidClick
+            .flatMap {
+                self.createChatRoomUseCase.execute(userID: $0)
+                    .catch {
+                        print($0.localizedDescription)
+                        return .error($0)
+                    }
+            }
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.steps.accept(SharingStep.chatRoomRequired(roomID: data.roomID))
+                }, onError: { _, _ in
+                    TabBarManager.shared.selectIndex(index: 2)
+                }
+            )
+            .disposed(by: disposeBag)
+
+        return Output(
+            detailData: detailData.asSignal()
+        )
     }
 }
