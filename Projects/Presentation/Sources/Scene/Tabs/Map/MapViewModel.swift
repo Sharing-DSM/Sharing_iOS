@@ -6,19 +6,23 @@ import Domain
 import Core
 
 public class MapViewModel: ViewModelType, Stepper {
+
     public var steps = PublishRelay<Step>()
-    
+
     public var disposeBag = DisposeBag()
 
     private let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
     private let fetchPostDetailUseCase: FetchPostDetailUseCase
+    private let createChatRoomUseCase: CreateChatRoomUseCase
 
     public init(
         fetchSurroundingPostUseCase: FetchSurroundingPostUseCase,
-        fetchPostDetailUseCase: FetchPostDetailUseCase
+        fetchPostDetailUseCase: FetchPostDetailUseCase,
+        createChatRoomUseCase: CreateChatRoomUseCase
     ) {
         self.fetchSurroundingPostUseCase = fetchSurroundingPostUseCase
         self.fetchPostDetailUseCase = fetchPostDetailUseCase
+        self.createChatRoomUseCase = createChatRoomUseCase
     }
 
     let surroundPostData = PublishRelay<SurroundPostEntity>()
@@ -30,6 +34,7 @@ public class MapViewModel: ViewModelType, Stepper {
         let selectItem: Signal<String>?
         let fetchSurroundingPost: Observable<(x: Double, y: Double)>?
         let dismissPostDetail: Observable<Void>?
+        let createChatRoom: Observable<String>?
     }
     
     public struct Output {
@@ -39,6 +44,11 @@ public class MapViewModel: ViewModelType, Stepper {
     }
 
     public func transform(input: Input) -> Output {
+
+        input.writePostButtonDidClick?
+            .map { SharingStep.postWriteRequired }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
 
         input.fetchSurroundingPost?.asObservable()
             .flatMap {
@@ -62,9 +72,21 @@ public class MapViewModel: ViewModelType, Stepper {
             .bind(to: postDetailData)
             .disposed(by: disposeBag)
 
-        input.writePostButtonDidClick?
-            .map { _ in SharingStep.postWriteRequired }
-            .bind(to: steps)
+        input.createChatRoom?
+            .flatMap {
+                self.createChatRoomUseCase.execute(userID: $0)
+                    .catch {
+                        print($0.localizedDescription)
+                        TabBarManager.shared.selectIndex(index: 2)
+                        return .never()
+                    }
+            }
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.steps.accept(SharingStep.chatRoomRequired(roomID: data.roomID))
+                }
+            )
             .disposed(by: disposeBag)
 
         input.dismissPostDetail?

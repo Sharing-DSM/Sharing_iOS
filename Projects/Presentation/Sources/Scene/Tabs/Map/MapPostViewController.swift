@@ -9,7 +9,10 @@ import Core
 
 public class MapPostViewController: BaseVC<MapViewModel> {
 
+    private var userID: String = ""
+
     private let selectItemWithID = PublishRelay<String>()
+    private let createChatRoom = PublishRelay<String>()
 
     let postDetailView = UIView().then {
         $0.backgroundColor = .black50
@@ -48,9 +51,6 @@ public class MapPostViewController: BaseVC<MapViewModel> {
         $0.textColor = .black900
     }
     private let detailsLabel = UILabel().then {
-        $0.text = """
-        asdfaklsjdf;lkasjdfasdjf;laksdjfk;lajsd;klfj;kalsjdfk;lalsdjfk;lasdjfk;ljaskldf;as
-        """
         $0.numberOfLines = 0
         $0.textAlignment = .natural
         $0.font = .bodyB2Medium
@@ -85,7 +85,8 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             writePostButtonDidClick: nil,
             selectItem: selectItemWithID.asSignal(),
             fetchSurroundingPost: nil,
-            dismissPostDetail: nil
+            dismissPostDetail: nil,
+            createChatRoom: createChatRoom.asObservable()
         )
         let output = viewModel.transform(input: input)
 
@@ -99,6 +100,11 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             .bind(to: selectItemWithID)
             .disposed(by: disposeBag)
 
+        chatButton.rx.tap
+            .map { self.userID }
+            .bind(to: createChatRoom)
+            .disposed(by: disposeBag)
+
         output.postDetailData.asObservable()
             .subscribe(
                 with: self,
@@ -108,6 +114,9 @@ public class MapPostViewController: BaseVC<MapViewModel> {
                     owner.volunteerTimeLabel.text = "봉사 시간 : \(data.volunteerTime)시간"
                     owner.recruitmentLabel.text = "모집 인원 : \(data.recruitment)명"
                     owner.detailsLabel.text = data.content
+                    owner.userID = data.userID
+                    owner.chatButton.isHidden = data.isMine
+                    owner.applyButton.isHidden = data.isMine
                     owner.postDetailView.isHidden = false
                 }
             )
