@@ -3,16 +3,18 @@ import Domain
 public struct ServiceDI {
     public static let shared = resolve()
 
+    // Auth
     public let loginUseCase: LoginUseCase
     public let signupUseCase: SignupUseCase
 
-
+    // Profile
     public let fetchUserProfileUseCaseInject: FetchUserProfileUseCase
     public let patchUserProfileUseCaseInject: PatchUserProfileUseCase
 
-    //schedules
+    // Schedules
     public let postSchedulesUseCaseInject: PostScheduleUseCase
 
+    // Post
     public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
     public let createPostUseCase: CreatePostUseCase
@@ -20,6 +22,12 @@ public struct ServiceDI {
     public let patchPostUseCase: PatchPostUseCase
     public let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
 
+    //Chat
+    public let fetchChatRoomListUseCase: FetchChatRoomListUseCase
+    public let createChatRoomUseCase: CreateChatRoomUseCase
+    public let chattingUseCase: ChattingUseCase
+
+    // Address
     public let fetchAddressUseCase : FetchAddressUseCase
 
 }
@@ -27,14 +35,16 @@ public struct ServiceDI {
 extension ServiceDI {
     private static func resolve() -> ServiceDI {
         let authRepo = AuthRepositoryImpl()
-
         let profileRepo = ProfileRepositoryImpl()
-
         let postRepo = PostRepositoryImpl()
+        let chatRepo = ChatRepositoryImpl()
         let addressRepo = AddressRepositoryImpl()
 
         // MARK: Auth관련 UseCase
-        let loginUseCaseInject = LoginUseCase(repository: authRepo)
+        let loginUseCaseInject = LoginUseCase(
+            authRepository: authRepo,
+            chatRepository: chatRepo
+        )
         let signupUseCaseInject = SignupUseCase(repository: authRepo)
 
         let fetchUserProfileUseCaseInject = FetchUserProfileUseCase(repository: profileRepo)
@@ -49,6 +59,11 @@ extension ServiceDI {
         let deletePostUseCaseInject = DeletePostUseCase(repository: postRepo)
         let patchPostUseCaseInject = PatchPostUseCase(repository: postRepo)
         let fetchSurroundingPostUseCaseInject = FetchSurroundingPostUseCase(repository: postRepo)
+
+        // MARK: Chat관련 UseCase
+        let fetchChatRoomListUseCaseInject = FetchChatRoomListUseCase(repository: chatRepo)
+        let createChatRoomUseCaseInject = CreateChatRoomUseCase(repository: chatRepo)
+        let chattingUseCaseInject = ChattingUseCase(repository: chatRepo)
 
         // MARK: Address관련 UseCase
         let fetchAddressUseCaseInject = FetchAddressUseCase(repository: addressRepo)
@@ -65,6 +80,9 @@ extension ServiceDI {
             deletePostUseCase: deletePostUseCaseInject,
             patchPostUseCase: patchPostUseCaseInject,
             fetchSurroundingPostUseCase: fetchSurroundingPostUseCaseInject,
+            fetchChatRoomListUseCase: fetchChatRoomListUseCaseInject,
+            createChatRoomUseCase: createChatRoomUseCaseInject,
+            chattingUseCase: chattingUseCaseInject,
             fetchAddressUseCase: fetchAddressUseCaseInject
         )
     }

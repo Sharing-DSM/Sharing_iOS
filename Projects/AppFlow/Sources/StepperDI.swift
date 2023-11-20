@@ -14,7 +14,10 @@ public struct StepperDI {
     public let postWriteViewModel: PostWriteViewModel
     public let postDetailViewModel: PostDetailViewModel
     public let postEditViewModel: PostEditViewModel
-    
+
+    public let chatViewModel: ChatViewModel
+    public let chatRoomViewModel: ChatRoomViewModel
+
     public let addressViewModel: AddressViewModel
     
     public let profileViewModel: ProfileViewModel
@@ -27,12 +30,12 @@ extension StepperDI {
 
         let serviceDI = ServiceDI.shared
 
-        // MARK: Home관련 UseCase
+        // MARK: Home관련 viewModel
         let homeViewModel = HomeViewModel(
             fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
 
-        // MARK: Auth관련 UseCase
+        // MARK: Auth관련 viewModel
         let loginViewModel = LoginViewModel(
             loginUseCase: serviceDI.loginUseCase
         )
@@ -41,23 +44,34 @@ extension StepperDI {
         )
         let mapViewModel = MapViewModel(
             fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCase,
-            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase
         )
 
-        // MARK: Post관련 UseCase
+        // MARK: Post관련 viewModel
         let postWriteViewModel = PostWriteViewModel(
             createPostUseCase: serviceDI.createPostUseCase
         )
         let postDetailViewModel = PostDetailViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
-            deletePostUseCase: serviceDI.deletePostUseCase
+            deletePostUseCase: serviceDI.deletePostUseCase,
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase
         )
         let postEditViewModel = PostEditViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             patchPostUseCase: serviceDI.patchPostUseCase
         )
 
-        // MARK: Address관련 UseCase
+        // MARK: Chat관련 viewModel
+        let chatViewModel = ChatViewModel(
+            fetchChatRoomListUseCase: serviceDI.fetchChatRoomListUseCase,
+            chattingUseCase: serviceDI.chattingUseCase
+        )
+        let chatRoomViewModel = ChatRoomViewModel(
+            chattingUseCase: serviceDI.chattingUseCase
+        )
+
+        // MARK: Address관련 viewModel
         let addressViewModel = AddressViewModel(
             fetchAddressUseCase: serviceDI.fetchAddressUseCase
         )
@@ -82,6 +96,8 @@ extension StepperDI {
             postWriteViewModel: postWriteViewModel,
             postDetailViewModel: postDetailViewModel,
             postEditViewModel: postEditViewModel,
+            chatViewModel: chatViewModel,
+            chatRoomViewModel: chatRoomViewModel,
             addressViewModel: addressViewModel,
             profileViewModel: profileViewModel,
             profileEditViewModel: profileEditViewModel,
