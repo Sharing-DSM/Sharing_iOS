@@ -84,7 +84,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     private func settingMenu() {
         let postEditButton = UIAction(
             title: "수정하기",
-            image: nil,
+            image: UIImage(systemName: "pencil"),
             handler: { [weak self] _ in
                 guard let self = self else { return }
                 editPostRelay.accept(id)
@@ -92,7 +92,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
         )
         let postDeleteButton = UIAction(
             title: "삭제하기",
-            image: nil,
+            image: UIImage(systemName: "trash"),
             attributes: .destructive,
             handler: { [weak self] _ in
                 guard let self = self else { return }

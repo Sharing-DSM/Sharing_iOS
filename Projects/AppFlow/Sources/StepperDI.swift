@@ -37,76 +37,76 @@ extension StepperDI {
 
         // MARK: Home관련 viewModel
         let homeViewModel = HomeViewModel(
-            fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCaseInject
+            fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase
         )
 
         // MARK: Auth관련 viewModel
         let loginViewModel = LoginViewModel(
-            loginUseCase: serviceDI.loginUseCaseInject
+            loginUseCase: serviceDI.loginUseCase
         )
         let signupViewModel = SignupViewModel(
-            signupUseCase: serviceDI.signupUseCaseInject
+            signupUseCase: serviceDI.signupUseCase
         )
         let mapViewModel = MapViewModel(
-            fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCaseInject,
-            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCaseInject,
-            createChatRoomUseCase: serviceDI.createChatRoomUseCaseInject
+            fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCase,
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase
         )
 
         // MARK: Post관련 viewModel
         let postWriteViewModel = PostWriteViewModel(
-            createPostUseCase: serviceDI.createPostUseCaseInject
+            createPostUseCase: serviceDI.createPostUseCase
         )
         let postDetailViewModel = PostDetailViewModel(
-            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCaseInject,
-            deletePostUseCase: serviceDI.deletePostUseCaseInject,
-            createChatRoomUseCase: serviceDI.createChatRoomUseCaseInject
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            deletePostUseCase: serviceDI.deletePostUseCase,
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase
         )
         let postEditViewModel = PostEditViewModel(
-            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCaseInject,
-            patchPostUseCase: serviceDI.patchPostUseCaseInject
+            fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
+            patchPostUseCase: serviceDI.patchPostUseCase
         )
 
         // MARK: Chat관련 viewModel
         let chatViewModel = ChatViewModel(
-            fetchChatRoomListUseCase: serviceDI.fetchChatRoomListUseCaseInject,
-            chattingUseCase: serviceDI.chattingUseCaseInject
+            fetchChatRoomListUseCase: serviceDI.fetchChatRoomListUseCase,
+            chattingUseCase: serviceDI.chattingUseCase
         )
         let chatRoomViewModel = ChatRoomViewModel(
-            chattingUseCase: serviceDI.chattingUseCaseInject
+            chattingUseCase: serviceDI.chattingUseCase
         )
 
         // MARK: Address관련 viewModel
         let addressViewModel = AddressViewModel(
-            fetchAddressUseCase: serviceDI.fetchAddressUseCaseInject
+            fetchAddressUseCase: serviceDI.fetchAddressUseCase
         )
 
         //MARK: Profile관련 UseCase
         let profileViewModel = ProfileViewModel(
-            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCaseInject
+            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCase
         )
         let profileEditViewModel = ProfileEditViewModel(
-            patchUserprofileUseCase: serviceDI.patchUserProfileUseCaseInject
+            patchUserprofileUseCase: serviceDI.patchUserProfileUseCase
         )
         let myPostViewModel = MyPostViewModel(
-            fetchMyPostUseCase: serviceDI.fetchMyPostUseCaseInject
+            fetchMyPostUseCase: serviceDI.fetchMyPostUseCase
         )
         let applyHistoryViewModel = ApplyHistroyViewModel(
-            fetchApplyHistoryUseCase: serviceDI.fetchApplyHistoryUseCaseInject
+            fetchApplyHistoryUseCase: serviceDI.fetchApplyHistoryUseCase
         )
 
         //MARK: Schedule관련 UseCase
         let scheduleViewModel = ScheduleViewModel(
-            fetchCompleteScheduleUseCase: serviceDI.fetchCompleteScheduleInject,
-            fetchUnCompleteScheduleUseCase: serviceDI.fetchUnCompleteScheduleInject,
-            completeScheduleUseCase: serviceDI.completScheduleUseCaseInject,
-            deleteScheduleUseCase: serviceDI.deleteScheduleUseCaseInject
+            fetchCompleteScheduleUseCase: serviceDI.fetchCompleteSchedule,
+            fetchUnCompleteScheduleUseCase: serviceDI.fetchUnCompleteSchedule,
+            completeScheduleUseCase: serviceDI.completScheduleUseCase,
+            deleteScheduleUseCase: serviceDI.deleteScheduleUseCase
         )
         let editScheduleViewModel = EditScheduleViewModel(
-            editScheduleUseCase: serviceDI.patchScheduleUseCaseInject
+            editScheduleUseCase: serviceDI.patchScheduleUseCase
         )
         let creatScheduleViewModel = CreateSheduleViewModel(
-            postScheduleUseCase: serviceDI.postSchedulesUseCaseInject
+            postScheduleUseCase: serviceDI.postSchedulesUseCase
         )
         
 
