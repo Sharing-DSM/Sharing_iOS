@@ -48,12 +48,14 @@ class PostDataSource {
             volunteerTime: volunteerTime,
             isEmergency: isEmergency
         ))
+        .filterSuccessfulStatusCodes()
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
     }
 
     func deletePost(id: String) -> Completable {
         return provider.rx.request(.deletePost(id: id))
+            .filterSuccessfulStatusCodes()
             .asCompletable()
             .catch { .error($0.toError(PostError.self)) }
     }
@@ -84,7 +86,14 @@ class PostDataSource {
             volunteerTime: volunteerTime,
             isEmergency: isEmergency
         ))
+        .filterSuccessfulStatusCodes()
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
+    }
+
+    func fetchSurroundingPost(x: Double, y: Double) -> Single<Response> {
+        return provider.rx.request(.fetchSurroundingPost(x: x, y: y))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
     }
 }

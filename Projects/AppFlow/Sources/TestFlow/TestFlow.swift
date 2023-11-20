@@ -51,4 +51,10 @@ class TestFlow: Flow {
             withNextStepper:  OneStepper(withSingleStep: SharingStep.scheduleRequired)
         ))
     }
+
+    private func navigateToChatRoom() -> FlowContributors {
+        let chatRoomViewController = ChatRoomViewController(viewModel: container.chatRoomViewModel)
+        self.rootViewController.pushViewController(chatRoomViewController, animated: false)
+        return .none
+    }
 }

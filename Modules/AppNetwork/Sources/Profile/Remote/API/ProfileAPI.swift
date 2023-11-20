@@ -31,7 +31,7 @@ extension ProfileAPI: TargetType {
             return "/schedules"
         case .postSchedules:
             return "/schedules"
-        case .patchSchedules(let id, let title, let date):
+        case .patchSchedules(let id, _, _):
             return "schedules/\(id)"
         case .deleteSchedules(let id):
             return "/schedules/\(id)"

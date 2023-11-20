@@ -22,15 +22,26 @@ class ChatFlow: Flow {
         switch step {
         case .chatRequired:
             return presentChatView()
+        case .chatRoomRequired(let roomID):
+            return presentChatRoom(roomID: roomID)
         default:
             return .none
         }
     }
 
     private func presentChatView() -> FlowContributors {
-        let chatView = ChatViewController()
+        let chatVC = ChatViewController(viewModel: container.chatViewModel)
+        self.rootViewController.pushViewController(chatVC, animated: false)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: chatVC,
+            withNextStepper: chatVC.viewModel
+        ))
+    }
 
-        self.rootViewController.pushViewController(chatView, animated: false)
+    private func presentChatRoom(roomID: String) -> FlowContributors {
+        let chatRoomVC = ChatRoomViewController(viewModel: container.chatRoomViewModel)
+        chatRoomVC.roomID = roomID
+        self.rootViewController.pushViewController(chatRoomVC, animated: true)
         return .none
     }
 }

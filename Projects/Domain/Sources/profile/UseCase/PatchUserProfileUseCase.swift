@@ -3,7 +3,7 @@ import RxSwift
 
 public class PatchUserProfileUseCase {
 
-    private let repository: ProfileRepository
+    let repository: ProfileRepository
 
     public init(repository: ProfileRepository) {
         self.repository = repository

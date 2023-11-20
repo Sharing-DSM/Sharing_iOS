@@ -15,6 +15,7 @@ public enum SharingStep: Step {
 
     // map
     case mapRequired
+    
 
     //home
     case homeRequired
@@ -34,6 +35,7 @@ public enum SharingStep: Step {
 
     // chat
     case chatRequired
+    case chatRoomRequired(roomID: String)
 
     //Alert
     case alertRequired(title: String, content: String)
