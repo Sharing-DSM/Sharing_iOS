@@ -29,6 +29,8 @@ class MapFlow: Flow {
             return popWhenSucceedCreatePost()
         case .errorAlertRequired(let content):
             return presentErrorAlert(content)
+        case .chatRoomRequired(let roomID):
+            return navigateToChatRoom(roomID: roomID)
         default:
             return .none
         }
@@ -75,6 +77,17 @@ class MapFlow: Flow {
         errorAlert.modalPresentationStyle = .overFullScreen
         rootViewController.present(errorAlert, animated: false)
         return .none
+    }
+
+    private func navigateToChatRoom(roomID: String) -> FlowContributors {
+        let chatRoomVC = ChatRoomViewController(viewModel: container.chatRoomViewModel)
+        chatRoomVC.roomID = roomID
+        self.rootViewController.pushViewController(chatRoomVC, animated: true)
+
+        return .one(flowContributor: .contribute(
+            withNextPresentable: chatRoomVC,
+            withNextStepper: chatRoomVC.viewModel
+        ))
     }
 
     private func popWhenSucceedCreatePost() -> FlowContributors {

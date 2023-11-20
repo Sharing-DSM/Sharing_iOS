@@ -26,6 +26,8 @@ class HomeFlow: Flow {
             return navigateToPostWriteScreen()
         case .postEditRequired(let id):
             return navigateToPostEditScreen(id: id)
+        case .chatRoomRequired(let roomID):
+            return navigateToChatRoom(roomID: roomID)
         case .popRequired:
             return popRequired()
         default:
@@ -80,6 +82,17 @@ class HomeFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: editViewController,
             withNextStepper: editViewController.viewModel
+        ))
+    }
+
+    private func navigateToChatRoom(roomID: String) -> FlowContributors {
+        let chatRoomVC = ChatRoomViewController(viewModel: container.chatRoomViewModel)
+        chatRoomVC.roomID = roomID
+        self.rootViewController.pushViewController(chatRoomVC, animated: true)
+
+        return .one(flowContributor: .contribute(
+            withNextPresentable: chatRoomVC,
+            withNextStepper: chatRoomVC.viewModel
         ))
     }
 

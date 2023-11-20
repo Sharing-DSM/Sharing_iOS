@@ -65,7 +65,7 @@ class TestFlow: Flow {
         ))
     }
     private func navigateToChatRoom() -> FlowContributors {
-        let chatRoomViewController = ChatRoomViewController(viewModel: ChatViewModel())
+        let chatRoomViewController = ChatRoomViewController(viewModel: container.chatRoomViewModel)
         self.rootViewController.pushViewController(chatRoomViewController, animated: false)
         return .none
     }
