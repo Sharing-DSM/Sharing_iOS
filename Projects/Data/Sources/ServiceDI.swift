@@ -4,32 +4,38 @@ public struct ServiceDI {
     public static let shared = resolve()
 
     // Auth
-    public let loginUseCase: LoginUseCase
-    public let signupUseCase: SignupUseCase
-
-    // Profile
-    public let fetchUserProfileUseCaseInject: FetchUserProfileUseCase
-    public let patchUserProfileUseCaseInject: PatchUserProfileUseCase
-
-    // Schedules
-    public let postSchedulesUseCaseInject: PostScheduleUseCase
+    public let loginUseCaseInject: LoginUseCase
+    public let signupUseCaseInject: SignupUseCase
 
     // Post
-    public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
-    public let fetchPostDetailUseCase: FetchPostDetailUseCase
-    public let createPostUseCase: CreatePostUseCase
-    public let deletePostUseCase: DeletePostUseCase
-    public let patchPostUseCase: PatchPostUseCase
-    public let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
+    public let fetchPopularityPostUseCaseInject: FetchPopularityPostUseCase
+    public let fetchPostDetailUseCaseInject: FetchPostDetailUseCase
+    public let createPostUseCaseInject: CreatePostUseCase
+    public let deletePostUseCaseInject: DeletePostUseCase
+    public let patchPostUseCaseInject: PatchPostUseCase
+    public let fetchSurroundingPostUseCaseInject: FetchSurroundingPostUseCase
 
     //Chat
-    public let fetchChatRoomListUseCase: FetchChatRoomListUseCase
-    public let createChatRoomUseCase: CreateChatRoomUseCase
-    public let chattingUseCase: ChattingUseCase
+    public let fetchChatRoomListUseCaseInject: FetchChatRoomListUseCase
+    public let createChatRoomUseCaseInject: CreateChatRoomUseCase
+    public let chattingUseCaseInject: ChattingUseCase
 
     // Address
-    public let fetchAddressUseCase : FetchAddressUseCase
+    public let fetchAddressUseCaseInject: FetchAddressUseCase
 
+    //userProfile
+    public let fetchUserProfileUseCaseInject: FetchUserProfileUseCase
+    public let patchUserProfileUseCaseInject: PatchUserProfileUseCase
+    public let fetchMyPostUseCaseInject: FetchMyPostUseCase
+    public let fetchApplyHistoryUseCaseInject: FetchApplyHistoryUseCase
+    
+    //schedules
+    public let postSchedulesUseCaseInject: PostScheduleUseCase
+    public let fetchCompleteScheduleInject: FetchCompletScheduleUseCase
+    public let fetchUnCompleteScheduleInject: FetchUnCompleteScheduleUseCase
+    public let completScheduleUseCaseInject: CompleteScheduleUseCase
+    public let patchScheduleUseCaseInject: PatchScheduleUseCase
+    public let deleteScheduleUseCaseInject: DeleteScheduleUseCase
 }
 
 extension ServiceDI {
@@ -47,11 +53,6 @@ extension ServiceDI {
         )
         let signupUseCaseInject = SignupUseCase(repository: authRepo)
 
-        let fetchUserProfileUseCaseInject = FetchUserProfileUseCase(repository: profileRepo)
-        let patchUserProfileUseCaseInject = PatchUserProfileUseCase(repository: profileRepo)
-
-        let postSchedulesUseCaseInject = PostScheduleUseCase(repository: profileRepo)
-
         // MARK: Post관련 UseCase
         let fetchTotalPostUseCaseInject = FetchPopularityPostUseCase(repository: postRepo)
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
@@ -68,22 +69,44 @@ extension ServiceDI {
         // MARK: Address관련 UseCase
         let fetchAddressUseCaseInject = FetchAddressUseCase(repository: addressRepo)
 
+        // MARK: UserProfile관련 UseCase
+        let fetchUserProfileUseCaseInject = FetchUserProfileUseCase(repository: profileRepo)
+        let patchUserProfileUseCaseInject = PatchUserProfileUseCase(repository: profileRepo)
+        let fetchMyPostUseCaseInject = FetchMyPostUseCase(repository: profileRepo)
+        let fetchMyApplyHistoryUseCaseInject = FetchApplyHistoryUseCase(repository: profileRepo)
+
+        // MARK: Schedule관련 UseCase
+        let postSchedulesUseCaseInject = PostScheduleUseCase(repository: profileRepo)
+        let fetchCompleteScheduleUseCaseInject = FetchCompletScheduleUseCase(repository: profileRepo)
+        let fetchUnCompleteScheduleUseCaseInject = FetchUnCompleteScheduleUseCase(repository: profileRepo)
+        let completeScheduleUsecaseInject = CompleteScheduleUseCase(repository: profileRepo)
+        let patchScheduleUseCaseInject = PatchScheduleUseCase(repository: profileRepo)
+        let deleteScheduleUseCaseInject = DeleteScheduleUseCase(repository: profileRepo)
+        
+
         return .init(
-            loginUseCase: loginUseCaseInject,
-            signupUseCase: signupUseCaseInject,
+            loginUseCaseInject: loginUseCaseInject,
+            signupUseCaseInject: signupUseCaseInject,
+            fetchPopularityPostUseCaseInject: fetchTotalPostUseCaseInject,
+            fetchPostDetailUseCaseInject: fetchPostDetailUseCaseInject,
+            createPostUseCaseInject: createPostUseCaseInject,
+            deletePostUseCaseInject: deletePostUseCaseInject,
+            patchPostUseCaseInject: patchPostUseCaseInject,
+            fetchSurroundingPostUseCaseInject: fetchSurroundingPostUseCaseInject,
+            fetchChatRoomListUseCaseInject: fetchChatRoomListUseCaseInject,
+            createChatRoomUseCaseInject: createChatRoomUseCaseInject,
+            chattingUseCaseInject: chattingUseCaseInject,
+            fetchAddressUseCaseInject: fetchAddressUseCaseInject,
             fetchUserProfileUseCaseInject: fetchUserProfileUseCaseInject,
             patchUserProfileUseCaseInject: patchUserProfileUseCaseInject,
+            fetchMyPostUseCaseInject: fetchMyPostUseCaseInject,
+            fetchApplyHistoryUseCaseInject: fetchMyApplyHistoryUseCaseInject,
             postSchedulesUseCaseInject: postSchedulesUseCaseInject,
-            fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
-            fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
-            createPostUseCase: createPostUseCaseInject,
-            deletePostUseCase: deletePostUseCaseInject,
-            patchPostUseCase: patchPostUseCaseInject,
-            fetchSurroundingPostUseCase: fetchSurroundingPostUseCaseInject,
-            fetchChatRoomListUseCase: fetchChatRoomListUseCaseInject,
-            createChatRoomUseCase: createChatRoomUseCaseInject,
-            chattingUseCase: chattingUseCaseInject,
-            fetchAddressUseCase: fetchAddressUseCaseInject
+            fetchCompleteScheduleInject: fetchCompleteScheduleUseCaseInject,
+            fetchUnCompleteScheduleInject: fetchUnCompleteScheduleUseCaseInject,
+            completScheduleUseCaseInject: completeScheduleUsecaseInject,
+            patchScheduleUseCaseInject: patchScheduleUseCaseInject,
+            deleteScheduleUseCaseInject: deleteScheduleUseCaseInject
         )
     }
 }

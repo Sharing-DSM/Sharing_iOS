@@ -9,7 +9,7 @@ public class PostScheduleUseCase {
         self.repository = repository
     }
 
-    public func excute(title: String, date: Date) -> Completable {
+    public func excute(title: String, date: String) -> Completable {
         return repository.postSchedules(title: title, date: date)
     }
 }

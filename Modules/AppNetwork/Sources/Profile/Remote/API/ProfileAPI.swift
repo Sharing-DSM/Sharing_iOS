@@ -6,10 +6,12 @@ public enum ProfileAPI {
     case fetchUserProfile
     case patchUserProfile(name: String, id: String, age: Int)
 
-    case postSchedules(title: String, date: Date)
-    case fetchCompleteSchedules(id: String)
+    case postSchedules(title: String, date: String)
+    case fetchCompleteSchedules
     case fetchUnCompleteSchedule
-    case patchSchedules(id: String)
+    case fetchMyPost
+    case fetchApplyHistory
+    case patchSchedules(id: String, title: String, date: String)
     case deleteSchedules(id: String)
     case completScheules(id: String)
 }
@@ -29,12 +31,16 @@ extension ProfileAPI: TargetType {
             return "/schedules"
         case .postSchedules:
             return "/schedules"
-        case .patchSchedules(let id):
+        case .patchSchedules(let id, _, _):
             return "schedules/\(id)"
         case .deleteSchedules(let id):
             return "/schedules/\(id)"
         case .completScheules(let id):
             return "schedules/check/\(id)"
+        case .fetchMyPost:
+            return "/feeds/mine"
+        case .fetchApplyHistory:
+            return "feeds/apply"
         }
     }
     
@@ -42,9 +48,14 @@ extension ProfileAPI: TargetType {
         switch self {
         case .postSchedules:
             return .post
-        case .patchUserProfile, .patchSchedules:
+        case .patchUserProfile, 
+             .patchSchedules:
             return .patch
-        case .fetchUserProfile, .fetchCompleteSchedules, .fetchUnCompleteSchedule:
+        case .fetchUserProfile, 
+             .fetchCompleteSchedules,
+             .fetchUnCompleteSchedule,
+             .fetchMyPost,
+             .fetchApplyHistory:
             return .get
         case .deleteSchedules:
             return .delete
@@ -61,13 +72,24 @@ extension ProfileAPI: TargetType {
                     "title": title,
                     "date": date
                 ],
-                encoding: URLEncoding.queryString)
+                encoding: JSONEncoding.default)
         case .patchUserProfile(let name, let id, let age):
             return .requestParameters(
                 parameters: [
                     "name": name,
                     "account_id": id,
                     "age": age
+                ], encoding: JSONEncoding.default)
+        case .completScheules:
+            return .requestParameters(
+                parameters: [
+                "is_completed" : false
+                ], encoding: JSONEncoding.default)
+        case .patchSchedules(_, let title, let date):
+            return .requestParameters(
+                parameters: [
+                    "title": title,
+                    "date": date
                 ], encoding: JSONEncoding.default)
         default:
             return .requestPlain

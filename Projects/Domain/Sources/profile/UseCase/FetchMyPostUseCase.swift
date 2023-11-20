@@ -1,7 +1,7 @@
 import Foundation
 import RxSwift
 
-public class FetchUserProfileUseCase {
+public class FetchMyPostUseCase {
 
     let repository: ProfileRepository
 
@@ -9,7 +9,7 @@ public class FetchUserProfileUseCase {
         self.repository = repository
     }
 
-    public func excute() -> Single<UserProfileEntity> {
-        return repository.fetchUserProfile()
+    public func excute() -> Single<MyPostEntity> {
+        return repository.fetchMyPost()
     }
 }

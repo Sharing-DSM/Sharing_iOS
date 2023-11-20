@@ -54,7 +54,7 @@ public class CreatScheculeViewController: BaseVC<CreateSheduleViewModel> {
     }
     public override func setLayout() {
         headerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(75)
+            $0.top.equalToSuperview().inset(90)
             $0.left.equalToSuperview().inset(25)
             $0.height.equalTo(30)
         }

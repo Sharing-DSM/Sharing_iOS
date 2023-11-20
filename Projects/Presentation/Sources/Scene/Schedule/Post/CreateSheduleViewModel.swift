@@ -27,14 +27,16 @@ public class CreateSheduleViewModel: ViewModelType, Stepper {
     }
 
     public func transform(input: Input) -> Output {
-        let info = Observable.combineLatest(input.titleText, input.dateText)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let info = Observable.combineLatest(input.titleText, input.dateText.map { dateFormatter.string(from: $0) })
 
         input.completeButtonDidTap
             .withLatestFrom(info)
             .flatMap { title, date in
                 self.postScheduleUseCase.excute(title: title, date: date)
+                    .andThen(Single.just(SharingStep.successCreateSchedule))
             }
-            .map { _ in SharingStep.tabsRequired}
             .bind(to: steps)
             .disposed(by: disposeBag)
         return Output()
