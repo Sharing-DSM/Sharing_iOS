@@ -100,6 +100,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
 
     public override func attribute() {
         view.backgroundColor = .white
+        settingDissmissGesture(target: [view])
     }
 
     public override func viewWillAppear(_ animated: Bool) {
