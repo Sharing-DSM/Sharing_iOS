@@ -25,10 +25,12 @@ public class MapViewController: BaseVC<MapViewModel> {
     }
 
     private let detailBackButton = UIButton(type: .system).then {
-        let backImage: UIImage = .backButton
-            .withTintColor(.black900!, renderingMode: .alwaysOriginal)
-        $0.largeContentImageInsets = .init(top: 0, left: 30, bottom: 0, right: 0)
-        $0.setImage(backImage, for: .normal)
+        let image = UIImage(
+            systemName: "arrow.left",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+        )
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .black900
         $0.layer.cornerRadius = 25
         $0.backgroundColor = .white
         $0.setShadow()
@@ -58,7 +60,8 @@ public class MapViewController: BaseVC<MapViewModel> {
         mapView.delegate = self
         locationManager.delegate = self
         postSheetController.delegate = self
-        
+        settingDissmissGesture(target: [mapPostVC.view])
+
         locationSetting()
         postBottomSeetSetting()
 
@@ -70,13 +73,14 @@ public class MapViewController: BaseVC<MapViewModel> {
             writePostButtonDidClick: writePostButton.rx.tap.asObservable(),
             selectItem: nil,
             fetchSurroundingPost: fetchSurroundingPost.asObservable(),
-            dismissPostDetail: dismissPostDetail.asObservable()
+            dismissPostDetail: dismissPostDetail.asObservable(),
+            createChatRoom: nil
         )
         let output = viewModel.transform(input: input)
-        
+
         searchBar.searchButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
-                owner.postSheetController.move(to: .half, animated: true)
+                owner.postSheetController.move(to: .full, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -219,10 +223,10 @@ extension MapViewController: FloatingPanelControllerDelegate {
         let minY = fpc.surfaceLocation(for: .full).y
         let maxY = fpc.surfaceLocation(for: .tip).y
         fpc.surfaceLocation = CGPoint(x: loc.x, y: min(max(loc.y, minY), maxY))
-        UIView.animate(withDuration: 0.1, animations: { [weak self] in
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
             guard let self = self else { return }
             if fpc.state != FloatingPanelState.tip {
-                mapView.transform = .init(translationX: 0, y: -(view.safeAreaInsets.bottom + 20))
+                mapView.transform = .init(translationX: 0, y: -(view.safeAreaInsets.bottom + 80))
             } else {
                 mapView.transform = .identity
             }
