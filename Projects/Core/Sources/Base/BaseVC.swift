@@ -35,7 +35,6 @@ open class BaseVC<ViewModel: ViewModelType>:
     }
 
     @objc private func dismissKeyboard(sender: UIView) {
-        print(sender)
         view.endEditing(true)
     }
 

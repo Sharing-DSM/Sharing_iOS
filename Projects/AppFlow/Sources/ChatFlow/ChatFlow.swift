@@ -39,7 +39,6 @@ class ChatFlow: Flow {
     }
 
     private func presentChatRoom(roomID: String) -> FlowContributors {
-        print("✨" + roomID)
         let chatRoomVC = ChatRoomViewController(viewModel: container.chatRoomViewModel)
         chatRoomVC.roomID = roomID
         self.rootViewController.pushViewController(chatRoomVC, animated: true)
