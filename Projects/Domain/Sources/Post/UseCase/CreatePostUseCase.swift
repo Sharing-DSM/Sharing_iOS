@@ -3,7 +3,7 @@ import RxSwift
 
 public class CreatePostUseCase {
 
-    let repository: PostRepository
+    private let repository: PostRepository
 
     public init(repository: PostRepository) {
         self.repository = repository

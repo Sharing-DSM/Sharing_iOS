@@ -4,7 +4,7 @@ import RxCocoa
 
 public class ChattingUseCase {
 
-    let repository: ChatRepository
+    private let repository: ChatRepository
 
     public let chatContent: PublishRelay<ChattingContentEntity>
 

@@ -1,7 +1,7 @@
 import Foundation
 import RxSwift
 
-public class FetchPopularityPostUseCase {
+public class FetchEmergencyPostUseCase {
 
     private let repository: PostRepository
 
@@ -9,7 +9,7 @@ public class FetchPopularityPostUseCase {
         self.repository = repository
     }
 
-    public func excute() -> Single<PopularityPostEntity> {
-        return repository.fetchPopularityPost()
+    public func excute() -> Single<CommonPostEntity> {
+        return repository.fetchEmergencyPost()
     }
 }

@@ -3,13 +3,13 @@ import RxSwift
 
 public class FetchSurroundingPostUseCase {
 
-    let repository: PostRepository
+    private let repository: PostRepository
 
     public init(repository: PostRepository) {
         self.repository = repository
     }
 
-    public func execute(x: Double, y: Double) -> Single<SurroundPostEntity> {
+    public func execute(x: Double, y: Double) -> Single<CommonPostEntity> {
         return repository.fetchSurroundingPost(x: x, y: y)
     }
 }
