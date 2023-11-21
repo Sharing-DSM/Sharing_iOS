@@ -20,13 +20,9 @@ public class HomeViewController: BaseVC<HomeViewModel> {
         $0.showsVerticalScrollIndicator = false
     }
     private let contentView = UIView()
-    private let bannerView = BannerView().then {
-        $0.layer.cornerRadius = 10
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.error?.cgColor
-        $0.backgroundColor = .black50
-        $0.setShadow()
-    }
+
+    private let bannerView = BannerView()
+
     private let searchBarTextField = SearchBarTextField().then {
         $0.layer.cornerRadius = 25
     }
@@ -60,12 +56,20 @@ public class HomeViewController: BaseVC<HomeViewModel> {
         $0.setImage(.pencil.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
     }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        bannerView.setContentOffset(
+            .init(x: bannerView.frame.width, y: bannerView.contentOffset.y),
+            animated: false
+        )
+    }
+
     public override func viewWillAppear(_ animated: Bool) {
         viewWillAppearRelay.accept(())
     }
 
     public override func attribute() {
         view.backgroundColor = .white
+        bannerView.delegate = self
     }
 
     public override func bind() {
@@ -117,6 +121,16 @@ public class HomeViewController: BaseVC<HomeViewModel> {
                     cell.setup()
                 }
                 .disposed(by: disposeBag)
+
+        output.emergencyPostData.asObservable()
+            .map {
+                var insertData = $0
+                insertData.insert(insertData[insertData.count - 1], at: 0)
+                insertData.append(insertData[1])
+                return insertData
+            }
+            .bind(to: bannerView.rx.bannerSetter)
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -176,6 +190,25 @@ public class HomeViewController: BaseVC<HomeViewModel> {
             $0.width.height.equalTo(70)
             $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
+        }
+    }
+}
+
+extension HomeViewController: UIScrollViewDelegate {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+
+        if scrollView.contentOffset.x <= 0 {
+            scrollView.setContentOffset(
+                .init(x: scrollView.frame.width * CGFloat(bannerView.bannerCount) , y: scrollView.contentOffset.y),
+                animated: false
+            )
+        }
+
+        if scrollView.contentOffset.x >= scrollView.frame.width * CGFloat(bannerView.bannerCount + 1) {
+            scrollView.setContentOffset(
+                .init(x: scrollView.frame.width, y: scrollView.contentOffset.y),
+                animated: false
+            )
         }
     }
 }

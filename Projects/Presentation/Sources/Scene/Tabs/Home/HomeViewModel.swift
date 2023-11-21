@@ -11,12 +11,18 @@ public class HomeViewModel: ViewModelType, Stepper {
     public var disposeBag = DisposeBag()
 
     private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
+    private let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
 
-    public init(fetchPopularityPostUseCase: FetchPopularityPostUseCase) {
+    public init(
+        fetchPopularityPostUseCase: FetchPopularityPostUseCase,
+        fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
+    ) {
         self.fetchPopularityPostUseCase = fetchPopularityPostUseCase
+        self.fetchEmergencyPostUseCase = fetchEmergencyPostUseCase
     }
 
     let popularityPostData = PublishRelay<PopularityPostEntity>()
+    let emergencyPostData = PublishRelay<CommonPostEntity>()
 
     public struct Input {
         let viewWillApper: Observable<Void>
@@ -26,6 +32,7 @@ public class HomeViewModel: ViewModelType, Stepper {
 
     public struct Output {
         let popularityPostData: Signal<PopularityPostEntity>
+        let emergencyPostData: Signal<CommonPostEntity>
     }
 
     public func transform(input: Input) -> Output {
@@ -40,6 +47,18 @@ public class HomeViewModel: ViewModelType, Stepper {
             .bind(to: popularityPostData)
             .disposed(by: disposeBag)
 
+        input.viewWillApper
+            .flatMap {
+                self.fetchEmergencyPostUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: emergencyPostData)
+            .disposed(by: disposeBag)
+        
+
         input.showDetailPost
             .map { SharingStep.postDetailRequired(id: $0) }
             .bind(to: steps)
@@ -51,7 +70,8 @@ public class HomeViewModel: ViewModelType, Stepper {
             .disposed(by: disposeBag)
 
         return Output(
-            popularityPostData: popularityPostData.asSignal()
+            popularityPostData: popularityPostData.asSignal(),
+            emergencyPostData: emergencyPostData.asSignal()
         )
     }
 }
