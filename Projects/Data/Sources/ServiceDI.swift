@@ -14,6 +14,7 @@ public struct ServiceDI {
     public let deletePostUseCase: DeletePostUseCase
     public let patchPostUseCase: PatchPostUseCase
     public let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
+    public let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
 
     //Chat
     public let fetchChatRoomListUseCase: FetchChatRoomListUseCase
@@ -60,6 +61,7 @@ extension ServiceDI {
         let deletePostUseCaseInject = DeletePostUseCase(repository: postRepo)
         let patchPostUseCaseInject = PatchPostUseCase(repository: postRepo)
         let fetchSurroundingPostUseCaseInject = FetchSurroundingPostUseCase(repository: postRepo)
+        let fetchEmergencyPostUseCase = FetchEmergencyPostUseCase(repository: postRepo)
 
         // MARK: Chat관련 UseCase
         let fetchChatRoomListUseCaseInject = FetchChatRoomListUseCase(repository: chatRepo)
@@ -93,6 +95,7 @@ extension ServiceDI {
             deletePostUseCase: deletePostUseCaseInject,
             patchPostUseCase: patchPostUseCaseInject,
             fetchSurroundingPostUseCase: fetchSurroundingPostUseCaseInject,
+            fetchEmergencyPostUseCase: fetchEmergencyPostUseCase,
             fetchChatRoomListUseCase: fetchChatRoomListUseCaseInject,
             createChatRoomUseCase: createChatRoomUseCaseInject,
             chattingUseCase: chattingUseCaseInject,

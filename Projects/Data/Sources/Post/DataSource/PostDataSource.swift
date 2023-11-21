@@ -96,4 +96,10 @@ class PostDataSource {
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
+
+    func fetchEmergencyPost() -> Single<Response> {
+        return provider.rx.request(.fetchEmergencyPost)
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
 }
