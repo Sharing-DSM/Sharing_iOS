@@ -8,6 +8,7 @@ public struct ServiceDI {
 
     public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
+    public let fetchAreaOfInterestPostUseCase: FetchAreaOfInteresPostUseCase
     public let createPostUseCase: CreatePostUseCase
     public let deletePostUseCase: DeletePostUseCase
     public let patchPostUseCase: PatchPostUseCase
@@ -19,6 +20,8 @@ public struct ServiceDI {
     public let patchUserProfileUseCaseInject: PatchUserProfileUseCase
     public let fetchMyPostUseCaseInject: FetchMyPostUseCase
     public let fetchApplyHistoryUseCaseInject: FetchApplyHistoryUseCase
+    public let uploadImageUseCaseInject: UploadImageUseCase
+    public let setAreaOfInterestUseCaseInject: SetAreaOfInterestUseCase
     
     //schedules
     public let postSchedulesUseCaseInject: PostScheduleUseCase
@@ -45,6 +48,7 @@ extension ServiceDI {
         // MARK: Post관련 UseCase
         let fetchTotalPostUseCaseInject = FetchPopularityPostUseCase(repository: postRepo)
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
+        let fetchAreaOfInterestPostUseCaseInject = FetchAreaOfInteresPostUseCase(repository: postRepo)
         let createPostUseCaseInject = CreatePostUseCase(repository: postRepo)
         let deletePostUseCase = DeletePostUseCase(repository: postRepo)
         let patchPostUseCase = PatchPostUseCase(repository: postRepo)
@@ -57,6 +61,8 @@ extension ServiceDI {
         let patchUserProfileUseCaseInject = PatchUserProfileUseCase(repository: profileRepo)
         let fetchMyPostUseCaseInject = FetchMyPostUseCase(repository: profileRepo)
         let fetchMyApplyHistoryUseCaseInject = FetchApplyHistoryUseCase(repository: profileRepo)
+        let uploadImageUseCaseInject = UploadImageUseCase(repository: profileRepo)
+        let setAreaOfInterestUseCaseInject = SetAreaOfInterestUseCase(repository: profileRepo)
 
         // MARK: Schedule관련 UseCase
         let postSchedulesUseCaseInject = PostScheduleUseCase(repository: profileRepo)
@@ -72,6 +78,7 @@ extension ServiceDI {
             signupUseCaseInject: signupUseCaseInject,
             fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
             fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
+            fetchAreaOfInterestPostUseCase: fetchAreaOfInterestPostUseCaseInject,
             createPostUseCase: createPostUseCaseInject,
             deletePostUseCase: deletePostUseCase,
             patchPostUseCase: patchPostUseCase,
@@ -80,6 +87,8 @@ extension ServiceDI {
             patchUserProfileUseCaseInject: patchUserProfileUseCaseInject,
             fetchMyPostUseCaseInject: fetchMyPostUseCaseInject,
             fetchApplyHistoryUseCaseInject: fetchMyApplyHistoryUseCaseInject,
+            uploadImageUseCaseInject: uploadImageUseCaseInject,
+            setAreaOfInterestUseCaseInject: setAreaOfInterestUseCaseInject,
             postSchedulesUseCaseInject: postSchedulesUseCaseInject,
             fetchCompleteScheduleInject: fetchCompleteScheduleUseCaseInject, 
             fetchUnCompleteScheduleInject: fetchUnCompleteScheduleUseCaseInject,
