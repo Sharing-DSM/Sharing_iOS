@@ -35,7 +35,7 @@ public class CreateSheduleViewModel: ViewModelType, Stepper {
             .withLatestFrom(info)
             .flatMap { title, date in
                 self.postScheduleUseCase.excute(title: title, date: date)
-                    .andThen(Single.just(SharingStep.successCreateSchedule))
+                    .andThen(Single.just(SharingStep.popRequired))
             }
             .bind(to: steps)
             .disposed(by: disposeBag)
