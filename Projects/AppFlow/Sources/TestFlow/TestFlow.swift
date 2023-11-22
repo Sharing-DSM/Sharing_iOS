@@ -25,9 +25,17 @@ class TestFlow: Flow {
             return navigateToCreateScheduleScreen()
         case .scheduleRequired:
             return navigateToScheduleScreen()
+        case .applicantListRequired:
+            return navigateToApplicantList(id: "")
         default:
             return .none
         }
+    }
+
+    private func navigateToApplicantList(id: String) -> FlowContributors {
+        let applicantView = ApplicantViewController(viewModel: container.applicantViewModel)
+        self.rootViewController.pushViewController(applicantView, animated: false)
+        return .none
     }
 
     private func navigateToHomeScreen() -> FlowContributors {
