@@ -31,6 +31,7 @@ public enum PostAPI {
         volunteerTime: Int,
         isEmergency: Bool
     )
+    case fetchAreaOfInterestPost
 }
 
 extension PostAPI: TargetType {
@@ -44,12 +45,16 @@ extension PostAPI: TargetType {
             return "/feeds/"
         case .fetchPostDetail(let id), .deletePost(let id), .editPost(let id, _, _, _, _, _, _, _, _, _, _):
             return "/feeds/\(id)"
+        case .fetchAreaOfInterestPost:
+            return "/feeds/interest-area"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .fetchPopularityPost, .fetchPostDetail:
+        case .fetchPopularityPost, 
+             .fetchPostDetail,
+             .fetchAreaOfInterestPost:
             return .get
         case .createPost:
             return .post
