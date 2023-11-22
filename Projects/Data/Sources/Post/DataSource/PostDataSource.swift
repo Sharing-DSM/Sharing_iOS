@@ -87,4 +87,9 @@ class PostDataSource {
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
     }
+    func fetchAreaOfInterestPost() -> Single<Response> {
+        return provider.rx.request(.fetchAreaOfInterestPost)
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
 }
