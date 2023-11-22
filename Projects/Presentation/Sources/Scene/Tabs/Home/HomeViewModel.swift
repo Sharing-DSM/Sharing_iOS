@@ -11,12 +11,18 @@ public class HomeViewModel: ViewModelType, Stepper {
     public var disposeBag = DisposeBag()
 
     private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
+    private let fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase
 
-    public init(fetchPopularityPostUseCase: FetchPopularityPostUseCase) {
+    public init(
+        fetchPopularityPostUseCase: FetchPopularityPostUseCase,
+        fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase
+    ) {
         self.fetchPopularityPostUseCase = fetchPopularityPostUseCase
+        self.fetchAreaOfInterestUseCase = fetchAreaOfInterestUseCase
     }
 
     let popularityPostData = PublishRelay<PopularityPostEntity>()
+    let areaOfInterestPostData = PublishRelay<AreaOfInterestPostEntity>()
 
     public struct Input {
         let viewWillApper: Observable<Void>
@@ -26,6 +32,7 @@ public class HomeViewModel: ViewModelType, Stepper {
 
     public struct Output {
         let popularityPostData: Signal<PopularityPostEntity>
+        let areaOfInterestPostData: Signal<AreaOfInterestPostEntity>
     }
 
     public func transform(input: Input) -> Output {
@@ -39,6 +46,16 @@ public class HomeViewModel: ViewModelType, Stepper {
             }
             .bind(to: popularityPostData)
             .disposed(by: disposeBag)
+        input.viewWillApper
+            .flatMap {
+                self.fetchAreaOfInterestUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: areaOfInterestPostData)
+            .disposed(by: disposeBag)
 
         input.showDetailPost
             .map { SharingStep.postDetailRequired(id: $0) }
@@ -51,7 +68,8 @@ public class HomeViewModel: ViewModelType, Stepper {
             .disposed(by: disposeBag)
 
         return Output(
-            popularityPostData: popularityPostData.asSignal()
+            popularityPostData: popularityPostData.asSignal(),
+            areaOfInterestPostData: areaOfInterestPostData.asSignal()
         )
     }
 }
