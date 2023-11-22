@@ -2,8 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사용자의 사진을 가져오려고 합니다</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>사용자의 위치를 받아오려고 합니다</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
