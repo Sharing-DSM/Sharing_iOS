@@ -21,8 +21,17 @@ class ProfileDataSource {
             .asCompletable()
             .catch { .error($0.toError(ProfileError.self))}
     }
+    func uploadImage(imageData: Data) -> Single<Response> {
+        return provider.rx.request(.uploadProfileImage(imageData: imageData))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(ProfileError.self))}
+    }
+    func setAreaOfInterest(addressName: String) -> Completable {
+        return provider.rx.request(.setAreaOfInterest(addressName: addressName))
+            .asCompletable()
+            .catch { .error($0.toError(ProfileError.self))}
+    }
 
-    //Single<Response>
     func fetchMyPost() -> Single<Response> {
         return provider.rx.request(.fetchMyPost)
             .filterSuccessfulStatusCodes()
