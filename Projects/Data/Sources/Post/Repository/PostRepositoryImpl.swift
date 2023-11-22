@@ -78,4 +78,10 @@ class PostRepositoryImpl: PostRepository {
             isEmergency: isEmergency
         )
     }
+    func fetchAreaOfInterestPost() -> RxSwift.Single<Domain.AreaOfInterestPostEntity> {
+        return remoteDataSource.fetchAreaOfInterestPost()
+                .map(AreaOfInterestPostDTO.self)
+                .map { $0.toDomain() }
+    }
+
 }
