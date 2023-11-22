@@ -29,6 +29,7 @@ public class PostDetailViewModel: ViewModelType, Stepper {
 
     public struct Input {
         let fetchDetailView: Observable<String>
+        let showApplicantList: Observable<String>
         let deletePost: Observable<String>
         let editPost: Observable<String>
         let chatButtonDidClick: Observable<String>
@@ -49,6 +50,11 @@ public class PostDetailViewModel: ViewModelType, Stepper {
                     }
             }
             .bind(to: detailData)
+            .disposed(by: disposeBag)
+
+        input.showApplicantList
+            .map { SharingStep.applicantListRequired(id: $0) }
+            .bind(to: steps)
             .disposed(by: disposeBag)
 
         input.deletePost

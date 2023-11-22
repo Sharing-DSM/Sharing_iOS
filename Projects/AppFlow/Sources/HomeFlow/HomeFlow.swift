@@ -28,6 +28,8 @@ class HomeFlow: Flow {
             return navigateToPostEditScreen(id: id)
         case .chatRoomRequired(let roomID):
             return navigateToChatRoom(roomID: roomID)
+        case .applicantListRequired(let id):
+            return navigateToApplicantListScreen(id: id)
         case .popRequired:
             return popRequired()
         default:
@@ -82,6 +84,17 @@ class HomeFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: editViewController,
             withNextStepper: editViewController.viewModel
+        ))
+    }
+
+    private func navigateToApplicantListScreen(id: String) -> FlowContributors {
+        let applicantListVC = ApplicantViewController(viewModel: container.applicantViewModel)
+        applicantListVC.postID = id
+
+        self.rootViewController.pushViewController(applicantListVC, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: applicantListVC,
+            withNextStepper: applicantListVC.viewModel
         ))
     }
 
