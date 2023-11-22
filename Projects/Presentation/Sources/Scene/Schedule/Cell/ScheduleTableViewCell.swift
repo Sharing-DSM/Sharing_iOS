@@ -18,12 +18,6 @@ public class ScheduleTableViewCell: UITableViewCell {
     var disposeBag = DisposeBag()
     weak var delegate: ScheduleTableViewCellDelegate?
     public var cellId: String? = nil
-    public var isComplete: Bool = false {
-        didSet {
-            interactionButton.isHidden = isComplete
-            checkBoxButton.backgroundColor = .main
-        }
-    }
 
     let cellBackgroundView = UIView().then {
         $0.backgroundColor = .black50
