@@ -5,6 +5,8 @@ import Core
 public enum ProfileAPI {
     case fetchUserProfile
     case patchUserProfile(name: String, id: String, age: Int)
+    case uploadProfileImage(imageData: Data)
+    case setAreaOfInterest(addressName: String)
 
     case postSchedules(title: String, date: String)
     case fetchCompleteSchedules
@@ -25,6 +27,11 @@ extension ProfileAPI: TargetType {
         switch self {
         case .fetchUserProfile, .patchUserProfile:
             return "/users"
+        case .uploadProfileImage:
+            return "/users/upload"
+        case .setAreaOfInterest:
+            return "/users"
+
         case .fetchCompleteSchedules:
             return "/schedules/is-completed"
         case .fetchUnCompleteSchedule:
@@ -46,7 +53,8 @@ extension ProfileAPI: TargetType {
     
     public var method: Moya.Method {
         switch self {
-        case .postSchedules:
+        case .postSchedules,
+             .uploadProfileImage:
             return .post
         case .patchUserProfile, 
              .patchSchedules:
@@ -59,20 +67,30 @@ extension ProfileAPI: TargetType {
             return .get
         case .deleteSchedules:
             return .delete
-        case .completScheules:
+        case .completScheules,
+             .setAreaOfInterest:
             return .put
         }
     }
     
     public var task: Moya.Task {
         switch self {
-        case .postSchedules(let title, let date) :
+        case .postSchedules(let title, let date):
             return .requestParameters(
                 parameters: [
                     "title": title,
                     "date": date
                 ],
                 encoding: JSONEncoding.default)
+        case .uploadProfileImage(let imageData):
+            let pngData = MultipartFormData(
+                provider: .data(imageData),
+                name: "profile",
+                fileName: "profile.png",
+                mimeType: "profile/png"
+            )
+            return .uploadMultipart([pngData])
+
         case .patchUserProfile(let name, let id, let age):
             return .requestParameters(
                 parameters: [
@@ -80,10 +98,15 @@ extension ProfileAPI: TargetType {
                     "account_id": id,
                     "age": age
                 ], encoding: JSONEncoding.default)
+        case .setAreaOfInterest(let addressName):
+            return .requestParameters(
+                parameters: [
+                    "interest-area": addressName
+                ], encoding: URLEncoding.queryString)
         case .completScheules:
             return .requestParameters(
                 parameters: [
-                "is_completed" : false
+                "completed" : true
                 ], encoding: JSONEncoding.default)
         case .patchSchedules(_, let title, let date):
             return .requestParameters(
