@@ -24,6 +24,14 @@ class ProfileRepositoryImpl: ProfileRepository {
             .map(ApplyHistoryDTO.self)
             .map { $0.toDomain() }
     }
+    func uploadImage(imageData: Data) -> Single<UploadImageResponseEntity> {
+        return remoteDataSource.uploadImage(imageData: imageData)
+            .map(UploadImageResponseDTO.self)
+            .map { $0.toDomain() }
+    }
+    func setAreaOfInterest(addressName: String) -> Completable {
+        return remoteDataSource.setAreaOfInterest(addressName: addressName)
+    }
 
     //Schedules
     func postSchedules(title: String, date: String) -> RxSwift.Completable {
