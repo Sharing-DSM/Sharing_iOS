@@ -31,7 +31,7 @@ class TestFlow: Flow {
     }
 
     private func navigateToHomeScreen() -> FlowContributors {
-        let testVC = PostDetailViewController(viewModel: container.postDetailViewModel)
+        let testVC = HomeViewController(viewModel: container.homeViewModel)
         self.rootViewController.pushViewController(testVC, animated: false)
         return .none
     }

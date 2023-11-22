@@ -32,6 +32,7 @@ public enum PostAPI {
         isEmergency: Bool
     )
     case fetchSurroundingPost(x: Double, y: Double)
+    case fetchEmergencyPost
 }
 
 extension PostAPI: TargetType {
@@ -47,12 +48,14 @@ extension PostAPI: TargetType {
             return "/feeds/\(id)"
         case .fetchSurroundingPost:
             return "/feeds/map"
+        case .fetchEmergencyPost:
+            return "/feeds/emergency"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .fetchPopularityPost, .fetchPostDetail:
+        case .fetchPopularityPost, .fetchPostDetail, .fetchEmergencyPost:
             return .get
         case .createPost, .fetchSurroundingPost:
             return .post

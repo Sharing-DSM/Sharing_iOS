@@ -3,7 +3,7 @@ import RxSwift
 
 public class CreateChatRoomUseCase {
 
-    let repository: ChatRepository
+    private let repository: ChatRepository
 
     public init(repository: ChatRepository) {
         self.repository = repository

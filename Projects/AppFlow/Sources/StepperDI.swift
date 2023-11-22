@@ -37,7 +37,8 @@ extension StepperDI {
 
         // MARK: Home관련 viewModel
         let homeViewModel = HomeViewModel(
-            fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase
+            fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase,
+            fetchEmergencyPostUseCase: serviceDI.fetchEmergencyPostUseCase
         )
 
         // MARK: Auth관련 viewModel

@@ -25,7 +25,7 @@ public class MapViewModel: ViewModelType, Stepper {
         self.createChatRoomUseCase = createChatRoomUseCase
     }
 
-    let surroundPostData = PublishRelay<SurroundPostEntity>()
+    let surroundPostData = PublishRelay<CommonPostEntity>()
     let postDetailData = PublishRelay<PostDetailEntity>()
     let dismissPostDetail = PublishRelay<Void>()
 
@@ -38,7 +38,7 @@ public class MapViewModel: ViewModelType, Stepper {
     }
     
     public struct Output {
-        let surroundPostData: Signal<SurroundPostEntity>
+        let surroundPostData: Signal<CommonPostEntity>
         let postDetailData: Signal<PostDetailEntity>
         let dismissPostDetail: Signal<Void>
     }

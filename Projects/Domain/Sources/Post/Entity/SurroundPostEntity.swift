@@ -1,7 +1,7 @@
 import Foundation
 import Core
 
-public struct SurroundPostEntityElement {
+public struct CommonPostEntityElement {
     public let id, title, addressName: String
     public let longitude, latitude: Double
     public let type: TagTypeEnum
@@ -23,4 +23,4 @@ public struct SurroundPostEntityElement {
     }
 }
 
-public typealias SurroundPostEntity = [SurroundPostEntityElement]
+public typealias CommonPostEntity = [CommonPostEntityElement]

@@ -5,7 +5,6 @@ import Core
 public enum ProfileAPI {
     case fetchUserProfile
     case patchUserProfile(name: String, id: String, age: Int)
-
     case postSchedules(title: String, date: String)
     case fetchCompleteSchedules
     case fetchUnCompleteSchedule

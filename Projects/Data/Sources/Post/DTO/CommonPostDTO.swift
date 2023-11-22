@@ -2,7 +2,7 @@ import Foundation
 import Domain
 import Core
 
-struct SurroundPostDTOElement: Decodable {
+struct CommonPostDTOElement: Decodable {
     let id, title, addressName: String
     let x, y: Double
     let type: String
@@ -14,16 +14,16 @@ struct SurroundPostDTOElement: Decodable {
     }
 }
 
-typealias SurroundPostDTO = [SurroundPostDTOElement]
+typealias CommonPostDTO = [CommonPostDTOElement]
 
-extension SurroundPostDTO {
-    func toDomain() -> SurroundPostEntity {
+extension CommonPostDTO {
+    func toDomain() -> CommonPostEntity {
         return self.map { $0.toDomain() }
     }
 }
 
-extension SurroundPostDTOElement {
-    func toDomain() -> SurroundPostEntityElement {
+extension CommonPostDTOElement {
+    func toDomain() -> CommonPostEntityElement {
         return .init(
             id: id,
             title: title,

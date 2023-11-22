@@ -79,9 +79,15 @@ class PostRepositoryImpl: PostRepository {
         )
     }
 
-    func fetchSurroundingPost(x: Double, y: Double) -> Single<SurroundPostEntity> {
+    func fetchSurroundingPost(x: Double, y: Double) -> Single<CommonPostEntity> {
         return remoteDataSource.fetchSurroundingPost(x: x, y: y)
-            .map(SurroundPostDTO.self)
+            .map(CommonPostDTO.self)
+            .map { $0.toDomain() }
+    }
+
+    func fetchEmergencyPost() -> Single<CommonPostEntity> {
+        return remoteDataSource.fetchEmergencyPost()
+            .map(CommonPostDTO.self)
             .map { $0.toDomain() }
     }
 }
