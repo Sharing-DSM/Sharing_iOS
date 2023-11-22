@@ -37,30 +37,40 @@ public class ScheduleViewModel: ViewModelType, Stepper {
     public struct Output {
         let completeScheduleList: PublishRelay<[CompleteScheduleEntity]>
         let unCompleteScheduleList: PublishRelay<[UncompleteScheduleEntity]>
+        let refreshTable: PublishRelay<Void>
     }
 
     public func transform(input: Input) -> Output {
         let completeSchedules = PublishRelay<[CompleteScheduleEntity]>()
         let unCompleteSchedules = PublishRelay<[UncompleteScheduleEntity]>()
+        let refreshTable = PublishRelay<Void>()
+
         input.viewWillAppear
             .flatMap {
                 self.fetchUnCompleteScheduleUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
             }
             .bind(to: unCompleteSchedules)
             .disposed(by: disposeBag)
+
         input.viewWillAppear
             .flatMap {
                 self.fetchCompleteScheduleUseCase.excute()
             }
             .bind(to: completeSchedules)
             .disposed(by: disposeBag)
+
         input.deleteSchedule
-            .flatMap { id in
+            .flatMap { id  in
                 self.deleteScheduleUseCase.excute(id: id)
-                    .andThen(Single.just(SharingStep.tabsRequired))
+                    .andThen(Single.just(()))
             }
-            .bind(to: steps)
+            .bind(to: refreshTable)
             .disposed(by: disposeBag)
+
         input.completeScheduleRelay
             .flatMap { id in
                 self.completeScheduleUseCase.excute(id: id)
@@ -68,9 +78,9 @@ public class ScheduleViewModel: ViewModelType, Stepper {
                         print($0.localizedDescription)
                         return .never()
                     }
-                    .andThen(Single.just(SharingStep.completeScheduleAlertRequired))
+                    .andThen(Single.just(()))
             }
-            .bind(to: steps)
+            .bind(to: refreshTable)
             .disposed(by: disposeBag)
         input.writeButtonDidTap
             .map { SharingStep.createScheduleRequired }
@@ -80,6 +90,11 @@ public class ScheduleViewModel: ViewModelType, Stepper {
             .map { SharingStep.scheduleEditRequired(id: $0) }
             .bind(to: steps)
             .disposed(by: disposeBag)
-        return Output(completeScheduleList: completeSchedules, unCompleteScheduleList: unCompleteSchedules)
+
+        return Output(
+            completeScheduleList: completeSchedules,
+            unCompleteScheduleList: unCompleteSchedules,
+            refreshTable: refreshTable
+        )
     }
 }
