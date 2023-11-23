@@ -23,6 +23,7 @@ public struct StepperDI {
     
     public let profileViewModel: ProfileViewModel
     public let profileEditViewModel: ProfileEditViewModel
+    public let setAreaOfInterestViewModel: SetAreaOfIntrestViewModel
     public let myPostViewModel: MyPostViewModel
     public let applyHistoryViewModel: ApplyHistroyViewModel
 
@@ -39,6 +40,7 @@ extension StepperDI {
         // MARK: Home관련 viewModel
         let homeViewModel = HomeViewModel(
             fetchPopularityPostUseCase: serviceDI.fetchPopularityPostUseCase,
+            fetchAreaOfInterestUseCase: serviceDI.fetchAreaOfInterestPostUseCase,
             fetchEmergencyPostUseCase: serviceDI.fetchEmergencyPostUseCase
         )
 
@@ -89,16 +91,21 @@ extension StepperDI {
 
         //MARK: Profile관련 UseCase
         let profileViewModel = ProfileViewModel(
-            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCase
+            fetchUserprofileUseCase: serviceDI.fetchUserProfileUseCase,
+            uploadImageUseCase: serviceDI.uploadImageUseCase
         )
         let profileEditViewModel = ProfileEditViewModel(
-            patchUserprofileUseCase: serviceDI.patchUserProfileUseCase
+            patchUserprofileUseCase: serviceDI.patchUserProfileUseCase,
+            uploadImageUseCase: serviceDI.uploadImageUseCase
         )
         let myPostViewModel = MyPostViewModel(
             fetchMyPostUseCase: serviceDI.fetchMyPostUseCase
         )
         let applyHistoryViewModel = ApplyHistroyViewModel(
             fetchApplyHistoryUseCase: serviceDI.fetchApplyHistoryUseCase
+        )
+        let setAreaOfInterestViewModel = SetAreaOfIntrestViewModel(
+            setAreaOfInterestUseCase: serviceDI.setAreaOfInterestUseCase
         )
 
         //MARK: Schedule관련 UseCase
@@ -129,7 +136,8 @@ extension StepperDI {
             chatRoomViewModel: chatRoomViewModel,
             addressViewModel: addressViewModel,
             profileViewModel: profileViewModel,
-            profileEditViewModel: profileEditViewModel,
+            profileEditViewModel: profileEditViewModel, 
+            setAreaOfInterestViewModel: setAreaOfInterestViewModel,
             myPostViewModel: myPostViewModel,
             applyHistoryViewModel: applyHistoryViewModel,
             scheduleViewModel: scheduleViewModel,

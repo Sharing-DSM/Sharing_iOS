@@ -30,6 +30,8 @@ public protocol PostRepository {
         volunteerTime: Int,
         isEmergency: Bool
     ) -> Completable
+
+    func fetchAreaOfInterestPost() -> Single<AreaOfInterestPostEntity>
     func fetchSurroundingPost(x: Double, y: Double) -> Single<CommonPostEntity>
     func fetchEmergencyPost() -> Single<CommonPostEntity>
     func fetchApplicantList(id: String) -> Single<ApplicantListEntity>

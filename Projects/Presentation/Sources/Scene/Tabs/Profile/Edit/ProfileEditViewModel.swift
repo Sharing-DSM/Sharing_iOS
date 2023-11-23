@@ -11,16 +11,22 @@ public class ProfileEditViewModel: ViewModelType, Stepper {
     public var disposeBag = DisposeBag()
 
     private let patchUserprofileUseCase: PatchUserProfileUseCase
+    private let uploadImageUseCase: UploadImageUseCase
 
-    public init(patchUserprofileUseCase: PatchUserProfileUseCase) {
+    public init(
+        patchUserprofileUseCase: PatchUserProfileUseCase,
+        uploadImageUseCase: UploadImageUseCase
+    ) {
         self.patchUserprofileUseCase = patchUserprofileUseCase
+        self.uploadImageUseCase = uploadImageUseCase
     }
 
     public struct Input {
-        let editButtonSignal: Observable<Void>
+        let editCompleteButtonSignal: Observable<Void>
         let idText: Observable<String>
         let nameText: Observable<String>
         let ageText: Observable<Int>
+        let profileChangeButtonDidTap: Observable<Data>
     }
     public struct Output {
         let nameErrorDescription: Signal<String?>
@@ -34,16 +40,23 @@ public class ProfileEditViewModel: ViewModelType, Stepper {
 
     public func transform(input: Input) -> Output {
         let info = Observable.combineLatest(input.idText, input.nameText, input.ageText)
+        let imageUrl = PublishRelay<UploadImageResponseEntity>()
 
-        input.editButtonSignal
+        input.editCompleteButtonSignal
             .withLatestFrom(info)
             .filter { self.checkData($0.0, $0.1, $0.2)}
             .flatMap { id, name, age in
                 self.patchUserprofileUseCase.excute(name: name, id: id, age: age)
-                    .andThen(Single.just(SharingStep.successProfileEdit))
+                    .andThen(Single.just(SharingStep.popRequired))
                     .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
             }
             .bind(to: steps)
+            .disposed(by: disposeBag)
+        input.profileChangeButtonDidTap
+            .flatMap { imageData in
+                self.uploadImageUseCase.excute(imageData: imageData)
+            }
+            .bind(to: imageUrl)
             .disposed(by: disposeBag)
         return Output(
             nameErrorDescription: nameErrorDescription.asSignal(),

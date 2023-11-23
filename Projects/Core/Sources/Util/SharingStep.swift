@@ -1,4 +1,5 @@
 import RxFlow
+import UIKit
 
 public enum SharingStep: Step {
 
@@ -24,6 +25,7 @@ public enum SharingStep: Step {
     //profile
     case profileRequired
     case profileEditRequired
+    case setAreaOfInterestRequired
     case successProfileEdit
     case createScheduleRequired
     case successCreateSchedule

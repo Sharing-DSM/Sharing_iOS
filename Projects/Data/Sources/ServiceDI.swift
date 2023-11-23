@@ -10,6 +10,7 @@ public struct ServiceDI {
     // Post
     public let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     public let fetchPostDetailUseCase: FetchPostDetailUseCase
+    public let fetchAreaOfInterestPostUseCase: FetchAreaOfInteresPostUseCase
     public let createPostUseCase: CreatePostUseCase
     public let deletePostUseCase: DeletePostUseCase
     public let patchPostUseCase: PatchPostUseCase
@@ -31,6 +32,9 @@ public struct ServiceDI {
     public let patchUserProfileUseCase: PatchUserProfileUseCase
     public let fetchMyPostUseCase: FetchMyPostUseCase
     public let fetchApplyHistoryUseCase: FetchApplyHistoryUseCase
+    public let uploadImageUseCase: UploadImageUseCase
+    public let setAreaOfInterestUseCase: SetAreaOfInterestUseCase
+
     
     //schedules
     public let postSchedulesUseCase: PostScheduleUseCase
@@ -59,6 +63,7 @@ extension ServiceDI {
         // MARK: Post관련 UseCase
         let fetchTotalPostUseCaseInject = FetchPopularityPostUseCase(repository: postRepo)
         let fetchPostDetailUseCaseInject = FetchPostDetailUseCase(repository: postRepo)
+        let fetchAreaOfInterestPostUseCaseInject = FetchAreaOfInteresPostUseCase(repository: postRepo)
         let createPostUseCaseInject = CreatePostUseCase(repository: postRepo)
         let deletePostUseCaseInject = DeletePostUseCase(repository: postRepo)
         let patchPostUseCaseInject = PatchPostUseCase(repository: postRepo)
@@ -80,6 +85,8 @@ extension ServiceDI {
         let patchUserProfileUseCaseInject = PatchUserProfileUseCase(repository: profileRepo)
         let fetchMyPostUseCaseInject = FetchMyPostUseCase(repository: profileRepo)
         let fetchMyApplyHistoryUseCaseInject = FetchApplyHistoryUseCase(repository: profileRepo)
+        let uploadImageUseCaseInject = UploadImageUseCase(repository: profileRepo)
+        let setAreaOfInterestUseCaseInject = SetAreaOfInterestUseCase(repository: profileRepo)
 
         // MARK: Schedule관련 UseCase
         let postSchedulesUseCaseInject = PostScheduleUseCase(repository: profileRepo)
@@ -95,6 +102,7 @@ extension ServiceDI {
             signupUseCase: signupUseCaseInject,
             fetchPopularityPostUseCase: fetchTotalPostUseCaseInject,
             fetchPostDetailUseCase: fetchPostDetailUseCaseInject,
+            fetchAreaOfInterestPostUseCase: fetchAreaOfInterestPostUseCaseInject,
             createPostUseCase: createPostUseCaseInject,
             deletePostUseCase: deletePostUseCaseInject,
             patchPostUseCase: patchPostUseCaseInject,
@@ -110,6 +118,8 @@ extension ServiceDI {
             patchUserProfileUseCase: patchUserProfileUseCaseInject,
             fetchMyPostUseCase: fetchMyPostUseCaseInject,
             fetchApplyHistoryUseCase: fetchMyApplyHistoryUseCaseInject,
+            uploadImageUseCase: uploadImageUseCaseInject,
+            setAreaOfInterestUseCase: setAreaOfInterestUseCaseInject,
             postSchedulesUseCase: postSchedulesUseCaseInject,
             fetchCompleteSchedule: fetchCompleteScheduleUseCaseInject,
             fetchUnCompleteSchedule: fetchUnCompleteScheduleUseCaseInject,

@@ -79,6 +79,12 @@ class PostRepositoryImpl: PostRepository {
         )
     }
 
+    func fetchAreaOfInterestPost() -> RxSwift.Single<Domain.AreaOfInterestPostEntity> {
+        return remoteDataSource.fetchAreaOfInterestPost()
+                .map(AreaOfInterestPostDTO.self)
+                .map { $0.toDomain() }
+    }
+
     func fetchSurroundingPost(x: Double, y: Double) -> Single<CommonPostEntity> {
         return remoteDataSource.fetchSurroundingPost(x: x, y: y)
             .map(CommonPostDTO.self)
@@ -101,4 +107,5 @@ class PostRepositoryImpl: PostRepository {
         return remoteDataSource.postApplicationVolunteer(id: id)
             .asCompletable()
     }
+
 }

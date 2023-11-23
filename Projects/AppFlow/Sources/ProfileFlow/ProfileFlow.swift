@@ -24,6 +24,8 @@ class ProfileFlow: Flow {
             return presentProfileView()
         case .profileEditRequired:
             return presentProfileEditView()
+        case .setAreaOfInterestRequired:
+            return presentSetAreaOfInterestView()
         case .scheduleRequired:
             return presentScheduleView()
         case .createScheduleRequired:
@@ -32,16 +34,14 @@ class ProfileFlow: Flow {
             return presentMyPostView()
         case .applyHistoryRequired:
             return presentApplyHistroyView()
-        case .successProfileEdit:
-            return popViewController()
-        case .successCreateSchedule:
-            return popViewController()
         case .postDetailRequired(let id):
             return navigateToDetail(id: id)
         case .scheduleEditRequired(let id):
             return navigateScheduleEditView(id: id)
         case .completeScheduleAlertRequired:
             return presentAlert()
+        case .popRequired:
+            return popViewController()
         default:
             return .none
         }
@@ -61,6 +61,17 @@ class ProfileFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: profileEditViewController,
             withNextStepper: profileEditViewController.viewModel))
+    }
+    private func presentSetAreaOfInterestView() -> FlowContributors {
+        let addressVC = AddressHelperViewController(viewModel: container.addressViewModel)
+        let setAreaOfInterestVC = SetAreaOfInterestViewController(
+            viewModel: container.setAreaOfInterestViewModel,
+            addressHelper: addressVC
+        )
+        self.rootViewController.pushViewController(setAreaOfInterestVC, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: setAreaOfInterestVC,
+            withNextStepper: setAreaOfInterestVC.viewModel))
     }
     private func presentScheduleView() -> FlowContributors {
         let scheduleView = ScheduleViewController(viewModel: container.scheduleViewModel)

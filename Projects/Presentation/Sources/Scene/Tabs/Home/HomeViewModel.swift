@@ -11,17 +11,21 @@ public class HomeViewModel: ViewModelType, Stepper {
     public var disposeBag = DisposeBag()
 
     private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
+    private let fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase
     private let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
 
     public init(
         fetchPopularityPostUseCase: FetchPopularityPostUseCase,
+        fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase,
         fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
     ) {
         self.fetchPopularityPostUseCase = fetchPopularityPostUseCase
+        self.fetchAreaOfInterestUseCase = fetchAreaOfInterestUseCase
         self.fetchEmergencyPostUseCase = fetchEmergencyPostUseCase
     }
 
     let popularityPostData = PublishRelay<PopularityPostEntity>()
+    let areaOfInterestPostData = PublishRelay<AreaOfInterestPostEntity>()
     let emergencyPostData = PublishRelay<CommonPostEntity>()
 
     public struct Input {
@@ -32,6 +36,7 @@ public class HomeViewModel: ViewModelType, Stepper {
 
     public struct Output {
         let popularityPostData: Signal<PopularityPostEntity>
+        let areaOfInterestPostData: Signal<AreaOfInterestPostEntity>
         let emergencyPostData: Signal<CommonPostEntity>
     }
 
@@ -45,6 +50,16 @@ public class HomeViewModel: ViewModelType, Stepper {
                     }
             }
             .bind(to: popularityPostData)
+            .disposed(by: disposeBag)
+        input.viewWillApper
+            .flatMap {
+                self.fetchAreaOfInterestUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: areaOfInterestPostData)
             .disposed(by: disposeBag)
 
         input.viewWillApper
@@ -71,6 +86,7 @@ public class HomeViewModel: ViewModelType, Stepper {
 
         return Output(
             popularityPostData: popularityPostData.asSignal(),
+            areaOfInterestPostData: areaOfInterestPostData.asSignal(),
             emergencyPostData: emergencyPostData.asSignal()
         )
     }

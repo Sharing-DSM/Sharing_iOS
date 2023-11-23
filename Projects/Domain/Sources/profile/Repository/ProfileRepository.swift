@@ -7,6 +7,8 @@ public protocol ProfileRepository {
     func patchUserProfile(name: String, id: String, age: Int) -> Completable
     func fetchMyPost() -> Single<MyPostEntity>
     func fetchApplyHistory() -> Single<ApplyHistoryEntity>
+    func uploadImage(imageData: Data) -> Single<UploadImageResponseEntity>
+    func setAreaOfInterest(addressName: String) -> Completable
 
     //Schedules
     func postSchedules(title: String, date: String) -> Completable

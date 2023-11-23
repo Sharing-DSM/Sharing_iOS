@@ -2,30 +2,37 @@ import UIKit
 import SnapKit
 import SharingKit
 import Then
-
 import RxFlow
 import RxCocoa
 import Core
 import RxSwift
-
+import Kingfisher
 
 public class ProfileViewController: BaseVC<ProfileViewModel> {
 
     private let viewDidLoadRelay = PublishRelay<Void>()
+    private let imageData = PublishRelay<Data>()
+    private var currentImage: UIImage = UIImage()
 
     private let profileBackgroundView = UIView().then {
         $0.backgroundColor = .black50
-        $0.layer.cornerRadius = 10
+        $0.layer.cornerRadius = 30
         $0.setShadow()
     }
     private let profileImageView = UIImageView().then {
         $0.image = SharingKitAsset.Image.profileImage.image
+        $0.layer.cornerRadius = 45
+        $0.clipsToBounds = true
     }
     private let imageAddButton = UIButton(type: .system).then {
         $0.setImage(SharingKitAsset.Image.profilePlus.image, for: .normal)
         $0.tintColor = .black900
         $0.backgroundColor = .black200
         $0.layer.cornerRadius = 10
+    }
+    private let imagePicker = UIImagePickerController().then {
+        $0.sourceType = .photoLibrary
+        $0.allowsEditing = true
     }
     private let nameLabel = UILabel().then {
         $0.text = ""
@@ -108,14 +115,13 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.backgroundColor = .black50
     }
 
-    public override init(viewModel: ProfileViewModel) {
-        super.init(viewModel: viewModel)
-    }
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     public override func attribute() {
+        imagePicker.delegate = self
         viewDidLoadRelay.accept(())
+        imageAddButton.rx.tap
+            .subscribe(onNext: {
+                self.present(self.imagePicker, animated: true)
+            }).disposed(by: disposeBag)
     }
     public override func viewWillAppear(_ animated: Bool) {
         viewDidLoadRelay.accept(())
@@ -125,16 +131,34 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         let input = ProfileViewModel.Input(
             viewWillApear: viewDidLoadRelay.asObservable(),
             applyButtonDidTap: applyButton.rx.tap.asObservable(),
+            addressButtonDidTap: addressButton.rx.tap.asObservable(),
             scheduleButtonDidTap: scheduleButton.rx.tap.asObservable(),
             profileEditButtonDidTap: editButton.rx.tap.asObservable(),
             myPostButtonDidTap: myPostButton.rx.tap.asObservable(),
-            logoutButtonDidTap: logoutButton.rx.tap.asObservable()
+            logoutButtonDidTap: logoutButton.rx.tap.asObservable(),
+            imageData: imageData.asObservable(),
+            currentImage: currentImage
         )
         let output = viewModel.transform(input: input)
-        output.userProfileData.asObservable().subscribe(onNext: {
+        output.userProfileData.asObservable().subscribe(onNext: { [self] in
             self.nameLabel.text = $0.name
             self.idLabel.text = "@\($0.accountId)"
+            if $0.profileImageURL != "" {
+                let url = URL(string: $0.profileImageURL)
+                print($0.profileImageURL)
+                self.profileImageView.kf.setImage(with: url)
+                self.imageAddButton.isHidden = true
+                self.currentImage = profileImageView.image ?? SharingKitAsset.Image.profileImage.image
+            } else {
+                self.profileImageView.image = SharingKitAsset.Image.profileImage.image
+            }
         }).disposed(by: disposeBag)
+        output.imageUrl.asObservable()
+            .subscribe(onNext: { image in
+                let url = URL(string: image.imageUrl)
+                self.profileImageView.kf.setImage(with: url)
+                self.currentImage = self.profileImageView.image ?? UIImage()
+            }).disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -268,6 +292,18 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             $0.bottom.equalTo(outOfMemberButton.snp.top).offset(-8)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(40)
+        }
+    }
+}
+
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true) { 
+            let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+            let imageData = image?.jpegData(compressionQuality: 0.7)
+            self.imageData.accept(imageData ?? Data())
+            self.profileImageView.image = image
+            self.imageAddButton.isHidden = true
         }
     }
 }

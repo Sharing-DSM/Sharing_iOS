@@ -3,8 +3,12 @@ import Then
 import SnapKit
 import SharingKit
 import Core
+import RxCocoa
 
 public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
+
+    private let imageData = PublishRelay<Data>()
+    public var currentImage: UIImage?
 
     private let headerLabel = UILabel().then {
         $0.text = "프로필 정보 수정"
@@ -12,7 +16,8 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
         $0.textColor = .main
     }
     private let profileImageView = UIImageView().then {
-        $0.image = SharingKitAsset.Image.profileImage.image
+        $0.layer.cornerRadius = 45
+        $0.clipsToBounds = true
     }
     private let profileChangeButton = UIButton(type: .system).then {
         let title = "프로필사진변경"
@@ -23,13 +28,17 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
         ])
         $0.setAttributedTitle(attributedTitle, for: .normal)
     }
-    public var idTextField = SharingTextField(title: "아이디").then {
+    private let imagePicker = UIImagePickerController().then {
+        $0.sourceType = .photoLibrary
+        $0.allowsEditing = true
+    }
+    public let idTextField = SharingTextField(title: "아이디").then {
         $0.placeholder = "아이디"
     }
-    public var nameTextField = SharingTextField(title: "이름").then {
+    public let nameTextField = SharingTextField(title: "이름").then {
         $0.placeholder = "이름"
     }
-    public var ageTextField = SharingTextField(title: "나이").then {
+    public let ageTextField = SharingTextField(title: "나이").then {
         $0.placeholder = "나이"
     }
     private let editCompleteButton = FillButton(type: .system).then {
@@ -38,17 +47,27 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
 
     public override init(viewModel: ProfileEditViewModel) {
         super.init(viewModel: viewModel)
+//        self.profileImageView.image = currentImage
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }    
+    }
     
+    public override func attribute() {
+        imagePicker.delegate = self
+        profileChangeButton.rx.tap
+            .subscribe(onNext: {
+                self.present(self.imagePicker, animated: true)
+            }).disposed(by: disposeBag)
+        profileImageView.image = currentImage
+    }
     public override func bind() {
         let input = ProfileEditViewModel.Input(
-            editButtonSignal: editCompleteButton.rx.tap.asObservable(),
+            editCompleteButtonSignal: editCompleteButton.rx.tap.asObservable(),
             idText: idTextField.rx.text.orEmpty.asObservable(),
             nameText: nameTextField.rx.text.orEmpty.asObservable(),
-            ageText: ageTextField.rx.text.orEmpty.asObservable().map { Int($0) ?? 0 }
+            ageText: ageTextField.rx.text.orEmpty.asObservable().map { Int($0) ?? 0 },
+            profileChangeButtonDidTap: imageData.asObservable()
         )
         let output = viewModel.transform(input: input)
         output.nameErrorDescription.asObservable()
@@ -108,6 +127,17 @@ public class ProfileEditViewController: BaseVC<ProfileEditViewModel> {
             $0.top.equalTo(ageTextField.snp.bottom).offset(24)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(40)
+        }
+    }
+}
+
+extension ProfileEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true) {
+            let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+            let imageData = image?.jpegData(compressionQuality: 0.7)
+            self.imageData.accept(imageData ?? Data())
+            self.profileImageView.image = image
         }
     }
 }

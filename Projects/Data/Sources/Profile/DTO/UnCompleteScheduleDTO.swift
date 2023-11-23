@@ -12,7 +12,7 @@ public struct UnCompleteScheduleDTO: Decodable {
         case id
         case title
         case date
-        case isComplete = "is_completed"
+        case isComplete = "completed"
     }
 }
 

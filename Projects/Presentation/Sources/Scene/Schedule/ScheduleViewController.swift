@@ -70,6 +70,7 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
             editRequired: editRequired.asObservable()
         )
         let output = viewModel.transform(input: input)
+
         output.unCompleteScheduleList
             .bind(to: scheduleTableView.rx.items(
                 cellIdentifier: ScheduleTableViewCell.identifier,
@@ -81,16 +82,33 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
                 cell.cellId = item.id
                 cell.setup()
                 cell.delegate = self
+                scheduleTableView.snp.updateConstraints {
+                    $0.height.greaterThanOrEqualTo(self.scheduleTableView.contentSize.height)
+                }
             }.disposed(by: disposeBag)
 
         output.completeScheduleList
             .bind(to: completScheduleTableView.rx.items(
                 cellIdentifier: ScheduleTableViewCell.identifier,
                 cellType: ScheduleTableViewCell.self
-            )) { row, item, cell in
+            )) { [weak self] row, item, cell in
+                guard let self = self else { return }
                 cell.titleLabel.text = item.title
+                cell.dateLabel.text = item.date
+                cell.cellId = item.id
+                if item.isCompleted == true {
+                    cell.checkBoxButton.backgroundColor = .main
+                }
                 cell.setup()
+                cell.delegate = self
+                completScheduleTableView.snp.updateConstraints {
+                    $0.height.greaterThanOrEqualTo(self.completScheduleTableView.contentSize.height + 5)
+                }
             }.disposed(by: disposeBag)
+
+        output.refreshTable
+            .bind(to: viewWillAppear)
+            .disposed(by: disposeBag)
     }
     
     public override func addView() {
@@ -134,7 +152,7 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
         completScheduleTableView.snp.makeConstraints {
             $0.top.equalTo(completScheduleLabel.snp.bottom).offset(16)
             $0.left.right.equalToSuperview()
-            $0.height.equalTo(self.completScheduleTableView.numberOfRows(inSection: 0) * 91)
+            $0.height.greaterThanOrEqualTo(self.completScheduleTableView.contentSize.height + 5)
         }
         postWriteButton.snp.makeConstraints {
             $0.width.height.equalTo(70)
@@ -153,7 +171,6 @@ extension ScheduleViewController: ScheduleTableViewCellDelegate {
             style: .destructive,
             handler: { _ in
                 self.deletePostRelay.accept(cellId)
-                self.viewWillAppear.accept(())
             }
         )
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)

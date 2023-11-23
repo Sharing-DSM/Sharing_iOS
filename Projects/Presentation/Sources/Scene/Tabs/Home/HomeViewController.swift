@@ -108,19 +108,31 @@ public class HomeViewController: BaseVC<HomeViewModel> {
             .bind(to: showDetailPostRelay)
             .disposed(by: disposeBag)
 
-        output.popularityPostData.asObservable()
+        output.areaOfInterestPostData.asObservable()
             .bind(to: areaOfInterstTableView.rx.items(
                 cellIdentifier: PostTableViewCell.identifier,
-                cellType: PostTableViewCell.self)) { row, element, cell in
+                cellType: PostTableViewCell.self)) {[weak self] row, element, cell in
+                    guard let self = self else { return }
+                    
                     cell.postTitleLable.text = element.title
                     cell.addressLable.text = element.addressName
-                    cell.tagView.setTag(element.type.rawValue)
+                    cell.tagView.setTag(element.type.toTagName)
                     cell.cellBackgroundView.backgroundColor = .black50
                     cell.cellId = element.id
-
                     cell.setup()
+                    areaOfInterstTableView.snp.updateConstraints {
+                        $0.height.greaterThanOrEqualTo(self.areaOfInterstTableView.contentSize.height + 5)
+                    }
                 }
                 .disposed(by: disposeBag)
+
+        areaOfInterstTableView.rx.itemSelected
+            .map { index -> String in
+                guard let cell = self.areaOfInterstTableView.cellForRow(at: index) as? PostTableViewCell else { return "" }
+                return cell.cellId ?? ""
+            }
+            .bind(to: showDetailPostRelay)
+            .disposed(by: disposeBag)
 
         output.emergencyPostData.asObservable()
             .map {
