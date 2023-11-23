@@ -15,6 +15,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     private let fetchDetailRelay = PublishRelay<String>()
     private let deletePostRelay = PublishRelay<String>()
     private let editPostRelay = PublishRelay<String>()
+    private let applicationRelay = PublishRelay<String>()
     private let applicantListRelay = PublishRelay<String>()
 
     private let backgroundView = UIView().then {
@@ -134,13 +135,19 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
             showApplicantList: applicantListRelay.asObservable(),
             deletePost: deletePostRelay.asObservable(),
             editPost: editPostRelay.asObservable(),
-            chatButtonDidClick: createChatRoom.asObservable()
+            chatButtonDidClick: createChatRoom.asObservable(),
+            applicationButtonDidClick: applicationRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
 
         chatButton.rx.tap
             .map { self.userID }
             .bind(to: createChatRoom)
+            .disposed(by: disposeBag)
+
+        applyButton.rx.tap
+            .map { self.id }
+            .bind(to: applicationRelay)
             .disposed(by: disposeBag)
 
         output.detailData.asObservable()

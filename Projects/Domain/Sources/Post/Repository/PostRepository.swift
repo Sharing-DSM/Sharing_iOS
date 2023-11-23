@@ -33,4 +33,5 @@ public protocol PostRepository {
     func fetchSurroundingPost(x: Double, y: Double) -> Single<CommonPostEntity>
     func fetchEmergencyPost() -> Single<CommonPostEntity>
     func fetchApplicantList(id: String) -> Single<ApplicantListEntity>
+    func postApplicationVolunteer(id: String) -> Completable
 }

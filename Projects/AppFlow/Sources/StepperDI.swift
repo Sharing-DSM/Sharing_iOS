@@ -62,7 +62,8 @@ extension StepperDI {
         let postDetailViewModel = PostDetailViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             deletePostUseCase: serviceDI.deletePostUseCase,
-            createChatRoomUseCase: serviceDI.createChatRoomUseCase
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase,
+            PostApplicationVolunteerUseCase: serviceDI.postApplicationVolunteerUseCase
         )
         let postEditViewModel = PostEditViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,

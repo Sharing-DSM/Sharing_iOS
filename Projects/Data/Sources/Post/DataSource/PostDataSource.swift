@@ -108,4 +108,10 @@ class PostDataSource {
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
+
+    func postApplicationVolunteer(id: String) -> Single<Response> {
+        return provider.rx.request(.postApplicationVolunteer(id: id))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
 }

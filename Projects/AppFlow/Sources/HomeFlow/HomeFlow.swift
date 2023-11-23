@@ -30,6 +30,10 @@ class HomeFlow: Flow {
             return navigateToChatRoom(roomID: roomID)
         case .applicantListRequired(let id):
             return navigateToApplicantListScreen(id: id)
+        case .errorAlertRequired(let content):
+            return presentErrorAlert(content)
+        case .alertRequired(let title, let content):
+            return presentAlert(title, content)
         case .popRequired:
             return popRequired()
         default:
@@ -107,6 +111,20 @@ class HomeFlow: Flow {
             withNextPresentable: chatRoomVC,
             withNextStepper: chatRoomVC.viewModel
         ))
+    }
+
+    private func presentErrorAlert(_ content: String) -> FlowContributors {
+        let errorAlert = AlertViewController(title: "오류", content: content)
+        errorAlert.modalPresentationStyle = .overFullScreen
+        rootViewController.present(errorAlert, animated: false)
+        return .none
+    }
+
+    private func presentAlert(_ title: String, _ content: String) -> FlowContributors {
+        let alert = AlertViewController(title: title, content: content)
+        alert.modalPresentationStyle = .overFullScreen
+        rootViewController.present(alert, animated: false)
+        return .none
     }
 
     private func popRequired() -> FlowContributors {

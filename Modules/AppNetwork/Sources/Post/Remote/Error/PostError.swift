@@ -3,6 +3,7 @@ import Core
 
 public enum PostError: Int, BaseError {
     case NOTFOUND = 404
+    case ALREADYAPPLY = 409
     case WRONGPASSWORD = 400
     case BADSERVER = 500
     case UNOWNDEERROR = 0
@@ -17,6 +18,8 @@ extension PostError {
         switch self {
         case .NOTFOUND:
             return "찾을 수 없는 게시물 입니다."
+        case .ALREADYAPPLY:
+            return "이미 신청한 봉사입니다."
         case .WRONGPASSWORD:
             return "올바르지 않은 요청입니다."
         case .BADSERVER:
