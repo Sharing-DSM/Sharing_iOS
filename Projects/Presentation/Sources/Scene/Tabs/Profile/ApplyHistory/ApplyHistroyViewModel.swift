@@ -16,6 +16,7 @@ public class ApplyHistroyViewModel: ViewModelType, Stepper {
 
     public struct Input {
         let viewWillAppear: Observable<Void>
+        let showDetail: Observable<String>
     }
     public struct Output {
         let ApplyHistoryData: PublishRelay<ApplyHistoryEntity>
@@ -27,6 +28,10 @@ public class ApplyHistroyViewModel: ViewModelType, Stepper {
                 self.fetchApplyHistoryUseCase.excute()
             }
             .bind(to: applyHistorydata)
+            .disposed(by: disposeBag)
+        input.showDetail
+            .map {SharingStep.postDetailRequired(id: $0)}
+            .bind(to: steps)
             .disposed(by: disposeBag)
         return Output(ApplyHistoryData: applyHistorydata)
     }
