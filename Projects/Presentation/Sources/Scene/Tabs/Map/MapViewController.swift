@@ -7,10 +7,12 @@ import RxSwift
 import RxCocoa
 import FloatingPanel
 import Core
+import CoreLocation
 
 public class MapViewController: BaseVC<MapViewModel> {
 
-    private let viewDidLoadRelay = PublishRelay<Void>()
+    private let fetchSurroundingPost = PublishRelay<(x: Double, y: Double)>()
+    private let dismissPostDetail = PublishRelay<Void>()
 
     private let locationManager = CLLocationManager() // 자기 위치 표시
     private let mapView = CoustomMapView()
@@ -20,6 +22,19 @@ public class MapViewController: BaseVC<MapViewModel> {
     private let searchBar = SearchBarTextField().then {
         $0.placeholder = "게시글 검색"
         $0.layer.cornerRadius = 25
+    }
+
+    private let detailBackButton = UIButton(type: .system).then {
+        let image = UIImage(
+            systemName: "arrow.left",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+        )
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .black900
+        $0.layer.cornerRadius = 25
+        $0.backgroundColor = .white
+        $0.setShadow()
+        $0.isHidden = true
     }
 
     private let writePostButton = GradationButton(type: .system).then {
@@ -36,43 +51,95 @@ public class MapViewController: BaseVC<MapViewModel> {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func attribute() { 
+    public override func viewWillAppear(_ animated: Bool) {
+        guard let location = locationManager.location?.coordinate else { return }
+        fetchSurroundingPost.accept((x: location.longitude, y: location.latitude))
+    }
+
+    public override func attribute() {
         mapView.delegate = self
         locationManager.delegate = self
         postSheetController.delegate = self
-        
+        settingDissmissGesture(target: [mapPostVC.view])
+
         locationSetting()
         postBottomSeetSetting()
-        
-        addAnnotation() // dummy
+
         postSheetController.show(animated: true)
-        viewDidLoadRelay.accept(())
     }
 
     public override func bind() {
         let input = MapViewModel.Input(
-            viewDidLoad: viewDidLoadRelay.asObservable(),
             writePostButtonDidClick: writePostButton.rx.tap.asObservable(),
-            selectItem: nil
+            selectItem: nil,
+            fetchSurroundingPost: fetchSurroundingPost.asObservable(),
+            dismissPostDetail: dismissPostDetail.asObservable(),
+            createChatRoom: nil
         )
         let output = viewModel.transform(input: input)
-        
+
         searchBar.searchButton.rx.tap
-            .bind(onNext: { [weak self] in
-                self?.postSheetController.move(to: .half, animated: true)
+            .bind(with: self, onNext: { owner, _ in
+                owner.postSheetController.move(to: .full, animated: true)
             })
+            .disposed(by: disposeBag)
+
+        detailBackButton.rx.tap
+            .subscribe(
+                with: self,
+                onNext: { owner, _ in
+                    owner.detailBackButton.isHidden = true
+                    owner.searchBar.isHidden = false
+                    owner.dismissPostDetail.accept(())
+                }
+            )
+            .disposed(by: disposeBag)
+
+        output.surroundPostData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    owner.mapView.removeAnnotations(owner.mapView.annotations)
+                    data.forEach {
+                        let annotation = CustomAnnotation(coordinate: CLLocationCoordinate2D(
+                            latitude: $0.latitude,
+                            longitude: $0.longitude
+                        ))
+                        owner.mapView.addAnnotation(annotation)
+                    }
+                }
+            )
+            .disposed(by: disposeBag)
+
+        output.postDetailData.asObservable()
+            .subscribe(
+                with: self,
+                onNext: { owner, data in
+                    UIView.animate(withDuration: 0.2, animations: {
+                        owner.searchBar.isHidden = true
+                        owner.detailBackButton.isHidden = false
+                    })
+                    let location: CLLocationCoordinate2D = .init(
+                        latitude: data.y,
+                        longitude: data.x
+                    )
+                    owner.mapView.setRegion(
+                        .init(center: location, span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)),
+                        animated: true
+                    )
+                }
+            )
             .disposed(by: disposeBag)
     }
 
     public override func addView() {
         [
             mapView,
+            detailBackButton,
             searchBar,
             postSheetController.view,
             writePostButton
-        ].forEach {
-            view.addSubview($0)
-        }
+        ].forEach { view.addSubview($0) }
         addChild(postSheetController)
     }
 
@@ -80,20 +147,25 @@ public class MapViewController: BaseVC<MapViewModel> {
         mapView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        detailBackButton.snp.makeConstraints {
+            $0.width.height.equalTo(50)
+            $0.left.equalToSuperview().inset(15)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+        }
         postSheetController.view.snp.makeConstraints {
             $0.height.greaterThanOrEqualToSuperview()
             $0.left.right.equalToSuperview()
         }
         searchBar.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(25)
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
         }
         mapView.snp.makeConstraints {
             $0.top.equalToSuperview()
         }
         writePostButton.snp.makeConstraints {
             $0.width.height.equalTo(70)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.right.equalToSuperview().inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
     }
@@ -101,6 +173,8 @@ public class MapViewController: BaseVC<MapViewModel> {
 
 extension MapViewController: CLLocationManagerDelegate {
     func locationSetting() {
+        guard let location = locationManager.location?.coordinate else { return }
+        mapView.setRegion(.init(center: location, span: .init(latitudeDelta: 0.02, longitudeDelta: 0.02)), animated: true)
         locationManager.requestWhenInUseAuthorization()
     }
 
@@ -115,24 +189,6 @@ extension MapViewController: CLLocationManagerDelegate {
         @unknown default:
             debugPrint("‼️ GPS: Defalte")
         }
-    }
-
-    // MARK: this function is Dummy Data
-    private func addAnnotation() {
-        let statueOfLibery = CustomAnnotation(coordinate: CLLocationCoordinate2D(
-            latitude: 40.689167,
-            longitude: -74.044444
-        ))
-        let meteoHouse = CustomAnnotation(coordinate: CLLocationCoordinate2D(
-            latitude: 36.316941168642,
-            longitude: 127.34772361173
-        ))
-        let annotation = CustomAnnotation(coordinate: CLLocationCoordinate2D(
-            latitude: 36.390906587662,
-            longitude: 127.36218898382
-        ))
-
-        mapView.addAnnotations([annotation, meteoHouse, statueOfLibery])
     }
 }
 
@@ -167,17 +223,25 @@ extension MapViewController: FloatingPanelControllerDelegate {
         let minY = fpc.surfaceLocation(for: .full).y
         let maxY = fpc.surfaceLocation(for: .tip).y
         fpc.surfaceLocation = CGPoint(x: loc.x, y: min(max(loc.y, minY), maxY))
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+            guard let self = self else { return }
+            if fpc.state != FloatingPanelState.tip {
+                mapView.transform = .init(translationX: 0, y: -(view.safeAreaInsets.bottom + 80))
+            } else {
+                mapView.transform = .identity
+            }
+        })
     }
 }
 
 class MyFloatingPanelLayout: FloatingPanelLayout {
     var position: FloatingPanelPosition = .bottom
 
-    var initialState: FloatingPanelState = .half
+    var initialState: FloatingPanelState = .tip
 
     var anchors: [FloatingPanelState: FloatingPanelLayoutAnchoring] = [
-        .full: FloatingPanelLayoutAnchor(absoluteInset: 120.0, edge: .top, referenceGuide: .safeArea),
+        .full: FloatingPanelLayoutAnchor(absoluteInset: 100.0, edge: .top, referenceGuide: .safeArea),
         .half: FloatingPanelLayoutAnchor(fractionalInset: 0.5, edge: .bottom, referenceGuide: .safeArea),
-        .tip: FloatingPanelLayoutAnchor(absoluteInset: 40.0, edge: .bottom, referenceGuide: .safeArea),
+        .tip: FloatingPanelLayoutAnchor(absoluteInset: 80.0, edge: .bottom, referenceGuide: .safeArea),
     ]
 }

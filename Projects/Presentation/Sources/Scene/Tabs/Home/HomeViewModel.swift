@@ -12,17 +12,21 @@ public class HomeViewModel: ViewModelType, Stepper {
 
     private let fetchPopularityPostUseCase: FetchPopularityPostUseCase
     private let fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase
+    private let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
 
     public init(
         fetchPopularityPostUseCase: FetchPopularityPostUseCase,
-        fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase
+        fetchAreaOfInterestUseCase: FetchAreaOfInteresPostUseCase,
+        fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
     ) {
         self.fetchPopularityPostUseCase = fetchPopularityPostUseCase
         self.fetchAreaOfInterestUseCase = fetchAreaOfInterestUseCase
+        self.fetchEmergencyPostUseCase = fetchEmergencyPostUseCase
     }
 
     let popularityPostData = PublishRelay<PopularityPostEntity>()
     let areaOfInterestPostData = PublishRelay<AreaOfInterestPostEntity>()
+    let emergencyPostData = PublishRelay<CommonPostEntity>()
 
     public struct Input {
         let viewWillApper: Observable<Void>
@@ -33,6 +37,7 @@ public class HomeViewModel: ViewModelType, Stepper {
     public struct Output {
         let popularityPostData: Signal<PopularityPostEntity>
         let areaOfInterestPostData: Signal<AreaOfInterestPostEntity>
+        let emergencyPostData: Signal<CommonPostEntity>
     }
 
     public func transform(input: Input) -> Output {
@@ -57,6 +62,18 @@ public class HomeViewModel: ViewModelType, Stepper {
             .bind(to: areaOfInterestPostData)
             .disposed(by: disposeBag)
 
+        input.viewWillApper
+            .flatMap {
+                self.fetchEmergencyPostUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: emergencyPostData)
+            .disposed(by: disposeBag)
+        
+
         input.showDetailPost
             .map { SharingStep.postDetailRequired(id: $0) }
             .bind(to: steps)
@@ -69,7 +86,8 @@ public class HomeViewModel: ViewModelType, Stepper {
 
         return Output(
             popularityPostData: popularityPostData.asSignal(),
-            areaOfInterestPostData: areaOfInterestPostData.asSignal()
+            areaOfInterestPostData: areaOfInterestPostData.asSignal(),
+            emergencyPostData: emergencyPostData.asSignal()
         )
     }
 }

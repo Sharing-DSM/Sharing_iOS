@@ -106,6 +106,7 @@ public class PostEditViewController: BaseVC<PostEditViewModel> {
 
     public override func attribute() {
         view.backgroundColor = .white
+        settingDissmissGesture(target: [view])
         fetchPostDetailRelay.accept(postId)
     }
 

@@ -20,4 +20,6 @@ public extension UIImage {
     static let toggleDisabled = SharingKitAsset.Image.toggleDisabled.image
 
     static let interactionDot = SharingKitAsset.Image.interactionDot.image
+    static let paperAirplane = SharingKitAsset.Image.paperAirplane.image
+    static let pencilInMessage = SharingKitAsset.Image.pencilInMessage.image
 }

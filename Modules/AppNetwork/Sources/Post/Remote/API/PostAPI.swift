@@ -32,6 +32,8 @@ public enum PostAPI {
         isEmergency: Bool
     )
     case fetchAreaOfInterestPost
+    case fetchSurroundingPost(x: Double, y: Double)
+    case fetchEmergencyPost
 }
 
 extension PostAPI: TargetType {
@@ -47,6 +49,10 @@ extension PostAPI: TargetType {
             return "/feeds/\(id)"
         case .fetchAreaOfInterestPost:
             return "/feeds/interest-area"
+        case .fetchSurroundingPost:
+            return "/feeds/map"
+        case .fetchEmergencyPost:
+            return "/feeds/emergency"
         }
     }
     
@@ -56,12 +62,14 @@ extension PostAPI: TargetType {
              .fetchPostDetail,
              .fetchAreaOfInterestPost:
             return .get
-        case .createPost:
+        case .createPost, .fetchSurroundingPost:
             return .post
         case .deletePost:
             return .delete
         case .editPost:
             return .patch
+        case .fetchEmergencyPost:
+            return .get
         }
     }
     
@@ -119,6 +127,14 @@ extension PostAPI: TargetType {
                     "type" : type,
                     "volunteer_time" : volunteerTime,
                     "is_emergency": isEmergency
+                ],
+                encoding: JSONEncoding.default
+            )
+        case .fetchSurroundingPost(let x, let y):
+            return .requestParameters(
+                parameters: [
+                    "x": x,
+                    "y": y
                 ],
                 encoding: JSONEncoding.default
             )

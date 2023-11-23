@@ -8,22 +8,22 @@ import Domain
 
 class PostDataSource {
     private let provider = MoyaProvider<PostAPI>(plugins: [MoyaLoggingPlugin()])
-
+    
     static let shared = PostDataSource()
     private init() {}
-
+    
     func fetchPopularityPost() -> Single<Response> {
         return provider.rx.request(.fetchPopularityPost)
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
-
+    
     func fetchDetailPost(id: String) -> Single<Response> {
         return provider.rx.request(.fetchPostDetail(id: id))
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
-
+    
     func createPost(
         title: String,
         content: String,
@@ -48,16 +48,18 @@ class PostDataSource {
             volunteerTime: volunteerTime,
             isEmergency: isEmergency
         ))
+        .filterSuccessfulStatusCodes()
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
     }
-
+    
     func deletePost(id: String) -> Completable {
         return provider.rx.request(.deletePost(id: id))
+            .filterSuccessfulStatusCodes()
             .asCompletable()
             .catch { .error($0.toError(PostError.self)) }
     }
-
+    
     func editPost(
         id: String,
         title: String,
@@ -84,11 +86,23 @@ class PostDataSource {
             volunteerTime: volunteerTime,
             isEmergency: isEmergency
         ))
+        .filterSuccessfulStatusCodes()
         .asCompletable()
         .catch { .error($0.toError(PostError.self)) }
     }
+    
     func fetchAreaOfInterestPost() -> Single<Response> {
         return provider.rx.request(.fetchAreaOfInterestPost)
+    }
+    
+    func fetchSurroundingPost(x: Double, y: Double) -> Single<Response> {
+        return provider.rx.request(.fetchSurroundingPost(x: x, y: y))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
+    
+    func fetchEmergencyPost() -> Single<Response> {
+        return provider.rx.request(.fetchEmergencyPost)
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }

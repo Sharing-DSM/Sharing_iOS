@@ -16,6 +16,10 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
         $0.layer.cornerRadius = 10
     }
 
+    private let tapBackgroundView = UIView().then {
+        $0.backgroundColor = .clear
+    }
+
     private let pageBackgroundView = UIView().then {
         $0.backgroundColor = .black50
         $0.layer.cornerRadius = 10
@@ -47,15 +51,11 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
         $0.textColor = .black900
     }
 
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        if let touch = touches.first, touch.view == self.view {
-            self.dismiss(animated: true, completion: nil)
-        }
-    }
-
     public override func attribute() {
         view.backgroundColor = .black.withAlphaComponent(0.4)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissView))
+        tap.cancelsTouchesInView = false
+        tapBackgroundView.addGestureRecognizer(tap)
     }
 
     public override func bind() {
@@ -71,9 +71,7 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
             .bind(to: addressTableView.rx.items(cellIdentifier: AddressTableViewCell.identifier, cellType: AddressTableViewCell.self)) { row, element, cell in
                 cell.roadAddressLabel.text = element.buildingName.isEmpty ?
                 element.roadAddressName : "\(element.roadAddressName)(\(element.buildingName))"
-
                 cell.addressNameLabel.text = element.addressName
-                
                 cell.addressData = element
                 cell.setup()
             }
@@ -121,6 +119,7 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
 
     public override func addView() {
         [
+            tapBackgroundView,
             searchBar,
             pageBackgroundView
         ].forEach { view.addSubview($0) }
@@ -133,6 +132,9 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
     }
 
     override public func setLayout() {
+        tapBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         searchBar.snp.makeConstraints {
             $0.top.equalToSuperview().offset(view.frame.height / 4)
             $0.leading.trailing.equalToSuperview().inset(25)
@@ -163,5 +165,9 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
             $0.centerY.equalTo(pageCountLabel)
             $0.width.height.equalTo(10)
         }
+    }
+
+    @objc private func dismissView() {
+        dismiss(animated: true)
     }
 }

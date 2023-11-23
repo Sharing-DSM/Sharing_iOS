@@ -17,16 +17,10 @@ public struct CompleteScheduleDTO: Decodable {
 
 extension CompleteScheduleDTO {
     public func toDomain() -> CompleteScheduleEntity {
-        let dateFormatter = DateFormatter()
-        let formatDate =  dateFormatter.formatDateString(
-            dateString: self.date,
-            inputFormat: "yyyy-mm-dd",
-            outputFormat: "YYYY년 MM월 dd일"
-        )
         return .init(
             id: self.id,
             title: self.title,
-            date: formatDate,
+            date: date.toDate(.fullDate).toString("YYYY년 MM월 dd일"),
             isCompleted: self.isComplete
         )
     }

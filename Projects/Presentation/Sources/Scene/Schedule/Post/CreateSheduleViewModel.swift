@@ -27,9 +27,7 @@ public class CreateSheduleViewModel: ViewModelType, Stepper {
     }
 
     public func transform(input: Input) -> Output {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let info = Observable.combineLatest(input.titleText, input.dateText.map { dateFormatter.string(from: $0) })
+        let info = Observable.combineLatest(input.titleText, input.dateText.map { $0.toString("yyyy-MM-dd") })
 
         input.completeButtonDidTap
             .withLatestFrom(info)

@@ -38,7 +38,7 @@ public class LoginViewModel: ViewModelType, Stepper {
             .withLatestFrom(info)
             .filter { self.checkLoginData($0.0, $0.1) }
             .flatMap { id, password in
-                self.loginUseCase.execute(accountID: id, password: password)
+                self.loginUseCase.login(accountID: id, password: password)
                     .andThen(Single.just(SharingStep.tabsRequired))
                     .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
             }

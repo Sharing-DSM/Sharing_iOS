@@ -12,7 +12,8 @@ class TabsFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = UITabBarController().then {
+    private let tabBarManager = TabBarManager.shared
+    private lazy var rootPresentable = TabBarManager.shared.manageTabBarController().then {
         $0.tabBar.backgroundColor = .white
         $0.tabBar.tintColor = .blue400
         $0.tabBar.unselectedItemTintColor = .black600
@@ -92,7 +93,7 @@ class TabsFlow: Flow {
             
             self?.rootPresentable.setViewControllers([root1, root2, root3, root4], animated: false)
         }
-        
+
         return .multiple(flowContributors: [
             .contribute(
                 withNextPresentable: mapFlow,
