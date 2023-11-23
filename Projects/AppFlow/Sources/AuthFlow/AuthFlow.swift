@@ -62,7 +62,8 @@ class AuthFlow: Flow {
     private func presentErrorAlert(_ content: String) -> FlowContributors {
         let errorAlert = AlertViewController(title: "오류", content: content)
         errorAlert.modalPresentationStyle = .overFullScreen
-        rootPresentable.present(errorAlert, animated: false)
+        errorAlert.modalTransitionStyle = .crossDissolve
+        rootPresentable.present(errorAlert, animated: true)
         return .none
     }
 
@@ -72,7 +73,8 @@ class AuthFlow: Flow {
             content: "같은 아이디와 비밀번호로 로그인을 시도해주세요."
         )
         alert.modalPresentationStyle = .overFullScreen
-        rootPresentable.present(alert, animated: false)
+        alert.modalTransitionStyle = .crossDissolve
+        rootPresentable.present(alert, animated: true)
         rootPresentable.popViewController(animated: true)
         return .none
     }
