@@ -11,27 +11,25 @@ public class AlertViewController: UIViewController, HasDisposeBag {
     public var disposeBag: DisposeBag = DisposeBag()
 
     private let alertBackGroundView = UIView().then {
+        $0.backgroundColor = .white
         $0.layer.cornerRadius = 10
-        $0.layer.opacity = 0
     }
 
     private let titleLabel = UILabel().then {
         $0.font = .headerH1Bold
         $0.textColor = .black900
-        $0.layer.opacity = 0
+        $0.textAlignment = .center
     }
 
     private let contentLabel = UILabel().then {
-        $0.font = .bodyB1SemiBold
+        $0.font = .bodyB1Medium
         $0.textColor = .black600
-        $0.textAlignment = .left
+        $0.textAlignment = .center
         $0.numberOfLines = .max
-        $0.layer.opacity = 0
     }
 
     private let alertButton = FillButton(type: .system).then {
         $0.setTitle("확인", for: .normal)
-        $0.layer.opacity = 0
     }
 
     public init(
@@ -55,13 +53,9 @@ public class AlertViewController: UIViewController, HasDisposeBag {
         view.backgroundColor = .black.withAlphaComponent(0.5)
         alertButton.rx.tap
             .bind(onNext: { [weak self] in
-                self?.dismissAlertWithAnimation()
+                self?.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
-    }
-
-    public override func viewDidAppear(_ animated: Bool) {
-        showAlertWithAnimation()
     }
 
     public override func viewDidLayoutSubviews() {
@@ -76,8 +70,7 @@ public class AlertViewController: UIViewController, HasDisposeBag {
         alertBackGroundView.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(40)
             $0.top.equalTo(titleLabel.snp.top).offset(-18)
-            $0.height.greaterThanOrEqualTo(182)
-            $0.bottom.equalTo(alertButton.snp.bottom).offset(12)
+            $0.bottom.greaterThanOrEqualTo(alertButton.snp.bottom).offset(16)
             $0.center.equalToSuperview()
         }
 
@@ -87,32 +80,14 @@ public class AlertViewController: UIViewController, HasDisposeBag {
         }
 
         contentLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(5)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
             $0.left.right.equalToSuperview().inset(15)
         }
 
         alertButton.snp.makeConstraints {
             $0.height.equalTo(40)
-            $0.left.right.equalToSuperview().inset(15)
-            $0.top.greaterThanOrEqualTo(contentLabel.snp.bottom).offset(30)
+            $0.left.right.equalToSuperview().inset(16)
+            $0.top.greaterThanOrEqualTo(contentLabel.snp.bottom).offset(16)
         }
-    }
-}
-
-extension AlertViewController {
-    private func showAlertWithAnimation() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) { [weak self] in
-            self?.alertBackGroundView.layer.opacity = 1
-            self?.alertBackGroundView.subviews.forEach { $0.layer.opacity = 1 }
-        }
-    }
-
-    private func dismissAlertWithAnimation() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: { [weak self] in
-            self?.alertBackGroundView.layer.opacity = 0
-            self?.alertBackGroundView.subviews.forEach { $0.layer.opacity = 0 }
-        }, completion: { _ in
-            self.dismiss(animated: false)
-        })
     }
 }

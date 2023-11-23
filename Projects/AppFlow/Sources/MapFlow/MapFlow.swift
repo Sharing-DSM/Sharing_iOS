@@ -75,7 +75,8 @@ class MapFlow: Flow {
     private func presentErrorAlert(_ content: String) -> FlowContributors {
         let errorAlert = AlertViewController(title: "오류", content: content)
         errorAlert.modalPresentationStyle = .overFullScreen
-        rootViewController.present(errorAlert, animated: false)
+        errorAlert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(errorAlert, animated: true)
         return .none
     }
 

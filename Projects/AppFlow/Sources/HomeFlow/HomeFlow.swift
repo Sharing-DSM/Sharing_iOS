@@ -116,14 +116,16 @@ class HomeFlow: Flow {
     private func presentErrorAlert(_ content: String) -> FlowContributors {
         let errorAlert = AlertViewController(title: "오류", content: content)
         errorAlert.modalPresentationStyle = .overFullScreen
-        rootViewController.present(errorAlert, animated: false)
+        errorAlert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(errorAlert, animated: true)
         return .none
     }
 
     private func presentAlert(_ title: String, _ content: String) -> FlowContributors {
         let alert = AlertViewController(title: title, content: content)
         alert.modalPresentationStyle = .overFullScreen
-        rootViewController.present(alert, animated: false)
+        alert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(alert, animated: true)
         return .none
     }
 
