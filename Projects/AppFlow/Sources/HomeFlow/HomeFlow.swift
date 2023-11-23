@@ -28,6 +28,12 @@ class HomeFlow: Flow {
             return navigateToPostEditScreen(id: id)
         case .chatRoomRequired(let roomID):
             return navigateToChatRoom(roomID: roomID)
+        case .applicantListRequired(let id):
+            return navigateToApplicantListScreen(id: id)
+        case .errorAlertRequired(let content):
+            return presentErrorAlert(content)
+        case .alertRequired(let title, let content):
+            return presentAlert(title, content)
         case .popRequired:
             return popRequired()
         default:
@@ -85,6 +91,17 @@ class HomeFlow: Flow {
         ))
     }
 
+    private func navigateToApplicantListScreen(id: String) -> FlowContributors {
+        let applicantListVC = ApplicantViewController(viewModel: container.applicantViewModel)
+        applicantListVC.postID = id
+
+        self.rootViewController.pushViewController(applicantListVC, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: applicantListVC,
+            withNextStepper: applicantListVC.viewModel
+        ))
+    }
+
     private func navigateToChatRoom(roomID: String) -> FlowContributors {
         let chatRoomVC = ChatRoomViewController(viewModel: container.chatRoomViewModel)
         chatRoomVC.roomID = roomID
@@ -94,6 +111,20 @@ class HomeFlow: Flow {
             withNextPresentable: chatRoomVC,
             withNextStepper: chatRoomVC.viewModel
         ))
+    }
+
+    private func presentErrorAlert(_ content: String) -> FlowContributors {
+        let errorAlert = AlertViewController(title: "오류", content: content)
+        errorAlert.modalPresentationStyle = .overFullScreen
+        rootViewController.present(errorAlert, animated: false)
+        return .none
+    }
+
+    private func presentAlert(_ title: String, _ content: String) -> FlowContributors {
+        let alert = AlertViewController(title: title, content: content)
+        alert.modalPresentationStyle = .overFullScreen
+        rootViewController.present(alert, animated: false)
+        return .none
     }
 
     private func popRequired() -> FlowContributors {

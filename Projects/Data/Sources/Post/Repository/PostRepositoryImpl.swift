@@ -97,4 +97,15 @@ class PostRepositoryImpl: PostRepository {
             .map { $0.toDomain() }
     }
 
+    func fetchApplicantList(id: String) -> Single<ApplicantListEntity> {
+        return remoteDataSource.fetchApplicantList(id: id)
+            .map(ApplicantListDTO.self)
+            .map { $0.toDomain() }
+    }
+
+    func postApplicationVolunteer(id: String) -> Completable {
+        return remoteDataSource.postApplicationVolunteer(id: id)
+            .asCompletable()
+    }
+
 }

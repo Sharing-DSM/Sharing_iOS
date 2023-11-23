@@ -13,15 +13,18 @@ public class PostDetailViewModel: ViewModelType, Stepper {
     private let fetchPostDetailUseCase: FetchPostDetailUseCase
     private let deletePostUseCase: DeletePostUseCase
     private let createChatRoomUseCase: CreateChatRoomUseCase
+    private let postApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
 
     public init(
         fetchPostDetailUseCase: FetchPostDetailUseCase,
         deletePostUseCase: DeletePostUseCase,
-        createChatRoomUseCase: CreateChatRoomUseCase
+        createChatRoomUseCase: CreateChatRoomUseCase,
+        PostApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
     ) {
         self.fetchPostDetailUseCase = fetchPostDetailUseCase
         self.deletePostUseCase = deletePostUseCase
         self.createChatRoomUseCase = createChatRoomUseCase
+        self.postApplicationVolunteerUseCase = PostApplicationVolunteerUseCase
     }
 
     private let detailData = PublishRelay<PostDetailEntity>()
@@ -29,9 +32,11 @@ public class PostDetailViewModel: ViewModelType, Stepper {
 
     public struct Input {
         let fetchDetailView: Observable<String>
+        let showApplicantList: Observable<String>
         let deletePost: Observable<String>
         let editPost: Observable<String>
         let chatButtonDidClick: Observable<String>
+        let applicationButtonDidClick: Observable<String>
     }
 
     public struct Output {
@@ -49,6 +54,11 @@ public class PostDetailViewModel: ViewModelType, Stepper {
                     }
             }
             .bind(to: detailData)
+            .disposed(by: disposeBag)
+
+        input.showApplicantList
+            .map { SharingStep.applicantListRequired(id: $0) }
+            .bind(to: steps)
             .disposed(by: disposeBag)
 
         input.deletePost
@@ -81,6 +91,15 @@ public class PostDetailViewModel: ViewModelType, Stepper {
                     TabBarManager.shared.selectIndex(index: 2)
                 }
             )
+            .disposed(by: disposeBag)
+
+        input.applicationButtonDidClick
+            .flatMap {
+                self.postApplicationVolunteerUseCase.excute(id: $0)
+                    .andThen(Single.just(SharingStep.alertRequired(title: "신청 완료", content: "신청이 성공적으로 완료되었습니다.")))
+                    .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
+            }
+            .bind(to: steps)
             .disposed(by: disposeBag)
 
         return Output(

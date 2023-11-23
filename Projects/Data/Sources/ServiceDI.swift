@@ -16,6 +16,8 @@ public struct ServiceDI {
     public let patchPostUseCase: PatchPostUseCase
     public let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
     public let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
+    public let fetchApplicantListUseCase: FetchApplicantListUseCase
+    public let postApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
 
     //Chat
     public let fetchChatRoomListUseCase: FetchChatRoomListUseCase
@@ -66,7 +68,9 @@ extension ServiceDI {
         let deletePostUseCaseInject = DeletePostUseCase(repository: postRepo)
         let patchPostUseCaseInject = PatchPostUseCase(repository: postRepo)
         let fetchSurroundingPostUseCaseInject = FetchSurroundingPostUseCase(repository: postRepo)
-        let fetchEmergencyPostUseCase = FetchEmergencyPostUseCase(repository: postRepo)
+        let fetchEmergencyPostUseCaseInject = FetchEmergencyPostUseCase(repository: postRepo)
+        let fetchApplicantListUseCaseInject = FetchApplicantListUseCase(repository: postRepo)
+        let postApplicationVolunteerUseCaseInject = PostApplicationVolunteerUseCase(repository: postRepo)
 
         // MARK: Chat관련 UseCase
         let fetchChatRoomListUseCaseInject = FetchChatRoomListUseCase(repository: chatRepo)
@@ -103,7 +107,9 @@ extension ServiceDI {
             deletePostUseCase: deletePostUseCaseInject,
             patchPostUseCase: patchPostUseCaseInject,
             fetchSurroundingPostUseCase: fetchSurroundingPostUseCaseInject,
-            fetchEmergencyPostUseCase: fetchEmergencyPostUseCase,
+            fetchEmergencyPostUseCase: fetchEmergencyPostUseCaseInject,
+            fetchApplicantListUseCase: fetchApplicantListUseCaseInject,
+            postApplicationVolunteerUseCase: postApplicationVolunteerUseCaseInject,
             fetchChatRoomListUseCase: fetchChatRoomListUseCaseInject,
             createChatRoomUseCase: createChatRoomUseCaseInject,
             chattingUseCase: chattingUseCaseInject,

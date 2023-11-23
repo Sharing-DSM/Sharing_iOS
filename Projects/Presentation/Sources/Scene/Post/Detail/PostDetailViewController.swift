@@ -15,6 +15,8 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     private let fetchDetailRelay = PublishRelay<String>()
     private let deletePostRelay = PublishRelay<String>()
     private let editPostRelay = PublishRelay<String>()
+    private let applicationRelay = PublishRelay<String>()
+    private let applicantListRelay = PublishRelay<String>()
 
     private let backgroundView = UIView().then {
         $0.layer.cornerRadius = 10
@@ -82,6 +84,14 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     }
 
     private func settingMenu() {
+        let applicantListButton = UIAction(
+            title: "신청목록",
+            image: UIImage(systemName: "list.clipboard"),
+            handler: { [weak self] _ in
+                guard let self = self else { return }
+                applicantListRelay.accept(id)
+            }
+        )
         let postEditButton = UIAction(
             title: "수정하기",
             image: UIImage(systemName: "pencil"),
@@ -104,7 +114,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
             image: nil,
             identifier: nil,
             options: .destructive,
-            children: [postEditButton, postDeleteButton]
+            children: [applicantListButton, postEditButton, postDeleteButton]
         )
         interactionButton.menu = postDatailMenu
     }
@@ -122,15 +132,22 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     public override func bind() {
         let input = PostDetailViewModel.Input(
             fetchDetailView: fetchDetailRelay.asObservable(),
+            showApplicantList: applicantListRelay.asObservable(),
             deletePost: deletePostRelay.asObservable(),
             editPost: editPostRelay.asObservable(),
-            chatButtonDidClick: createChatRoom.asObservable()
+            chatButtonDidClick: createChatRoom.asObservable(),
+            applicationButtonDidClick: applicationRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
 
         chatButton.rx.tap
             .map { self.userID }
             .bind(to: createChatRoom)
+            .disposed(by: disposeBag)
+
+        applyButton.rx.tap
+            .map { self.id }
+            .bind(to: applicationRelay)
             .disposed(by: disposeBag)
 
         output.detailData.asObservable()

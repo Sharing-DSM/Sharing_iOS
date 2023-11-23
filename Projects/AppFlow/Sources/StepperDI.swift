@@ -14,6 +14,7 @@ public struct StepperDI {
     public let postWriteViewModel: PostWriteViewModel
     public let postDetailViewModel: PostDetailViewModel
     public let postEditViewModel: PostEditViewModel
+    public let applicantViewModel: ApplicantViewModel
 
     public let chatViewModel: ChatViewModel
     public let chatRoomViewModel: ChatRoomViewModel
@@ -63,11 +64,15 @@ extension StepperDI {
         let postDetailViewModel = PostDetailViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             deletePostUseCase: serviceDI.deletePostUseCase,
-            createChatRoomUseCase: serviceDI.createChatRoomUseCase
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase,
+            PostApplicationVolunteerUseCase: serviceDI.postApplicationVolunteerUseCase
         )
         let postEditViewModel = PostEditViewModel(
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             patchPostUseCase: serviceDI.patchPostUseCase
+        )
+        let applicantViewModel = ApplicantViewModel(
+            fetchApplicantListUseCase: serviceDI.fetchApplicantListUseCase
         )
 
         // MARK: Chat관련 viewModel
@@ -126,6 +131,7 @@ extension StepperDI {
             postWriteViewModel: postWriteViewModel,
             postDetailViewModel: postDetailViewModel,
             postEditViewModel: postEditViewModel,
+            applicantViewModel: applicantViewModel,
             chatViewModel: chatViewModel,
             chatRoomViewModel: chatRoomViewModel,
             addressViewModel: addressViewModel,
