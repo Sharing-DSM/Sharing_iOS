@@ -9,30 +9,44 @@ import RxCocoa
 public class ApplyHistoryViewController: BaseVC<ApplyHistroyViewModel> {
 
     private let viewWillAppear = PublishRelay<Void>()
+    private let showDetailRelay = PublishRelay<String>()
+
     private let headerLabel = UILabel().then {
         $0.text = "내가 신청한 게시글"
         $0.textColor = .main
         $0.font = .headerH1SemiBold
     }
     private let applyTableView = UITableView().then {
-        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
         $0.separatorStyle = .none
+        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
     }
 
     public override func viewWillAppear(_ animated: Bool) {
         viewWillAppear.accept(())
     }
     public override func bind() {
-        let input = ApplyHistroyViewModel.Input(viewWillAppear: viewWillAppear.asObservable())
+        let input = ApplyHistroyViewModel.Input(
+            viewWillAppear: viewWillAppear.asObservable(),
+            showDetail: showDetailRelay.asObservable()
+        )
         let output = viewModel.transform(input: input)
         output.ApplyHistoryData.asObservable().bind(to: applyTableView.rx.items(
                 cellIdentifier: PostTableViewCell.identifier,
-                cellType: PostTableViewCell.self)) { [weak self] row, item, cell in
-                    cell.cellId = item.id
+                cellType: PostTableViewCell.self)) { row, item, cell in
+                    cell.cellId = item.feedId
                     cell.tagView.setTag(item.feedType.toTagName)
                     cell.postTitleLable.text = item.title
                     cell.addressLable.text = item.address
+                    cell.setup()
                 }.disposed(by: disposeBag)
+
+        applyTableView.rx.itemSelected
+            .map { index -> String in
+                guard let cell = self.applyTableView.cellForRow(at: index) as? PostTableViewCell else { return "" }
+                return cell.cellId ?? ""
+            }
+            .bind(to: showDetailRelay)
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
