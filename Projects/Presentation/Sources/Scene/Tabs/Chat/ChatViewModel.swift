@@ -73,7 +73,8 @@ public class ChatViewModel: ViewModelType, Stepper {
                         lastChat: source.chattingData.message,
                         lastSendAt: source.chattingData.sendAt,
                         isRead: false,
-                        roomName: source.roomList[originIndex].roomName
+                        roomName: source.roomList[originIndex].roomName,
+                        userProfile: source.roomList[originIndex].userProfile
                     )
                     returnList.remove(at: originIndex)
                     returnList.insert(inputData, at: 0)

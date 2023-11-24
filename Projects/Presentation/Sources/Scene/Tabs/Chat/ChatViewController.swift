@@ -58,11 +58,13 @@ public class ChatViewController: BaseVC<ChatViewModel> {
                 cellType: ChatTableViewCell.self)
             ) { (row, data, cell) in
                 cell.isDidNotRead = !data.isRead
-                cell.nameLabel.text = data.roomName
-                cell.previewLabel.text = data.lastChat
-                cell.timeLineLabel.text = "・\(data.lastSendAt)"
-                cell.roomID = data.roomID
-                cell.setup()
+                cell.setup(
+                    imageURL: data.userProfile,
+                    roomName: data.roomName,
+                    preview: data.lastChat,
+                    sendAt: data.lastSendAt,
+                    roomID: data.roomID
+                )
             }
             .disposed(by: disposeBag)
     }

@@ -50,7 +50,8 @@ class ApplicantListCollectionViewCell: UICollectionViewCell {
         identifier: String,
         applicantAt: String
     ) {
-        profileImageView.kf.setImage(with: URL(string: profileImageLink))
+        if profileImageLink.isEmpty { profileImageView.image = .profileImage }
+        else { profileImageView.kf.setImage(with: URL(string: profileImageLink))}
         nameLabel.text = name
         idLabel.text = "@\(identifier)"
         applicationDateLabel.text = applicantAt
