@@ -13,7 +13,7 @@ struct ChatListDTO: Decodable {
 struct ChatListDTOMyRoomList: Decodable {
     let roomID, lastChat, lastSendAt: String
     let isRead: Bool
-    let roomName: String
+    let roomName, userProfile: String
 
     enum CodingKeys: String, CodingKey {
         case roomID = "room_id"
@@ -21,6 +21,7 @@ struct ChatListDTOMyRoomList: Decodable {
         case lastSendAt = "last_send_at"
         case isRead = "is_read"
         case roomName = "room_name"
+        case userProfile = "user_profile"
     }
 }
 
@@ -39,7 +40,8 @@ extension ChatListDTOMyRoomList {
             lastChat: lastChat,
             lastSendAt: lastSendAt.toDate(.fullDateAndTime).toString("a hh:mm"),
             isRead: isRead,
-            roomName: roomName
+            roomName: roomName,
+            userProfile: userProfile
         )
     }
 }
