@@ -18,17 +18,10 @@ public struct UnCompleteScheduleDTO: Decodable {
 
 extension UnCompleteScheduleDTO {
     public func toDomain() -> UncompleteScheduleEntity {
-        let dateFormatter = DateFormatter()
-        let formatDate =  dateFormatter.formatDateString(
-            dateString: self.date,
-            inputFormat: "yyyy-mm-dd",
-            outputFormat: "YYYY년 MM월 dd일"
-        )
-
         return .init(
             id: self.id,
             title: self.title,
-            date: formatDate,
+            date: date.toDate(.fullDate).toString("yyyy년 MM월 dd일"),
             isCompleted: self.isComplete
         )
     }

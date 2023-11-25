@@ -82,10 +82,12 @@ public class ScheduleViewModel: ViewModelType, Stepper {
             }
             .bind(to: refreshTable)
             .disposed(by: disposeBag)
+
         input.writeButtonDidTap
             .map { SharingStep.createScheduleRequired }
             .bind(to: steps)
             .disposed(by: disposeBag)
+
         input.editRequired
             .map { SharingStep.scheduleEditRequired(id: $0) }
             .bind(to: steps)
