@@ -15,6 +15,7 @@ public extension UIImage {
     static let homeIcon = SharingKitAsset.Image.homeIcon.image
     static let chatIcon = SharingKitAsset.Image.chatIcon.image
     static let profileIcon = SharingKitAsset.Image.profileIcon.image
+    static let profileImage = SharingKitAsset.Image.profileImage.image
 
     static let toggleActivate = SharingKitAsset.Image.toggleActivate.image
     static let toggleDisabled = SharingKitAsset.Image.toggleDisabled.image

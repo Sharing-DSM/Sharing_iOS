@@ -2,6 +2,7 @@ import UIKit
 import SharingKit
 import SnapKit
 import Then
+import Kingfisher
 
 class ChatTableViewCell: UITableViewCell {
 
@@ -18,27 +19,27 @@ class ChatTableViewCell: UITableViewCell {
         }
     }
 
-    let profileImageView = UIImageView().then {
+    private let profileImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .black100
         $0.layer.cornerRadius = 30
         $0.clipsToBounds = true
     }
 
-    let nameLabel = UILabel().then {
-        $0.text = "박주영"
+    private let nameLabel = UILabel().then {
+        $0.text = "-"
         $0.textColor = .black900
         $0.font = .bodyB1SemiBold
     }
 
-    let previewLabel = UILabel().then {
-        $0.text = "봉사활동 신청 문의드리려고 연락드렸습adsfasdfasdfasd"
+    private let previewLabel = UILabel().then {
+        $0.text = "-"
         $0.textColor = .black700
         $0.font = .bodyB3Medium
     }
 
-    let timeLineLabel = UILabel().then {
-        $0.text = "・오후 11:09"
+    private let timeLineLabel = UILabel().then {
+        $0.text = "・"
         $0.textColor = .black600
         $0.font = .bodyB3SemiBold
     }
@@ -49,7 +50,21 @@ class ChatTableViewCell: UITableViewCell {
         $0.isHidden = true
     }
 
-    public func setup() {
+    public func setup(
+        imageURL: String,
+        roomName: String,
+        preview: String,
+        sendAt: String,
+        roomID: String
+    ) {
+        if imageURL.isEmpty { profileImageView.image = .profileImage }
+        else { profileImageView.kf.setImage(with: URL(string: imageURL))}
+
+        nameLabel.text = roomName
+        previewLabel.text = preview
+        timeLineLabel.text = "・\(sendAt)"
+        self.roomID = roomID
+        
         addView()
         setLayout()
     }
