@@ -61,6 +61,10 @@ public class LoginViewController: BaseVC<LoginViewModel> {
         output.passwordErrorDescription.asObservable()
             .bind(to: self.passwordTextField.errorMessage)
             .disposed(by: disposeBag)
+
+        output.isLoading.asObservable()
+            .bind(to: loginButton.rx.isLoading)
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
