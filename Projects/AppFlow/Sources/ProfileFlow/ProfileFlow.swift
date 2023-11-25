@@ -28,18 +28,10 @@ class ProfileFlow: Flow {
             return presentSetAreaOfInterestView()
         case .scheduleRequired:
             return presentScheduleView()
-        case .createScheduleRequired:
-            return presentCreateScheduleView()
         case .myPostRequired:
             return presentMyPostView()
         case .applyHistoryRequired:
             return presentApplyHistroyView()
-        case .postDetailRequired(let id):
-            return navigateToDetail(id: id)
-        case .scheduleEditRequired(let id):
-            return navigateScheduleEditView(id: id)
-        case .completeScheduleAlertRequired:
-            return presentAlert()
         case .popRequired:
             return popViewController()
         default:
@@ -55,6 +47,7 @@ class ProfileFlow: Flow {
             withNextPresentable: profileView,
             withNextStepper: profileView.viewModel))
     }
+
     private func presentProfileEditView() -> FlowContributors {
         let profileEditViewController = ProfileEditViewController(viewModel: container.profileEditViewModel)
         self.rootViewController.pushViewController(profileEditViewController, animated: true)
@@ -62,6 +55,7 @@ class ProfileFlow: Flow {
             withNextPresentable: profileEditViewController,
             withNextStepper: profileEditViewController.viewModel))
     }
+
     private func presentSetAreaOfInterestView() -> FlowContributors {
         let addressVC = AddressHelperViewController(viewModel: container.addressViewModel)
         let setAreaOfInterestVC = SetAreaOfInterestViewController(
@@ -73,62 +67,45 @@ class ProfileFlow: Flow {
             withNextPresentable: setAreaOfInterestVC,
             withNextStepper: setAreaOfInterestVC.viewModel))
     }
+
     private func presentScheduleView() -> FlowContributors {
-        let scheduleView = ScheduleViewController(viewModel: container.scheduleViewModel)
-        self.rootViewController.pushViewController(scheduleView, animated: true)
+        let scheduleFlow = ScheduleFlow()
+        Flows.use(scheduleFlow, when: .created) { [weak self] root in
+            self?.rootViewController.pushViewController(root, animated: true)
+        }
         
         return .one(flowContributor: .contribute(
-            withNextPresentable: scheduleView,
-            withNextStepper: scheduleView.viewModel))
+            withNextPresentable: scheduleFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.scheduleRequired)
+        ))
     }
-    private func presentCreateScheduleView() -> FlowContributors {
-        let createScheduleView = CreatScheculeViewController(viewModel: container.createScheduleViewModel)
-        self.rootViewController.pushViewController(createScheduleView, animated: true)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: createScheduleView,
-            withNextStepper: createScheduleView.viewModel))
-    }
+
     private func presentMyPostView() -> FlowContributors {
-        let myPostView = MyPostViewController(viewModel: container.myPostViewModel)
-        self.rootViewController.pushViewController(myPostView, animated: true)
+        let myPostFlow = MyPostFlow()
+        Flows.use(myPostFlow, when: .created) { [weak self] root in
+            self?.rootViewController.pushViewController(root, animated: true)
+        }
+        
         return .one(flowContributor: .contribute(
-            withNextPresentable: myPostView,
-            withNextStepper: myPostView.viewModel))
+            withNextPresentable: myPostFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.myPostRequired)
+        ))
     }
+
     private func presentApplyHistroyView() -> FlowContributors {
-        let applyHistoryVC = ApplyHistoryViewController(viewModel: container.applyHistoryViewModel)
-        self.rootViewController.pushViewController(applyHistoryVC, animated: true)
+        let applyHistoryFlow = ApplyHistroyFlow()
+        Flows.use(applyHistoryFlow, when: .created) { [weak self] root in
+            self?.rootViewController.pushViewController(root, animated: true)
+        }
+        
         return .one(flowContributor: .contribute(
-            withNextPresentable: applyHistoryVC,
-            withNextStepper: applyHistoryVC.viewModel))
+            withNextPresentable: applyHistoryFlow,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.applyHistoryRequired)
+        ))
     }
+
     private func popViewController() -> FlowContributors {
         self.rootViewController.popViewController(animated: true)
-        return .none
-    }
-    private func navigateToDetail(id: String) -> FlowContributors {
-        let detailViewController = PostDetailViewController(viewModel: container.postDetailViewModel)
-        detailViewController.id = id
-        self.rootViewController.pushViewController(detailViewController, animated: true)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: detailViewController,
-            withNextStepper: detailViewController.viewModel
-        ))
-    }
-    private func navigateScheduleEditView(id: String) -> FlowContributors {
-        let scheduleEditViewController = EditScheduleViewController(viewModel: container.editScheduleViewModel)
-        scheduleEditViewController.cellId = id
-        self.rootViewController.pushViewController(scheduleEditViewController, animated: true)
-        return .one(flowContributor: .contribute(
-            withNextPresentable: scheduleEditViewController,
-            withNextStepper: scheduleEditViewController.viewModel
-        ))
-    }
-    private func presentAlert() -> FlowContributors {
-        let alert = UIAlertController(title: "일정이 완료되었습니다", message: "", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "확인", style: .default, handler: { _ in })
-        alert.addAction(okAction)
-        self.rootViewController.present(alert, animated: true)
         return .none
     }
 }

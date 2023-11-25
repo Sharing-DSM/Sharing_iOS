@@ -25,12 +25,10 @@ public class ScheduleTableViewCell: UITableViewCell {
         $0.setShadow()
     }
     let titleLabel = UILabel().then {
-        $0.text = ""
         $0.font = .bodyB1Bold
         $0.textColor = .black900
     }
     let dateLabel = UILabel().then {
-        $0.text = "2023년 11월 31일"
         $0.font = .bodyB1Regular
         $0.textColor = .black700
     }
@@ -60,9 +58,7 @@ public class ScheduleTableViewCell: UITableViewCell {
     private func bind() {
         checkBoxButton.rx.tap
             .bind { [unowned self] in
-                self.delegate?.checkBoxButtonDidTap(
-                    cellId: cellId ?? ""
-                )
+                self.delegate?.checkBoxButtonDidTap(cellId: cellId ?? "")
                 checkBoxButton.backgroundColor = .main
             }.disposed(by: disposeBag)
     }
