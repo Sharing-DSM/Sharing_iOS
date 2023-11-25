@@ -26,10 +26,12 @@ public class LoginViewModel: ViewModelType, Stepper {
     public struct Output {
         let passwordErrorDescription: Signal<String?>
         let idErrorDescription: Signal<String?>
+        let isLoading: Signal<Bool>
     }
 
     private let passwordErrorDescription = PublishRelay<String?>()
     private let idErrorDescription = PublishRelay<String?>()
+    private let isLoading = PublishRelay<Bool>()
 
     public func transform(input: Input) -> Output {
         let info = Observable.combineLatest(input.idText, input.passwordText)
@@ -37,12 +39,19 @@ public class LoginViewModel: ViewModelType, Stepper {
         input.loginButtonSignal
             .withLatestFrom(info)
             .filter { self.checkLoginData($0.0, $0.1) }
-            .flatMap { id, password in
-                self.loginUseCase.login(accountID: id, password: password)
+            .flatMap { id, password -> Single<Step> in
+                self.isLoading.accept(true)
+                return self.loginUseCase.login(accountID: id, password: password)
                     .andThen(Single.just(SharingStep.tabsRequired))
                     .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
             }
-            .bind(to: steps)
+            .subscribe(
+                with: self,
+                onNext: { owner, step in
+                    owner.isLoading.accept(false)
+                    owner.steps.accept(step)
+                }
+            )
             .disposed(by: disposeBag)
 
         input.signupButtonSignal
@@ -52,7 +61,8 @@ public class LoginViewModel: ViewModelType, Stepper {
 
         return Output(
             passwordErrorDescription: passwordErrorDescription.asSignal(),
-            idErrorDescription: idErrorDescription.asSignal()
+            idErrorDescription: idErrorDescription.asSignal(),
+            isLoading: isLoading.asSignal()
         )
     }
 }
