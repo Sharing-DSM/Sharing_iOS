@@ -135,7 +135,7 @@ public class ScheduleViewController:  BaseVC<ScheduleViewModel>{
             $0.bottom.equalTo(completScheduleTableView.snp.bottom).offset(10)
         }
         scheduleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(30)
+            $0.top.equalToSuperview()
             $0.left.equalToSuperview().inset(25)
             $0.height.equalTo(30)
         }
