@@ -96,6 +96,15 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         $0.font = .bodyB1Medium
     }
     private let scheduleButton = UIButton(type: .system)
+    private let guideLineButton = UIButton(type: .system).then {
+        $0.setTitle("가이드라인", for: .normal)
+        $0.setTitleColor(.black900, for: .normal)
+        $0.titleLabel?.font = .bodyB2Medium
+        $0.layer.cornerRadius = 10
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.main?.cgColor
+        $0.backgroundColor = .black50
+    }
     private let logoutButton = UIButton(type: .system).then {
         $0.setTitle("로그아웃", for: .normal)
         $0.setTitleColor(.black900, for: .normal)
@@ -137,7 +146,8 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             myPostButtonDidTap: myPostButton.rx.tap.asObservable(),
             logoutButtonDidTap: logoutButton.rx.tap.asObservable(),
             imageData: imageData.asObservable(),
-            currentImage: currentImage
+            currentImage: currentImage,
+            guideLineButtonDidTap: guideLineButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)
         output.userProfileData.asObservable().subscribe(onNext: { [self] in
@@ -185,7 +195,8 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             scheduleLabel,
             scheduleButton,
             logoutButton,
-            outOfMemberButton
+            outOfMemberButton,
+            guideLineButton
         ].forEach { view.addSubview($0) }
     }
     public override func setLayout() {
@@ -290,6 +301,11 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
         }
         logoutButton.snp.makeConstraints {
             $0.bottom.equalTo(outOfMemberButton.snp.top).offset(-8)
+            $0.left.right.equalToSuperview().inset(25)
+            $0.height.equalTo(40)
+        }
+        guideLineButton.snp.makeConstraints {
+            $0.bottom.equalTo(logoutButton.snp.top).offset(-8)
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(40)
         }

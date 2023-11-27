@@ -32,6 +32,8 @@ class ProfileFlow: Flow {
             return presentMyPostView()
         case .applyHistoryRequired:
             return presentApplyHistroyView()
+        case .guideLineRequired:
+            return presentGuideLineView()
         case .popRequired:
             return popViewController()
         default:
@@ -102,6 +104,14 @@ class ProfileFlow: Flow {
             withNextPresentable: applyHistoryFlow,
             withNextStepper: OneStepper(withSingleStep: SharingStep.applyHistoryRequired)
         ))
+    }
+
+    private func presentGuideLineView() -> FlowContributors {
+        let guideLineVC = GuideLineViewController()
+        self.rootViewController.pushViewController(guideLineVC, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: guideLineVC,
+            withNextStepper: OneStepper(withSingleStep: SharingStep.guideLineRequired)))
     }
 
     private func popViewController() -> FlowContributors {
