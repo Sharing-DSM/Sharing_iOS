@@ -33,6 +33,7 @@ public class ProfileViewModel: ViewModelType, Stepper {
         let logoutButtonDidTap: Observable<Void>
         let imageData: Observable<Data>
         let currentImage: UIImage
+        let guideLineButtonDidTap: Observable<Void>
     }
     public struct Output {
         let userProfileData: Signal<UserProfileEntity>
@@ -76,6 +77,10 @@ public class ProfileViewModel: ViewModelType, Stepper {
             .disposed(by: disposeBag)
         input.logoutButtonDidTap
             .map { SharingStep.loginRequired}
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        input.guideLineButtonDidTap
+            .map { SharingStep.guideLineRequired}
             .bind(to: steps)
             .disposed(by: disposeBag)
 
