@@ -33,6 +33,7 @@ public enum SharingStep: Step {
     case scheduleEditRequired(id: String)
     case myPostRequired
     case applyHistoryRequired
+    case guideLineRequired
 
     // chat
     case chatRequired
