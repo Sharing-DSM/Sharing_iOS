@@ -14,15 +14,18 @@ public class MapViewModel: ViewModelType, Stepper {
     private let fetchSurroundingPostUseCase: FetchSurroundingPostUseCase
     private let fetchPostDetailUseCase: FetchPostDetailUseCase
     private let createChatRoomUseCase: CreateChatRoomUseCase
+    private let searchInMapUseCase: SearchInMapUseCase
 
     public init(
         fetchSurroundingPostUseCase: FetchSurroundingPostUseCase,
         fetchPostDetailUseCase: FetchPostDetailUseCase,
-        createChatRoomUseCase: CreateChatRoomUseCase
+        createChatRoomUseCase: CreateChatRoomUseCase,
+        searchInMapUseCase: SearchInMapUseCase
     ) {
         self.fetchSurroundingPostUseCase = fetchSurroundingPostUseCase
         self.fetchPostDetailUseCase = fetchPostDetailUseCase
         self.createChatRoomUseCase = createChatRoomUseCase
+        self.searchInMapUseCase = searchInMapUseCase
     }
 
     let surroundPostData = PublishRelay<CommonPostEntity>()
@@ -35,6 +38,7 @@ public class MapViewModel: ViewModelType, Stepper {
         let fetchSurroundingPost: Observable<(x: Double, y: Double)>?
         let dismissPostDetail: Observable<Void>?
         let createChatRoom: Observable<String>?
+        let searchPost: Observable<(keyword: String, x: Double, y: Double)>?
     }
     
     public struct Output {
@@ -44,6 +48,17 @@ public class MapViewModel: ViewModelType, Stepper {
     }
 
     public func transform(input: Input) -> Output {
+
+        input.searchPost?.asObservable()
+            .flatMap {
+                self.searchInMapUseCase.excute(keyword: $0.keyword, x: $0.x, y: $0.y)
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: surroundPostData)
+            .disposed(by: disposeBag)
 
         input.writePostButtonDidClick?
             .map { SharingStep.postWriteRequired }

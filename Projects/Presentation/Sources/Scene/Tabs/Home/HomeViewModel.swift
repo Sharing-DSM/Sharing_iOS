@@ -25,22 +25,29 @@ public class HomeViewModel: ViewModelType, Stepper {
     }
 
     let popularityPostData = PublishRelay<PopularityPostEntity>()
-    let areaOfInterestPostData = PublishRelay<AreaOfInterestPostEntity>()
+    let areaOfInterestPostData = PublishRelay<CommonPostEntity>()
     let emergencyPostData = PublishRelay<CommonPostEntity>()
 
     public struct Input {
         let viewWillApper: Observable<Void>
         let showDetailPost: Observable<String>
         let writePostButtonDidClick: Observable<Void>
+        let searchButtonDidClick: Observable<Void>
     }
 
     public struct Output {
         let popularityPostData: Signal<PopularityPostEntity>
-        let areaOfInterestPostData: Signal<AreaOfInterestPostEntity>
+        let areaOfInterestPostData: Signal<CommonPostEntity>
         let emergencyPostData: Signal<CommonPostEntity>
     }
 
     public func transform(input: Input) -> Output {
+
+        input.searchButtonDidClick
+            .map { SharingStep.postSearchRequired }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        
         input.viewWillApper
             .flatMap {
                 self.fetchPopularityPostUseCase.excute()
@@ -51,6 +58,7 @@ public class HomeViewModel: ViewModelType, Stepper {
             }
             .bind(to: popularityPostData)
             .disposed(by: disposeBag)
+
         input.viewWillApper
             .flatMap {
                 self.fetchAreaOfInterestUseCase.excute()
