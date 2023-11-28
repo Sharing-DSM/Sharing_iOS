@@ -3,7 +3,7 @@ import Domain
 import Core
 
 struct PostDetailDTO: Decodable {
-    let feedID, title, addressName, roadAddressName, content, userID, type: String
+    let feedID, title, addressName, roadAddressName, content, userID, type, userProfile: String
     let x, y: Double
     let recruitment, volunteerTime: Int
     let isEmergency, isMine: Bool
@@ -19,6 +19,7 @@ struct PostDetailDTO: Decodable {
             case isEmergency = "is_emergency"
             case isMine = "is_mine"
             case userID = "user_id"
+            case userProfile = "user_profile"
             case type
         }
 }
@@ -38,7 +39,8 @@ extension PostDetailDTO {
             volunteerTime: volunteerTime,
             isEmergency: isEmergency,
             isMine: isMine,
-            type: TagTypeEnum(rawValue: type) ?? .none
+            type: TagTypeEnum(rawValue: type) ?? .none,
+            userProfile: userProfile
         )
     }
 }

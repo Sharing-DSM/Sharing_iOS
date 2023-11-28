@@ -26,6 +26,7 @@ public struct StepperDI {
     public let setAreaOfInterestViewModel: SetAreaOfIntrestViewModel
     public let myPostViewModel: MyPostViewModel
     public let applyHistoryViewModel: ApplyHistroyViewModel
+    public let searchViewModel: SearchViewModel
 
     public let scheduleViewModel: ScheduleViewModel
     public let createScheduleViewModel: CreateSheduleViewModel
@@ -54,7 +55,8 @@ extension StepperDI {
         let mapViewModel = MapViewModel(
             fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCase,
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
-            createChatRoomUseCase: serviceDI.createChatRoomUseCase
+            createChatRoomUseCase: serviceDI.createChatRoomUseCase,
+            searchInMapUseCase: serviceDI.searchInMapUseCase
         )
 
         // MARK: Post관련 viewModel
@@ -73,6 +75,9 @@ extension StepperDI {
         )
         let applicantViewModel = ApplicantViewModel(
             fetchApplicantListUseCase: serviceDI.fetchApplicantListUseCase
+        )
+        let searchViewModel = SearchViewModel(
+            searchInPostTitleUseCase: serviceDI.searchInPostTitleUseCase
         )
 
         // MARK: Chat관련 viewModel
@@ -140,6 +145,7 @@ extension StepperDI {
             setAreaOfInterestViewModel: setAreaOfInterestViewModel,
             myPostViewModel: myPostViewModel,
             applyHistoryViewModel: applyHistoryViewModel,
+            searchViewModel: searchViewModel,
             scheduleViewModel: scheduleViewModel,
             createScheduleViewModel: creatScheduleViewModel,
             editScheduleViewModel: editScheduleViewModel

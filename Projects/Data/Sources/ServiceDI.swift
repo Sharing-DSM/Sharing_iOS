@@ -18,6 +18,8 @@ public struct ServiceDI {
     public let fetchEmergencyPostUseCase: FetchEmergencyPostUseCase
     public let fetchApplicantListUseCase: FetchApplicantListUseCase
     public let postApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
+    public let searchInPostTitleUseCase: SearchInPostTitleUseCase
+    public let searchInMapUseCase: SearchInMapUseCase
 
     //Chat
     public let fetchChatRoomListUseCase: FetchChatRoomListUseCase
@@ -71,6 +73,8 @@ extension ServiceDI {
         let fetchEmergencyPostUseCaseInject = FetchEmergencyPostUseCase(repository: postRepo)
         let fetchApplicantListUseCaseInject = FetchApplicantListUseCase(repository: postRepo)
         let postApplicationVolunteerUseCaseInject = PostApplicationVolunteerUseCase(repository: postRepo)
+        let searchInPostTitleUseCaseInject = SearchInPostTitleUseCase(repository: postRepo)
+        let searchInMapUseCaseInject = SearchInMapUseCase(repository: postRepo)
 
         // MARK: Chat관련 UseCase
         let fetchChatRoomListUseCaseInject = FetchChatRoomListUseCase(repository: chatRepo)
@@ -110,6 +114,8 @@ extension ServiceDI {
             fetchEmergencyPostUseCase: fetchEmergencyPostUseCaseInject,
             fetchApplicantListUseCase: fetchApplicantListUseCaseInject,
             postApplicationVolunteerUseCase: postApplicationVolunteerUseCaseInject,
+            searchInPostTitleUseCase: searchInPostTitleUseCaseInject,
+            searchInMapUseCase: searchInMapUseCaseInject,
             fetchChatRoomListUseCase: fetchChatRoomListUseCaseInject,
             createChatRoomUseCase: createChatRoomUseCaseInject,
             chattingUseCase: chattingUseCaseInject,

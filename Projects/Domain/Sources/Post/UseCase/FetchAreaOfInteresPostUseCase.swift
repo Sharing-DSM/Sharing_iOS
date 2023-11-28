@@ -9,7 +9,7 @@ public class FetchAreaOfInteresPostUseCase {
         self.repository = repository
     }
 
-    public func excute() -> Single<AreaOfInterestPostEntity> {
+    public func excute() -> Single<CommonPostEntity> {
         return repository.fetchAreaOfInterestPost()
     }
 }

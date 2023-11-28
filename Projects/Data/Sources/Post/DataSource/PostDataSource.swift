@@ -118,4 +118,16 @@ class PostDataSource {
             .filterSuccessfulStatusCodes()
             .catch { .error($0.toError(PostError.self)) }
     }
+
+    func searchInMap(keyword: String, x: Double, y: Double) -> Single<Response> {
+        return provider.rx.request(.searchInMap(keyword: keyword, x: x, y: y))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
+
+    func searchInPostTitle(keyword: String) -> Single<Response> {
+        return provider.rx.request(.searchInPostTitle(keyword: keyword))
+            .filterSuccessfulStatusCodes()
+            .catch { .error($0.toError(PostError.self)) }
+    }
 }

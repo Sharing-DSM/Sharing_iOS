@@ -79,9 +79,9 @@ class PostRepositoryImpl: PostRepository {
         )
     }
 
-    func fetchAreaOfInterestPost() -> RxSwift.Single<Domain.AreaOfInterestPostEntity> {
+    func fetchAreaOfInterestPost() -> Single<CommonPostEntity> {
         return remoteDataSource.fetchAreaOfInterestPost()
-                .map(AreaOfInterestPostDTO.self)
+                .map(CommonPostDTO.self)
                 .map { $0.toDomain() }
     }
 
@@ -108,4 +108,15 @@ class PostRepositoryImpl: PostRepository {
             .asCompletable()
     }
 
+    func searchInMap(keyword: String, x: Double, y: Double) -> Single<CommonPostEntity> {
+        return remoteDataSource.searchInMap(keyword: keyword, x: x, y: y)
+            .map(CommonPostDTO.self)
+            .map { $0.toDomain() }
+    }
+
+    func searchInPostTitle(keyword: String) -> Single<CommonPostEntity> {
+        return remoteDataSource.searchInPostTitle(keyword: keyword)
+            .map(CommonPostDTO.self)
+            .map { $0.toDomain() }
+    }
 }

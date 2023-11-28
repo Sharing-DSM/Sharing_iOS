@@ -2,7 +2,7 @@ import Foundation
 import Core
 
 public struct PostDetailEntity {
-    public let feedID, title, addressName, roadAddressName, content, userID: String
+    public let feedID, title, addressName, roadAddressName, content, userID, userProfile: String
     public let x, y: Double
     public let recruitment, volunteerTime: Int
     public let isEmergency, isMine: Bool
@@ -21,7 +21,8 @@ public struct PostDetailEntity {
         volunteerTime: Int,
         isEmergency: Bool,
         isMine: Bool,
-        type: TagTypeEnum
+        type: TagTypeEnum,
+        userProfile: String
     ) {
         self.feedID = feedID
         self.title = title
@@ -36,5 +37,6 @@ public struct PostDetailEntity {
         self.isEmergency = isEmergency
         self.isMine = isMine
         self.type = type
+        self.userProfile = userProfile
     }
 }
