@@ -35,7 +35,7 @@ public class ApplyHistoryViewController: BaseVC<ApplyHistroyViewModel> {
             cellType: PostTableViewCell.self
         )) { row, item, cell in
             cell.setup(
-                cellID: item.id,
+                cellID: item.feedId,
                 title: item.title,
                 address: item.address,
                 tag: item.feedType

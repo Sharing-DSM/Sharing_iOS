@@ -34,6 +34,8 @@ class ProfileFlow: Flow {
             return presentApplyHistroyView()
         case .guideLineRequired:
             return presentGuideLineView()
+        case .loginRequired:
+            return logout()
         case .popRequired:
             return popViewController()
         default:
@@ -112,6 +114,10 @@ class ProfileFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: guideLineVC,
             withNextStepper: OneStepper(withSingleStep: SharingStep.guideLineRequired)))
+    }
+
+    private func logout() -> FlowContributors {
+        return .end(forwardToParentFlowWithStep: SharingStep.loginRequired)
     }
 
     private func popViewController() -> FlowContributors {

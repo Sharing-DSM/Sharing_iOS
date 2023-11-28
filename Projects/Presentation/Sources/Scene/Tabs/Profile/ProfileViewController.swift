@@ -150,6 +150,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
             guideLineButtonDidTap: guideLineButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)
+
         output.userProfileData.asObservable().subscribe(onNext: { [self] in
             self.nameLabel.text = $0.name
             self.idLabel.text = "@\($0.accountId)"
@@ -163,6 +164,7 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
                 self.profileImageView.image = SharingKitAsset.Image.profileImage.image
             }
         }).disposed(by: disposeBag)
+
         output.imageUrl.asObservable()
             .subscribe(onNext: { image in
                 let url = URL(string: image.imageUrl)

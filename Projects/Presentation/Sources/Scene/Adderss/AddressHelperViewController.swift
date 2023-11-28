@@ -10,6 +10,7 @@ import Core
 public class AddressHelperViewController: BaseVC<AddressViewModel> {
 
     public let selectAddress = BehaviorRelay<AddressEntityElement?>(value: nil)
+    private let searchAddress = PublishRelay<String>()
 
     private let searchBar = SearchBarTextField().then {
         $0.placeholder = "주소를 검색해주세요(도로명, 지번)"
@@ -60,12 +61,19 @@ public class AddressHelperViewController: BaseVC<AddressViewModel> {
 
     public override func bind() {
         let input = AddressViewModel.Input(
-            searchButtonDidClick: searchBar.searchButton.rx.tap.asObservable(),
+            searchAddress: searchAddress.asObservable(),
             searchBarText: searchBar.rx.text.orEmpty.asObservable(),
             leftPageButttoDidClick: pageLeftButton.rx.tap.asObservable(),
             rightPageButttoDidClick: pageRightButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)
+
+        searchBar.rx.text
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind(to: searchAddress)
+            .disposed(by: disposeBag)
 
         output.addressDatas.asObservable()
             .bind(to: addressTableView.rx.items(cellIdentifier: AddressTableViewCell.identifier, cellType: AddressTableViewCell.self)) { row, element, cell in

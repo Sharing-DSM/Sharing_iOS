@@ -76,11 +76,13 @@ public class MapViewController: BaseVC<MapViewModel> {
             fetchSurroundingPost: fetchSurroundingPost.asObservable(),
             dismissPostDetail: dismissPostDetail.asObservable(),
             createChatRoom: nil,
+            applicationVolunteer: nil,
             searchPost: searchPost.asObservable()
         )
         let output = viewModel.transform(input: input)
 
         searchBar.searchButton.rx.tap
+            .throttle(.milliseconds(800), latest: false, scheduler: MainScheduler.instance)
             .bind(with: self, onNext: { owner, _ in
                 guard let location = owner.locationManager.location?.coordinate else { return }
                 owner.searchPost.accept(
@@ -135,6 +137,7 @@ public class MapViewController: BaseVC<MapViewModel> {
                         .init(center: location, span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)),
                         animated: true
                     )
+                    owner.postSheetController.move(to: .half, animated: true)
                 }
             )
             .disposed(by: disposeBag)

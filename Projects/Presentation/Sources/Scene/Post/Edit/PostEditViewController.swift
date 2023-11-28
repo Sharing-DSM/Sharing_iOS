@@ -108,6 +108,7 @@ public class PostEditViewController: BaseVC<PostEditViewModel> {
         view.backgroundColor = .white
         settingDissmissGesture(target: [view])
         fetchPostDetailRelay.accept(postId)
+        keyboardNotification()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -323,6 +324,39 @@ public class PostEditViewController: BaseVC<PostEditViewModel> {
             $0.top.equalTo(emergencyMarkLabel.snp.bottom).offset(26)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(40)
+        }
+    }
+
+    private func keyboardNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardControl(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardControl(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    @objc func keyboardControl(_ sender: Notification) {
+        guard let userInfo = sender.userInfo else { return }
+        guard let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else { return }
+        
+        if sender.name == UIResponder.keyboardWillShowNotification {
+            let moveTo = -keyboardFrame.height + view.safeAreaInsets.bottom + 10
+            scrollView.contentInset = .init(
+                top: 20,
+                left: 0,
+                bottom: keyboardFrame.height - view.safeAreaInsets.bottom,
+                right: 0
+            )
+        } else {
+            scrollView.contentInset = .init(top: 10, left: 0, bottom: 20, right: 0)
         }
     }
 }

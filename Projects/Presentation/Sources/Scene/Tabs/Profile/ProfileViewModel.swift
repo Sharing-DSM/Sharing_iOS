@@ -71,14 +71,20 @@ public class ProfileViewModel: ViewModelType, Stepper {
             .map { SharingStep.myPostRequired}
             .bind(to: steps)
             .disposed(by: disposeBag)
+
         input.applyButtonDidTap
             .map { SharingStep.applyHistoryRequired}
             .bind(to: steps)
             .disposed(by: disposeBag)
+
         input.logoutButtonDidTap
-            .map { SharingStep.loginRequired}
-            .bind(to: steps)
+            .map { SharingStep.loginRequired }
+            .subscribe(with: self, onNext: { owner, step in
+                TokenStorage.shared.resetToken()
+                owner.steps.accept(step)
+            })
             .disposed(by: disposeBag)
+
         input.guideLineButtonDidTap
             .map { SharingStep.guideLineRequired}
             .bind(to: steps)
