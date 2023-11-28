@@ -31,14 +31,16 @@ public class ApplyHistoryViewController: BaseVC<ApplyHistroyViewModel> {
         )
         let output = viewModel.transform(input: input)
         output.ApplyHistoryData.asObservable().bind(to: applyTableView.rx.items(
-                cellIdentifier: PostTableViewCell.identifier,
-                cellType: PostTableViewCell.self)) { row, item, cell in
-                    cell.cellId = item.feedId
-                    cell.tagView.setTag(item.feedType.toTagName)
-                    cell.postTitleLable.text = item.title
-                    cell.addressLable.text = item.address
-                    cell.setup()
-                }.disposed(by: disposeBag)
+            cellIdentifier: PostTableViewCell.identifier,
+            cellType: PostTableViewCell.self
+        )) { row, item, cell in
+            cell.setup(
+                cellID: item.id,
+                title: item.title,
+                address: item.address,
+                tag: item.feedType
+            )
+        }.disposed(by: disposeBag)
 
         applyTableView.rx.itemSelected
             .map { index -> String in

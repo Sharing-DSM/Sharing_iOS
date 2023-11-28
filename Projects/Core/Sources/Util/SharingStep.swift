@@ -50,5 +50,6 @@ public enum SharingStep: Step {
     case postDetailRequired(id: String)
     case postEditRequired(id: String)
     case applicantListRequired(id: String)
+    case postSearchRequired
     case popRequired
 }

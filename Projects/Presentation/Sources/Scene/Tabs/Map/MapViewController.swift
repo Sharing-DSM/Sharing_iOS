@@ -11,6 +11,7 @@ import CoreLocation
 
 public class MapViewController: BaseVC<MapViewModel> {
 
+    private let searchPost = PublishRelay<(keyword: String, x: Double, y: Double)>()
     private let fetchSurroundingPost = PublishRelay<(x: Double, y: Double)>()
     private let dismissPostDetail = PublishRelay<Void>()
 
@@ -74,12 +75,21 @@ public class MapViewController: BaseVC<MapViewModel> {
             selectItem: nil,
             fetchSurroundingPost: fetchSurroundingPost.asObservable(),
             dismissPostDetail: dismissPostDetail.asObservable(),
-            createChatRoom: nil
+            createChatRoom: nil,
+            searchPost: searchPost.asObservable()
         )
         let output = viewModel.transform(input: input)
 
         searchBar.searchButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
+                guard let location = owner.locationManager.location?.coordinate else { return }
+                owner.searchPost.accept(
+                    (
+                        keyword: owner.searchBar.text ?? "",
+                        x: location.longitude,
+                        y: location.latitude
+                    )
+                )
                 owner.postSheetController.move(to: .full, animated: true)
             })
             .disposed(by: disposeBag)
@@ -115,10 +125,8 @@ public class MapViewController: BaseVC<MapViewModel> {
             .subscribe(
                 with: self,
                 onNext: { owner, data in
-                    UIView.animate(withDuration: 0.2, animations: {
-                        owner.searchBar.isHidden = true
-                        owner.detailBackButton.isHidden = false
-                    })
+                    owner.searchBar.isHidden = true
+                    owner.detailBackButton.isHidden = false
                     let location: CLLocationCoordinate2D = .init(
                         latitude: data.y,
                         longitude: data.x

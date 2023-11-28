@@ -36,6 +36,8 @@ public enum PostAPI {
     case fetchEmergencyPost
     case fetchApplicantList(id: String)
     case postApplicationVolunteer(id: String)
+    case searchInPostTitle(keyword: String)
+    case searchInMap(keyword: String, x: Double, y: Double)
 }
 
 extension PostAPI: TargetType {
@@ -59,6 +61,10 @@ extension PostAPI: TargetType {
             return "/feeds/applicant/\(id)"
         case .postApplicationVolunteer(let id):
             return "/feeds/apply/\(id)"
+        case .searchInPostTitle:
+            return "/feeds/search"
+        case .searchInMap:
+            return "/feeds/search/map"
         }
     }
     
@@ -69,9 +75,10 @@ extension PostAPI: TargetType {
              .fetchPostDetail,
              .fetchAreaOfInterestPost,
              .fetchApplicantList,
-             .fetchEmergencyPost:
+             .fetchEmergencyPost,
+             .searchInPostTitle:
             return .get
-        case .createPost, .fetchSurroundingPost, .postApplicationVolunteer:
+        case .createPost, .fetchSurroundingPost, .postApplicationVolunteer, .searchInMap:
             return .post
         case .deletePost:
             return .delete
@@ -140,6 +147,22 @@ extension PostAPI: TargetType {
         case .fetchSurroundingPost(let x, let y):
             return .requestParameters(
                 parameters: [
+                    "x": x,
+                    "y": y
+                ],
+                encoding: JSONEncoding.default
+            )
+        case .searchInPostTitle(let keyword):
+            return .requestParameters(
+                parameters: [
+                    "keyword" : keyword
+                ],
+                encoding: URLEncoding.queryString
+            )
+        case .searchInMap(let keyword, let x, let y):
+            return .requestParameters(
+                parameters: [
+                    "keyword" : keyword,
                     "x": x,
                     "y": y
                 ],

@@ -23,8 +23,14 @@ public class HomeViewController: BaseVC<HomeViewModel> {
 
     private let bannerView = BannerView()
 
-    private let searchBarTextField = SearchBarTextField().then {
+    private let searchImageView = UIImageView().then {
+        $0.image = .search
+    }
+
+    private let searchBarButton = UIButton().then {
         $0.layer.cornerRadius = 25
+        $0.backgroundColor = .black50
+        $0.setShadow()
     }
     private let popularHeaderLabel = UILabel().then {
         $0.text = "인기 자원봉사"
@@ -76,29 +82,29 @@ public class HomeViewController: BaseVC<HomeViewModel> {
         let input = HomeViewModel.Input(
             viewWillApper: viewWillAppearRelay.asObservable(),
             showDetailPost: showDetailPostRelay.asObservable(),
-            writePostButtonDidClick: writePostButton.rx.tap.asObservable()
+            writePostButtonDidClick: writePostButton.rx.tap.asObservable(),
+            searchButtonDidClick: searchBarButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)
 
         output.popularityPostData.asObservable()
             .bind(to: popularTableView.rx.items(
                 cellIdentifier: PostTableViewCell.identifier,
-                cellType: PostTableViewCell.self)) { [weak self] row, element, cell in
-                    guard let self = self else { return }
-                    cell.postTitleLable.text = element.title
-                    cell.addressLable.text = element.addressName
-                    cell.tagView.setTag(element.type.toTagName)
-                    
-                    cell.cellBackgroundView.backgroundColor = .black50
-                    cell.cellId = element.id
+                cellType: PostTableViewCell.self
+            )) { [weak self] row, element, cell in
+                guard let self = self else { return }
+                cell.setup(
+                    cellID: element.id,
+                    title: element.title,
+                    address: element.addressName,
+                    tag: element.type
+                )
 
-                    cell.setup()
-
-                    popularTableView.snp.updateConstraints {
-                        $0.height.greaterThanOrEqualTo(self.popularTableView.contentSize.height + 5)
-                    }
+                popularTableView.snp.updateConstraints {
+                    $0.height.greaterThanOrEqualTo(self.popularTableView.contentSize.height + 5)
                 }
-                .disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
 
         popularTableView.rx.itemSelected
             .map { index -> String in
@@ -111,20 +117,21 @@ public class HomeViewController: BaseVC<HomeViewModel> {
         output.areaOfInterestPostData.asObservable()
             .bind(to: areaOfInterstTableView.rx.items(
                 cellIdentifier: PostTableViewCell.identifier,
-                cellType: PostTableViewCell.self)) {[weak self] row, element, cell in
-                    guard let self = self else { return }
-                    
-                    cell.postTitleLable.text = element.title
-                    cell.addressLable.text = element.addressName
-                    cell.tagView.setTag(element.type.toTagName)
-                    cell.cellBackgroundView.backgroundColor = .black50
-                    cell.cellId = element.id
-                    cell.setup()
-                    areaOfInterstTableView.snp.updateConstraints {
-                        $0.height.greaterThanOrEqualTo(self.areaOfInterstTableView.contentSize.height + 5)
-                    }
+                cellType: PostTableViewCell.self
+            )) { [weak self] row, element, cell in
+                guard let self = self else { return }
+                cell.setup(
+                    cellID: element.id,
+                    title: element.title,
+                    address: element.addressName,
+                    tag: element.type
+                )
+                
+                areaOfInterstTableView.snp.updateConstraints {
+                    $0.height.greaterThanOrEqualTo(self.areaOfInterstTableView.contentSize.height + 5)
                 }
-                .disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
 
         areaOfInterstTableView.rx.itemSelected
             .map { index -> String in
@@ -150,10 +157,11 @@ public class HomeViewController: BaseVC<HomeViewModel> {
             scrollView,
             writePostButton
         ].forEach( { view.addSubview($0) })
+        searchBarButton.addSubview(searchImageView)
         scrollView.addSubview(contentView)
         [
             bannerView,
-            searchBarTextField,
+            searchBarButton,
             popularHeaderLabel,
             popularTableView,
             areaOfInterestHeaderLabel,
@@ -176,12 +184,18 @@ public class HomeViewController: BaseVC<HomeViewModel> {
             $0.left.right.equalToSuperview().inset(25)
             $0.height.equalTo(103)
         }
-        searchBarTextField.snp.makeConstraints {
+        searchImageView.snp.makeConstraints {
+            $0.width.height.equalTo(25)
+            $0.centerY.equalToSuperview()
+            $0.right.equalToSuperview().inset(20)
+        }
+        searchBarButton.snp.makeConstraints {
+            $0.height.equalTo(50)
             $0.left.right.equalToSuperview().inset(25)
             $0.top.equalTo(bannerView.snp.bottom).offset(15)
         }
         popularHeaderLabel.snp.makeConstraints {
-            $0.top.equalTo(searchBarTextField.snp.bottom).offset(20)
+            $0.top.equalTo(searchBarButton.snp.bottom).offset(20)
             $0.leading.equalToSuperview().inset(26)
         }
         popularTableView.snp.makeConstraints {

@@ -5,6 +5,7 @@ import SharingKit
 import RxSwift
 import RxCocoa
 import Core
+import Kingfisher
 
 public class PostDetailViewController: BaseVC<PostDetailViewModel> {
 
@@ -26,8 +27,10 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
     private let locationImageView = UIImageView().then {
         $0.layer.cornerRadius = 20
         $0.clipsToBounds = true
-        $0.backgroundColor = .black
-        $0.image = UIImage(named: "example")
+        $0.backgroundColor = .black100
+        $0.image = .profileImage
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.black400?.cgColor
     }
     private let titleLabel = UILabel().then {
         $0.text = "-"
@@ -162,6 +165,7 @@ public class PostDetailViewController: BaseVC<PostDetailViewModel> {
                     owner.interactionButton.isHidden = !data.isMine
                     owner.chatButton.isHidden = data.isMine
                     owner.applyButton.isHidden = data.isMine
+                    owner.locationImageView.kf.setImage(with: URL(string: data.userProfile))
                     owner.userID = data.userID
                 }
             )

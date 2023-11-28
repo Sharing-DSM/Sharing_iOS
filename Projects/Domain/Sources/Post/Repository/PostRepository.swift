@@ -31,9 +31,11 @@ public protocol PostRepository {
         isEmergency: Bool
     ) -> Completable
 
-    func fetchAreaOfInterestPost() -> Single<AreaOfInterestPostEntity>
+    func fetchAreaOfInterestPost() -> Single<CommonPostEntity>
     func fetchSurroundingPost(x: Double, y: Double) -> Single<CommonPostEntity>
     func fetchEmergencyPost() -> Single<CommonPostEntity>
     func fetchApplicantList(id: String) -> Single<ApplicantListEntity>
     func postApplicationVolunteer(id: String) -> Completable
+    func searchInPostTitle(keyword: String) -> Single<CommonPostEntity>
+    func searchInMap(keyword: String, x: Double, y: Double) -> Single<CommonPostEntity>
 }

@@ -24,6 +24,8 @@ class HomeFlow: Flow {
             return navigateToPostDetailScreen(id: id)
         case .postWriteRequired:
             return navigateToPostWriteScreen()
+        case .postSearchRequired:
+            return navigateToPostSearchScreen()
         case .popRequired:
             return popRequired()
         default:
@@ -66,6 +68,17 @@ class HomeFlow: Flow {
             withNextStepper: writeViewController.viewModel
         ))
     }
+
+    private func navigateToPostSearchScreen() -> FlowContributors {
+        let searchVC = SearchViewController(viewModel: container.searchViewModel)
+        self.rootViewController.pushViewController(searchVC, animated: true)
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: searchVC,
+            withNextStepper: searchVC.viewModel
+        ))
+    }
+    
     
     private func popRequired() -> FlowContributors {
         self.rootViewController.popViewController(animated: true)

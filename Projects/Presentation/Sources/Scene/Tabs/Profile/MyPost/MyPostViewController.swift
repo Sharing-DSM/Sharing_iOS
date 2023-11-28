@@ -34,11 +34,12 @@ public class MyPostViewController: BaseVC<MyPostViewModel> {
             .bind(to: myPostTableView.rx.items(
                 cellIdentifier: PostTableViewCell.identifier,
                 cellType: PostTableViewCell.self)) { row, item, cell in
-                    cell.cellId = item.id
-                    cell.postTitleLable.text = item.title
-                    cell.addressLable.text = item.addressName
-                    cell.tagView.setTag(item.type.toTagName)
-                    cell.setup()
+                    cell.setup(
+                        cellID: item.id,
+                        title: item.title,
+                        address: item.addressName,
+                        tag: item.type
+                    )
                 }.disposed(by: disposeBag)
 
         myPostTableView.rx.itemSelected

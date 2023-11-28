@@ -6,6 +6,7 @@ import RxSwift
 import RxCocoa
 import RxSwift
 import Core
+import Kingfisher
 
 public class MapPostViewController: BaseVC<MapViewModel> {
 
@@ -28,8 +29,10 @@ public class MapPostViewController: BaseVC<MapViewModel> {
     private let profileImageView = UIImageView().then {
         $0.layer.cornerRadius = 20
         $0.clipsToBounds = true
-        $0.backgroundColor = .black
-        $0.image = UIImage(named: "example")
+        $0.backgroundColor = .black100
+        $0.image = .profileImage
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.black400?.cgColor
     }
     private let titleLabel = UILabel().then {
         $0.text = "-"
@@ -86,7 +89,8 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             selectItem: selectItemWithID.asSignal(),
             fetchSurroundingPost: nil,
             dismissPostDetail: nil,
-            createChatRoom: createChatRoom.asObservable()
+            createChatRoom: createChatRoom.asObservable(),
+            searchPost: nil
         )
         let output = viewModel.transform(input: input)
 
@@ -118,6 +122,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
                     owner.chatButton.isHidden = data.isMine
                     owner.applyButton.isHidden = data.isMine
                     owner.postDetailView.isHidden = false
+                    owner.profileImageView.kf.setImage(with: URL(string: data.userProfile))
                 }
             )
             .disposed(by: disposeBag)
@@ -127,13 +132,13 @@ public class MapPostViewController: BaseVC<MapViewModel> {
                 cellIdentifier: PostTableViewCell.identifier,
                 cellType: PostTableViewCell.self
             )) { (index, element, cell) in
-                cell.postTitleLable.text = element.title
-                cell.addressLable.text = element.addressName
-                cell.tagView.setTag(element.type.toTagName)
-                cell.cellBackgroundView.backgroundColor = .white
-                cell.cellId = element.id
-                
-                cell.setup()
+                cell.setup(
+                    cellID: element.id,
+                    title: element.title,
+                    address: element.addressName,
+                    tag: element.type,
+                    cellBackgroundColor: .white
+                )
             }
             .disposed(by: disposeBag)
 
