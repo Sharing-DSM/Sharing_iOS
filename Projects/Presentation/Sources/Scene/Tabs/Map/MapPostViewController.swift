@@ -11,9 +11,11 @@ import Kingfisher
 public class MapPostViewController: BaseVC<MapViewModel> {
 
     private var userID: String = ""
+    private var postID: String = ""
 
     private let selectItemWithID = PublishRelay<String>()
     private let createChatRoom = PublishRelay<String>()
+    private let applicationRelay = PublishRelay<String>()
 
     let postDetailView = UIView().then {
         $0.backgroundColor = .black50
@@ -90,6 +92,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             fetchSurroundingPost: nil,
             dismissPostDetail: nil,
             createChatRoom: createChatRoom.asObservable(),
+            applicationVolunteer: applicationRelay.asObservable(),
             searchPost: nil
         )
         let output = viewModel.transform(input: input)
@@ -109,6 +112,11 @@ public class MapPostViewController: BaseVC<MapViewModel> {
             .bind(to: createChatRoom)
             .disposed(by: disposeBag)
 
+        applyButton.rx.tap
+            .map { self.postID }
+            .bind(to: applicationRelay)
+            .disposed(by: disposeBag)
+
         output.postDetailData.asObservable()
             .subscribe(
                 with: self,
@@ -119,6 +127,7 @@ public class MapPostViewController: BaseVC<MapViewModel> {
                     owner.recruitmentLabel.text = "모집 인원 : \(data.recruitment)명"
                     owner.detailsLabel.text = data.content
                     owner.userID = data.userID
+                    owner.postID = data.feedID
                     owner.chatButton.isHidden = data.isMine
                     owner.applyButton.isHidden = data.isMine
                     owner.postDetailView.isHidden = false

@@ -23,7 +23,7 @@ public class AddressViewModel: ViewModelType, Stepper {
     private let isEndOfRightPage = BehaviorRelay<Bool>(value: true)
     
     public struct Input {
-        let searchButtonDidClick: Observable<Void>
+        let searchAddress: Observable<String>
         let searchBarText: Observable<String>
         let leftPageButttoDidClick: Observable<Void>
         let rightPageButttoDidClick: Observable<Void>
@@ -38,7 +38,7 @@ public class AddressViewModel: ViewModelType, Stepper {
 
     public func transform(input: Input) -> Output {
 
-        input.searchButtonDidClick.withLatestFrom(input.searchBarText)
+        input.searchAddress
             .flatMap  {
                 self.fetchAddressUseCase.execute(keyword: $0, page: self.addressPage)
                     .catch {

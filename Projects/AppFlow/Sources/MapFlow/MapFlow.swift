@@ -27,6 +27,8 @@ class MapFlow: Flow {
             return navigateToPostWriteScreen()
         case .popRequired:
             return popWhenSucceedCreatePost()
+        case .alertRequired(let title, let content):
+            return presentAlert(title, content)
         case .errorAlertRequired(let content):
             return presentErrorAlert(content)
         case .chatRoomRequired(let roomID):
@@ -89,6 +91,14 @@ class MapFlow: Flow {
             withNextPresentable: chatRoomVC,
             withNextStepper: chatRoomVC.viewModel
         ))
+    }
+
+    private func presentAlert(_ title: String, _ content: String) -> FlowContributors {
+        let alert = AlertViewController(title: title, content: content)
+        alert.modalPresentationStyle = .overFullScreen
+        alert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(alert, animated: true)
+        return .none
     }
 
     private func popWhenSucceedCreatePost() -> FlowContributors {

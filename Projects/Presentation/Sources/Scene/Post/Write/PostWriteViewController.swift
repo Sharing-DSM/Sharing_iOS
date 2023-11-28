@@ -51,7 +51,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
     }
 
     private let recruitmentTextField = SharingTextField(title: "모집 인원", keyboardType: .asciiCapableNumberPad).then {
-        $0.placeholder = "ex) 특정 지역, 연령대 등"
+        $0.placeholder = "숫자로 모집인원 입력"
     }
 
     private let tagMarkLabel = UILabel().then {
@@ -99,6 +99,7 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
     }
 
     public override func attribute() {
+        keyboardNotification()
         view.backgroundColor = .white
         settingDissmissGesture(target: [view])
     }
@@ -285,6 +286,39 @@ public class PostWriteViewController: BaseVC<PostWriteViewModel> {
             $0.top.equalTo(emergencyMarkLabel.snp.bottom).offset(26)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(40)
+        }
+    }
+
+    private func keyboardNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardControl(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardControl(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    @objc func keyboardControl(_ sender: Notification) {
+        guard let userInfo = sender.userInfo else { return }
+        guard let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else { return }
+        
+        if sender.name == UIResponder.keyboardWillShowNotification {
+            let moveTo = -keyboardFrame.height + view.safeAreaInsets.bottom + 10
+            scrollView.contentInset = .init(
+                top: 20,
+                left: 0,
+                bottom: keyboardFrame.height - view.safeAreaInsets.bottom,
+                right: 0
+            )
+        } else {
+            scrollView.contentInset = .init(top: 10, left: 0, bottom: 20, right: 0)
         }
     }
 }

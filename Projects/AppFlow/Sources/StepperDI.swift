@@ -56,7 +56,8 @@ extension StepperDI {
             fetchSurroundingPostUseCase: serviceDI.fetchSurroundingPostUseCase,
             fetchPostDetailUseCase: serviceDI.fetchPostDetailUseCase,
             createChatRoomUseCase: serviceDI.createChatRoomUseCase,
-            searchInMapUseCase: serviceDI.searchInMapUseCase
+            searchInMapUseCase: serviceDI.searchInMapUseCase,
+            postApplicationVolunteerUseCase: serviceDI.postApplicationVolunteerUseCase
         )
 
         // MARK: Post관련 viewModel

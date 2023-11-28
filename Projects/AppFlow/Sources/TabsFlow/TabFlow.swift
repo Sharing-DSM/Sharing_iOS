@@ -39,9 +39,15 @@ class TabsFlow: Flow {
         switch step {
         case .tabsRequired:
             return navigateToTabsView()
+        case .loginRequired:
+            return logout()
         default:
             return .none
         }
+    }
+
+    func logout() -> FlowContributors {
+        return .end(forwardToParentFlowWithStep: SharingStep.loginRequired)
     }
 
     private func navigateToTabsView() -> FlowContributors {

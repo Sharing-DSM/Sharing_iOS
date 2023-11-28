@@ -15,17 +15,20 @@ public class MapViewModel: ViewModelType, Stepper {
     private let fetchPostDetailUseCase: FetchPostDetailUseCase
     private let createChatRoomUseCase: CreateChatRoomUseCase
     private let searchInMapUseCase: SearchInMapUseCase
+    private let postApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
 
     public init(
         fetchSurroundingPostUseCase: FetchSurroundingPostUseCase,
         fetchPostDetailUseCase: FetchPostDetailUseCase,
         createChatRoomUseCase: CreateChatRoomUseCase,
-        searchInMapUseCase: SearchInMapUseCase
+        searchInMapUseCase: SearchInMapUseCase,
+        postApplicationVolunteerUseCase: PostApplicationVolunteerUseCase
     ) {
         self.fetchSurroundingPostUseCase = fetchSurroundingPostUseCase
         self.fetchPostDetailUseCase = fetchPostDetailUseCase
         self.createChatRoomUseCase = createChatRoomUseCase
         self.searchInMapUseCase = searchInMapUseCase
+        self.postApplicationVolunteerUseCase = postApplicationVolunteerUseCase
     }
 
     let surroundPostData = PublishRelay<CommonPostEntity>()
@@ -38,6 +41,7 @@ public class MapViewModel: ViewModelType, Stepper {
         let fetchSurroundingPost: Observable<(x: Double, y: Double)>?
         let dismissPostDetail: Observable<Void>?
         let createChatRoom: Observable<String>?
+        let applicationVolunteer: Observable<String>?
         let searchPost: Observable<(keyword: String, x: Double, y: Double)>?
     }
     
@@ -102,6 +106,15 @@ public class MapViewModel: ViewModelType, Stepper {
                     owner.steps.accept(SharingStep.chatRoomRequired(roomID: data.roomID))
                 }
             )
+            .disposed(by: disposeBag)
+
+        input.applicationVolunteer?
+            .flatMap {
+                self.postApplicationVolunteerUseCase.excute(id: $0)
+                    .andThen(Single.just(SharingStep.alertRequired(title: "신청 완료", content: "신청이 성공적으로 완료되었습니다.")))
+                    .catch { .just(SharingStep.errorAlertRequired(content: $0.localizedDescription)) }
+            }
+            .bind(to: steps)
             .disposed(by: disposeBag)
 
         input.dismissPostDetail?
