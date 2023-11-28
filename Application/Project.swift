@@ -10,7 +10,7 @@ let project = Project(
             name: "Sharing-iOS",
             platform: .iOS,
             product: .app,
-            bundleId: "\(SharingOrganizationName).iOS",
+            bundleId: "\(SharingOrganizationName).iOS.app",
             deploymentTarget: .iOS(
                 targetVersion: "16.0",
                 devices: [.iphone, .ipad]
