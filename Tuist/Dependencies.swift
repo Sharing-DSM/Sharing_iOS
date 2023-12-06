@@ -44,6 +44,11 @@ let dependencies = Dependencies.init(
         .remote(
             url: "https://github.com/scenee/FloatingPanel.git",
             requirement: .upToNextMajor(from: "2.8.0")
+        ),
+        // Firebase-iOS-sdk
+        .remote(
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            requirement: .upToNextMajor(from: "10.3.0")
         )
     ]),
     platforms: [.iOS]

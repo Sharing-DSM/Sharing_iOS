@@ -12,8 +12,8 @@ class AuthDataSource {
     static let shared = AuthDataSource()
     private init() {}
 
-    func login(accountID: String, password: String) -> Single<TokenDTO> {
-        return provider.rx.request(.login(accountID: accountID, password: password))
+    func login(accountID: String, password: String, deviceToken: String) -> Single<TokenDTO> {
+        return provider.rx.request(.login(accountID: accountID, password: password, deviceToken: deviceToken))
             .filterSuccessfulStatusCodes()
             .map(TokenDTO.self)
             .catch { .error($0.toError(AuthError.self)) }

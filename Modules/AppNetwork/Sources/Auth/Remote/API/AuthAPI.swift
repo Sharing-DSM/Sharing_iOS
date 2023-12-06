@@ -3,7 +3,7 @@ import Moya
 import Core
 
 public enum AuthAPI {
-    case login(accountID: String, password: String)
+    case login(accountID: String, password: String, deviceToken: String)
     case signup(accountID: String, password: String, name: String, age: Int)
 }
 
@@ -30,15 +30,16 @@ extension AuthAPI: TargetType {
     
     public var task: Moya.Task {
         switch self {
-        case .login(let accountID, let password):
+        case let .login(accountID, password, deviceToken):
             return .requestParameters(
                 parameters: [
                     "account_id": accountID,
-                    "password": password
+                    "password": password,
+                    "device_token": deviceToken
                 ],
                 encoding: JSONEncoding.default)
 
-        case .signup(let accountID, let password, let name, let age):
+        case let .signup(accountID, password, name, age):
             return .requestParameters(
                 parameters: [
                     "account_id": accountID,
